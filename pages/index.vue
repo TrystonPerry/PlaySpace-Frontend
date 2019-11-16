@@ -1,5 +1,5 @@
 <template>
-  <div class="landing container px-2 mx-auto mt-4">
+  <div class="landing container px-2 mx-auto my-6 py-6">
     <div class="flex flex-wrap items-center">
       <div class="w-full md:w-6/12 text-center md:text-left">
         <h1 class="text-5xl font-medium text-primary">PlaySpace</h1>
@@ -72,29 +72,40 @@
           </li>
         </ul>
       </div>
-      <div class="w-full md:w-6/12">
+      <!-- <div class="w-full md:w-6/12">
         <img src="https://i.imgur.com/NVAaY3Q.png" class="w-100" />
-      </div>
+      </div> -->
+    </div>
+
+    <div class="relative">
+      <video
+        src="https://trystonperry.com/public/videos/PlaySpace-Demo.mp4"
+        muted
+        class="hero__video hero__video-md"
+      ></video>
     </div>
 
     <!-- What is a PlaySpace? -->
-    <div class="container text-center my-6 py-6 mx-auto">
-      <h1 class="text-3xl font-medium text-primary">What is a PlaySpace?</h1>
-      <h2 class="text-2xl md:w-6/12 mx-auto">
+    <div
+      class="container text-center md:text-right my-6 py-6 ml-auto"
+      style="padding-top:15rem"
+    >
+      <h1 class="text-2xl font-medium text-primary">What is a PlaySpace?</h1>
+      <h2 class="text-xl md:w-6/12 ml-auto mb-3">
         A PlaySpace is a virtual room you can create to easily share gameplay,
         videos or browse the internet with friends.
       </h2>
-      <div class="flex flex-wrap mx-auto -px-2 md:w-9/12">
+      <div class="flex flex-wrap ml-auto -px-2 md:w-9/12">
         <div class="w-full md:w-6/12 p-2">
-          <h2 class="text-2xl text-primary">Public PlaySpaces</h2>
-          <h3 class="text-left font-weight-normal">
+          <h2 class="text-xl font-medium text-primary">Public PlaySpaces</h2>
+          <h3 class="text-center md:text-right text-lg">
             Public PlaySpaces are rooms for streaming yourself to anyone on the
             intertnet. It's much like streaming on Twitch or Youtube.
           </h3>
         </div>
         <div class="w-full md:w-6/12 p-2">
-          <h2 class="text-2xl text-primary">Private PlaySpaces</h2>
-          <h3 class="text-left font-weight-normal">
+          <h2 class="text-xl font-medium text-primary">Private PlaySpaces</h2>
+          <h3 class="text-center md:text-right text-lg">
             Private PlaySpaces are private rooms only accessible to those with
             an invite link. They are intended to be used when you want to watch
             content with only people you know.
@@ -256,6 +267,15 @@ export default {
 
     .social-media {
       display: flex;
+    }
+
+    &__video {
+      &-md {
+        position: absolute;
+        z-index: -1;
+        transform: rotate(-15deg);
+        top: -6vw;
+      }
     }
   }
 
