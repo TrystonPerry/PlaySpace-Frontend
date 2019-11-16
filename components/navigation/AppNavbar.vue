@@ -5,7 +5,11 @@
         <p-icon icon="fas fa-bars" screen-reader-text="Menu" size="lg" />
       </button>
       <NavLink to="/live" class="font-bold">
-        <img src="/img/playspace-icon-trans.png" alt="PlaySpace logo" class="h-full" />
+        <img
+          src="/img/playspace-icon-trans.png"
+          alt="PlaySpace logo"
+          class="h-full"
+        />
         <span>PlaySpace</span>
       </NavLink>
       <NavLink to="/categories" class="hidden sm:block">
@@ -27,10 +31,12 @@
 </template>
 
 <script>
+import AppSidebar from "./AppSidebar"
 import NavLink from "./NavLink"
 
 export default {
   components: {
+    AppSidebar,
     NavLink
   }
 }

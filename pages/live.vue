@@ -1,10 +1,10 @@
 <template>
   <div class="container mx-auto">
     <h1 class="h1 text-primary text-center text-3xl my-6">Live PlaySpaces</h1>
-    <ul v-if="playSpaces.length" class="flex flex-wrap">
+    <ul class="flex flex-wrap">
       <li
         v-for="playSpace in playSpaces"
-        :key="playSpace._id"
+        :key="playSpace.username"
         class="live__item w-full sm:w-6/12 md:w-4/12 lg:w-3/12 p-1 hover:bg-primary rounded-lg"
       >
         <PlaySpace :stream="playSpace" class="w-full h-full shadow-reg" />
