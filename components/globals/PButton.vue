@@ -1,11 +1,12 @@
 <template>
-  <nuxt-link
+  <button
     v-bind="$attrs"
-    class="p-link inline-block rounded font-medium"
+    v-on="$listeners"
+    class="p-btn inline-block rounded font-medium"
     :class="`btn-${variant} ${computedSize}`"
   >
     <slot></slot>
-  </nuxt-link>
+  </button>
 </template>
 
 <script>

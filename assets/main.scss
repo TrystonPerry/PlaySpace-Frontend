@@ -1,3 +1,37 @@
+.p-link,
+.p-btn {
+  @apply border;
+  transition-duration: 50ms;
+
+  &:hover {
+    transform: translateY(-1px);
+  }
+}
+
+.btn-primary {
+  @apply bg-primary text-white border-primary;
+}
+
+.btn-primary-outline {
+  @apply text-primary bg-white border-primary;
+
+  &:hover {
+    @apply bg-primary text-white;
+  }
+}
+
+.btn-white {
+  @apply bg-white text-primary border-white;
+}
+
+.btn-white-outline {
+  @apply text-white bg-primary border-white;
+
+  &:hover {
+    @apply bg-white text-primary;
+  }
+}
+
 .visually-hidden {
   position: absolute;
   left: -10000px;
