@@ -1,0 +1,17 @@
+<template>
+  <li>
+    <nuxt-link v-bind="$attrs" class="nav-link flex items-center hover:bg-blue-400 h-12 py-1 px-2">
+      <slot></slot>
+    </nuxt-link>
+  </li>
+</template>
+
+<script>
+export default {}
+</script>
+
+<style lang="scss" scoped>
+.nav-link {
+  transition-duration: 50ms;
+}
+</style>
