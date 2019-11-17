@@ -6,8 +6,8 @@
       >
         live
       </small>
-      <div class="w-full h-48 overflow-hidden rounded-t-lg">
-        <img :src="stream.screenshot.url" class="w-full h-full object-cover" />
+      <div class="w-full overflow-hidden rounded-t-lg">
+        <img :src="stream.screenshot.url" />
       </div>
       <div class="relative p-3">
         <span
@@ -17,7 +17,9 @@
           {{ stream.viewerCount }} viewers
         </span>
         <div class="mt-4">
-          <h2 class="font-bold mb-1">{{ stream.title }}</h2>
+          <h2 class="font-bold mb-1" :title="stream.title">
+            {{ truncatedTitle }}
+          </h2>
           <h3 class="mb-3">
             <p-avatar :src="stream.avatar" :alt="stream.username" size="sm" />
             <span>{{ stream.username }}</span>
@@ -45,6 +47,17 @@ export default {
     stream: {
       type: Object,
       required: true
+    }
+  },
+
+  computed: {
+    truncatedTitle() {
+      const length = this.stream.title.length
+      let truncated = this.stream.title.substring(0, 24)
+      if (length > truncated.length) {
+        truncated += "..."
+      }
+      return truncated
     }
   }
 }

@@ -38,7 +38,8 @@ module.exports = {
       none: "none"
     },
     maxWidth: {
-      "64": "16rem"
+      "64": "16rem",
+      "96": "24rem"
     },
     textColor: {
       primary: "#009dee",

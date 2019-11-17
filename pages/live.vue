@@ -3,11 +3,11 @@
     <h1 class="text-3xl text-primary text-center font-medium mt-6 mb-2">
       Live PlaySpaces
     </h1>
-    <ul v-if="playSpaces.length" class="flex flex-wrap">
+    <ul v-if="playSpaces.length" class="flex flex-wrap justify-center">
       <li
         v-for="playSpace in playSpaces"
         :key="playSpace.username"
-        class="live__item w-full sm:w-6/12 md:w-4/12 lg:w-3/12 rounded-lg p-1"
+        class="live__item w-full sm:max-w-64 rounded-lg p-1"
       >
         <PlaySpace :stream="playSpace" class="w-full h-full shadow-reg" />
       </li>
