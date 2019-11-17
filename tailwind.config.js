@@ -16,10 +16,11 @@ module.exports = {
       "black-800": "#111",
       "black-900": "#000"
     }),
-    borderColor: {
+    borderColor: theme => ({
+      ...theme("colors"),
       primary: "#009dee",
       white: "#fff"
-    },
+    }),
     boxShadow: {
       default: "0 1px 3px 0 rgba(0, 0, 0, .1), 0 1px 2px 0 rgba(0, 0, 0, .06)",
       md:
@@ -35,6 +36,9 @@ module.exports = {
       outline: "0 0 0 3px rgba(66,153,225,0.5)",
       focus: "0 0 0 3px rgba(66,153,225,0.5)",
       none: "none"
+    },
+    maxWidth: {
+      "64": "16rem"
     },
     textColor: {
       primary: "#009dee",

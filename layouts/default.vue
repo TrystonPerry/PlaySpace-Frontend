@@ -1,6 +1,7 @@
 <template>
   <div>
     <AppNavbar />
+    <div class="h-12"></div>
     <nuxt />
   </div>
 </template>
