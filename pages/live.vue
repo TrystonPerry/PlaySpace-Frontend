@@ -25,7 +25,7 @@
 </template>
 
 <script>
-import API from "@/api"
+import API from "@/api/server-api"
 
 import PlaySpace from "@/components/playspaces/PlaySpace"
 

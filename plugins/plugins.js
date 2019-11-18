@@ -1,5 +1,7 @@
 import Vue from "vue"
 
+import Vuelidate from "vuelidate"
+
 Vue.directive("click-out", {
   bind(el, binding, vnode) {
     binding.stop = e => e.stopPropagation()
@@ -14,3 +16,5 @@ Vue.directive("click-out", {
     el.removeEventListener("click", binding.stop)
   }
 })
+
+Vue.use(Vuelidate)

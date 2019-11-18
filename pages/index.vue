@@ -77,13 +77,13 @@
       </div> -->
     </div>
 
-    <div class="relative">
+    <!-- <div class="relative">
       <video
         src="https://trystonperry.com/public/videos/PlaySpace-Demo.mp4"
         muted
         class="hero__video hero__video-md"
       ></video>
-    </div>
+    </div> -->
 
     <!-- What is a PlaySpace? -->
     <div

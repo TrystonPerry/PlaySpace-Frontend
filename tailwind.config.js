@@ -41,11 +41,11 @@ module.exports = {
       "64": "16rem",
       "96": "24rem"
     },
-    textColor: {
+    textColor: theme => ({
+      ...theme("colors"),
       primary: "#009dee",
-      white: "#fff",
-      "black-900": "#000"
-    }
+      white: "#fff"
+    })
   },
   variants: {},
   plugins: []
