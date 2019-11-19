@@ -1,6 +1,6 @@
 <template>
   <div
-    class="app-sidebar fixed top-0 bg-primary text-white h-screen w-full max-w-64 shadow-reg"
+    class="app-sidebar fixed top-0 bg-dark-5 text-gray-300 h-screen w-full max-w-64 shadow-reg"
   >
     <ul
       v-click-out="close"
@@ -24,12 +24,12 @@
       <div class="flex-grow"></div>
       <ul class="list-none flex text-center px-1">
         <li class="px-1 py-2 w-6/12">
-          <p-link to="/signup" variant="white" size="sm" class="w-full">
+          <p-link to="/signup" variant="primary" size="sm" class="w-full">
             Sign Up
           </p-link>
         </li>
         <li class="px-1 py-2 w-6/12">
-          <p-link to="/login" variant="white-outline" size="sm" class="w-full">
+          <p-link to="/login" variant="primary-hover" size="sm" class="w-full">
             Log In
           </p-link>
         </li>

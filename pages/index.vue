@@ -1,9 +1,9 @@
 <template>
-  <div class="landing container px-2 mx-auto my-6 py-6">
+  <div class="landing container px-2 mx-auto my-6 py-6 text-gray-400">
     <div class="flex flex-wrap items-center">
       <div class="w-full md:w-6/12 text-center md:text-left">
         <h1 class="text-5xl font-medium text-primary">PlaySpace</h1>
-        <h2 class="text-xl mt-1 mb-4">
+        <h2 class="text-thin text-gray-400 mt-1 mb-4">
           Watch videos, play games, or browse the internet with your friends.
           All from your web browser, no software needed.
         </h2>
@@ -11,12 +11,12 @@
           <p-link to="/live" variant="primary" class="mr-2 mb-2 text-center">
             Join a PlaySpace
           </p-link>
-          <p-link to="/signup" variant="primary-outline" class="text-center">
+          <p-link to="/signup" variant="primary-hover" class="text-center">
             Create a PlaySpace
           </p-link>
         </div>
         <ul
-          class="flex justify-center md:justify-start social-media list-style-none pl-0 text-primary"
+          class="flex justify-center md:justify-start social-media list-style-none pl-0 text-gray-400"
           aria-label="PlaySpace's Social Media"
         >
           <li class="mr-2">
@@ -124,7 +124,7 @@
             <li v-for="(useCase, i) in useCases" :key="i">
               <p-btn
                 @click="curUseCase = i"
-                :variant="curUseCase === i ? 'primary' : 'primary-outline'"
+                :variant="curUseCase === i ? 'primary' : 'primary-hover'"
                 class="mb-2 w-full sm:text-left"
               >
                 {{ useCase.title }}

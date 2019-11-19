@@ -3,7 +3,7 @@
     <nuxt-link
       v-bind="$attrs"
       v-on="$listeners"
-      class="nav-link flex items-center hover:bg-blue-400 h-12 py-1 px-2"
+      class="nav-link flex items-center hover:bg-black-500 h-12 py-1 px-2"
     >
       <slot></slot>
     </nuxt-link>

@@ -1,7 +1,7 @@
 <template>
   <div class="relative">
     <div
-      class="app-navbar flex fixed top-0 justify-between w-full h-12 bg-primary text-white shadow-md"
+      class="app-navbar flex fixed top-0 justify-between w-full h-12 bg-dark-4 text-gray-300 shadow-md"
     >
       <ul class="list-none flex items-center">
         <button @click="showSidebar = true" class="w-12 h-12">
@@ -24,10 +24,10 @@
       </ul>
       <ul class="list-none flex items-center">
         <li class="hidden sm:block px-1 py-2">
-          <p-link to="/login" variant="white-outline" size="sm">Log In</p-link>
+          <p-link to="/login" variant="primary-hover" size="sm">Log In</p-link>
         </li>
         <li class="px-1 py-2">
-          <p-link to="/signup" variant="white" size="sm">Sign Up</p-link>
+          <p-link to="/signup" variant="primary" size="sm">Sign Up</p-link>
         </li>
       </ul>
     </div>

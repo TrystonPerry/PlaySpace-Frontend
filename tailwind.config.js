@@ -14,7 +14,12 @@ module.exports = {
       "black-600": "#444",
       "black-700": "#333",
       "black-800": "#111",
-      "black-900": "#000"
+      "black-900": "#000",
+      "dark-5": "#4F4F4F",
+      "dark-4": "#404040",
+      "dark-3": "#383838",
+      "dark-2": "#404040",
+      "dark-1": "#202020"
     }),
     borderColor: theme => ({
       ...theme("colors"),
@@ -44,6 +49,11 @@ module.exports = {
     textColor: theme => ({
       ...theme("colors"),
       primary: "#009dee",
+      "dark-5": "#4F4F4F",
+      "dark-4": "#404040",
+      "dark-3": "#383838",
+      "dark-2": "#404040",
+      "dark-1": "#252525",
       white: "#fff"
     })
   },

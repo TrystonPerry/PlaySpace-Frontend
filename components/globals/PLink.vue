@@ -9,7 +9,7 @@
 </template>
 
 <script>
-const variants = ["primary", "primary-outline", "white", "white-outline"]
+const variants = ["primary", "primary-hover", "white", "white-outline"]
 const sizes = ["sm", "md", "lg"]
 
 export default {
