@@ -1,14 +1,5 @@
 <template>
-  <div ref="videos" class="flex flex-wrap items-center justify-center">
-    <video
-      src="https://trystonperry.com/public/videos/PlaySpace-Demo.mp4"
-    ></video>
-    <video
-      src="https://trystonperry.com/public/videos/PlaySpace-Demo.mp4"
-    ></video>
-    <video
-      src="https://trystonperry.com/public/videos/PlaySpace-Demo.mp4"
-    ></video>
+  <div ref="videos" class="relative flex flex-wrap items-center justify-center">
     <video
       src="https://trystonperry.com/public/videos/PlaySpace-Demo.mp4"
     ></video>
@@ -22,16 +13,16 @@ export default {
   }),
 
   mounted() {
-    this.getProperSize()
-    window.addEventListener("resize", this.getProperSize)
+    this.setProperSize()
+    window.addEventListener("resize", this.setProperSize)
   },
 
   beforeDestroy() {
-    window.removeEventListener("resize", this.getProperSize)
+    window.removeEventListener("resize", this.setProperSize)
   },
 
   methods: {
-    getProperSize() {
+    setProperSize() {
       this.$refs.videos.style.height = "calc(100vh - 7rem)"
 
       const height = this.$refs.videos.offsetHeight
@@ -73,5 +64,4 @@ export default {
 }
 </script>
 
-<style>
-</style>
+<style></style>
