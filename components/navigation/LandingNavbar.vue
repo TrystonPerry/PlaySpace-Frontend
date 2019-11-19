@@ -1,10 +1,10 @@
 <template>
-  <div>
+  <div class="relative">
     <div
       class="app-navbar flex fixed top-0 justify-between w-full h-12 bg-dark-4 text-gray-300 shadow-md"
     >
       <ul class="list-none flex items-center">
-        <button @click="toggleLeftSidebar" class="w-12 h-12">
+        <button @click="showSidebar = true" class="w-12 h-12">
           <p-icon icon="fas fa-bars" screen-reader-text="Menu" size="lg" />
         </button>
         <NavLink to="/live" class="font-bold">
@@ -22,25 +22,6 @@
           <span>About</span>
         </NavLink>
       </ul>
-      <ul
-        v-if="$route.params.playspace"
-        class="absolute hidden sm:flex list-style-none items-center"
-        style="left:50%;transform:translateX(-50%)"
-      >
-        <li class="md:mr-2">
-          <img
-            src="https://pbs.twimg.com/profile_images/1108106619978547202/edEc1d0C_400x400.jpg"
-            alt=""
-            class="w-12 h-12 rounded-full p-1"
-          />
-        </li>
-        <li class="hidden md:block lg:mr-2 font-medium text-lg">
-          {{ $route.params.playspace }}
-        </li>
-        <li class="hidden lg:block">
-          Playing some Jackbox Party Pack with you guys.
-        </li>
-      </ul>
       <ul class="list-none flex items-center">
         <li class="hidden sm:block px-1 py-2">
           <p-link to="/login" variant="primary-hover" size="sm">Log In</p-link>
@@ -50,23 +31,28 @@
         </li>
       </ul>
     </div>
+    <LandingSidebar v-if="showSidebar" @close="showSidebar = false" />
   </div>
 </template>
 
 <script>
-import { mapActions } from "vuex"
-
+import LandingSidebar from "./LandingSidebar"
 import NavLink from "./NavLink"
 
 export default {
   components: {
+    LandingSidebar,
     NavLink
   },
 
+  data: () => ({
+    showSidebar: false
+  }),
+
   methods: {
-    ...mapActions({
-      toggleLeftSidebar: "nav/toggleLeftSidebar"
-    })
+    close() {
+      this.showSidebar = false
+    }
   }
 }
 </script>

@@ -1,24 +1,15 @@
 <template>
   <div
-    class="app-sidebar fixed top-0 bg-dark-5 text-gray-300 h-screen w-full max-w-64 shadow-reg"
+    class="app-sidebar bg-dark-5 text-gray-300 h-full w-full max-w-64 min-w-64 shadow-reg"
   >
-    <ul
-      v-click-out="close"
-      class="flex flex-col list-style-none h-full"
-      :style="`height: ${screenHeight}`"
-    >
-      <li>
-        <button @click="close" class="w-12 h-12">
-          <p-icon icon="fas fa-bars" screen-reader-text="Menu" size="lg" />
-        </button>
-      </li>
-      <NavLink @click="close" to="/live">
+    <ul class="flex flex-col list-style-none h-full">
+      <NavLink to="/live">
         <span>Live</span>
       </NavLink>
-      <NavLink @click="close" to="/categories">
+      <NavLink to="/categories">
         <span>Browse</span>
       </NavLink>
-      <NavLink @click="close" to="/">
+      <NavLink to="/">
         <span>About</span>
       </NavLink>
       <div class="flex-grow"></div>
@@ -35,10 +26,6 @@
         </li>
       </ul>
     </ul>
-    <!-- <div
-      class="app-sidebar-bg fixed top-0 left-0 h-screen w-screen"
-      style="background:rgba(0,0,0,0.2)"
-    ></div> -->
   </div>
 </template>
 
@@ -48,38 +35,9 @@ import NavLink from "./NavLink"
 export default {
   components: {
     NavLink
-  },
-
-  data: () => ({
-    screenHeight: "0px"
-  }),
-
-  mounted() {
-    this.updateScreenHeight()
-    window.addEventListener("resize", this.updateScreenHeight)
-  },
-
-  beforeDestroy() {
-    window.removeEventListener("resize", this.updateScreenHeight)
-  },
-
-  methods: {
-    close() {
-      this.$emit("close")
-    },
-
-    updateScreenHeight() {
-      this.screenHeight = window.innerHeight + "px"
-    }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-.app-sidebar {
-  z-index: 1020;
-}
-.app-sidebar-bg {
-  z-index: 1019;
-}
 </style>

@@ -1,6 +1,6 @@
 <template>
   <div class="playspace relative rounded-lg bg-gray-200">
-    <nuxt-link :to="`/${stream.username}`">
+    <nuxt-link :to="`/p/${stream.username}`">
       <small
         class="absolute bg-primary text-white rounded-lg m-2 py-1 px-2 uppercase"
       >

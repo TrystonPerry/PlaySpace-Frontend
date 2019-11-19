@@ -1,17 +1,17 @@
 <template>
-  <div class="bg-dark-1">
-    <AppNavbar />
+  <div class="bg-dark-1 text-gray-300">
+    <LandingNavbar />
     <div class="h-12"></div>
     <nuxt />
   </div>
 </template>
 
 <script>
-import AppNavbar from "@/components/navigation/AppNavbar"
+import LandingNavbar from "@/components/navigation/LandingNavbar"
 
 export default {
   components: {
-    AppNavbar
+    LandingNavbar
   }
 }
 </script>

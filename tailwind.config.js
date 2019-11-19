@@ -42,9 +42,15 @@ module.exports = {
       focus: "0 0 0 3px rgba(66,153,225,0.5)",
       none: "none"
     },
+    maxHeight: {
+      "screen-90": "90vh"
+    },
     maxWidth: {
       "64": "16rem",
       "96": "24rem"
+    },
+    minWidth: {
+      "64": "16rem"
     },
     textColor: theme => ({
       ...theme("colors"),
