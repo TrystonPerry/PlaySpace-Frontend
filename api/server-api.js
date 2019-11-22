@@ -44,7 +44,6 @@ export default {
   },
 
   getPlaySpace(handle) {
-    console.log(handle)
     return axis.get(`/channels/c/${handle}`)
   }
 }

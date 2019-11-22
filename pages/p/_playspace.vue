@@ -23,7 +23,7 @@ export default {
   head() {
     return require("@/meta/p/_playspace")({
       title: `${this.playSpace.username} - PlaySpace`,
-      desc: `Watch ${this.playSpace.username}'s streams on PlaySpace Live. Participate in chat, watch videos, play games together.`,
+      desc: this.playSpace.title,
       img: this.playSpace.avatar,
       url: this.$route.path
     })

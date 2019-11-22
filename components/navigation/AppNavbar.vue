@@ -8,11 +8,7 @@
           <p-icon icon="fas fa-bars" screen-reader-text="Menu" size="lg" />
         </button>
         <NavLink to="/live" class="font-bold">
-          <img
-            src="/img/playspace-icon-trans.png"
-            alt="PlaySpace logo"
-            class="h-full"
-          />
+          <img src="/img/playspace-icon-trans.png" alt="PlaySpace logo" class="h-full" />
           <span>PlaySpace</span>
         </NavLink>
         <NavLink to="/categories" class="hidden sm:block">
@@ -34,12 +30,8 @@
             class="w-12 h-12 rounded-full p-1"
           />
         </li>
-        <li class="hidden md:block lg:mr-2 font-medium text-lg">
-          {{ $route.params.playspace }}
-        </li>
-        <li class="hidden lg:block">
-          Playing some Jackbox Party Pack with you guys.
-        </li>
+        <li class="hidden md:block lg:mr-2 font-medium text-lg">{{ playSpace.username }}</li>
+        <li class="hidden lg:block">{{ playSpace.title }}</li>
       </ul>
       <ul class="list-none flex items-center">
         <li class="hidden sm:block px-1 py-2">
@@ -70,6 +62,12 @@ export default {
 
   components: {
     NavLink
+  },
+
+  watch: {
+    async "$route.params.playspace"(value) {
+      this.playSpace = await API.getPlaySpace(value)
+    }
   },
 
   methods: {

@@ -1,34 +1,12 @@
 <template>
   <div ref="videos" class="relative flex flex-wrap items-center justify-center">
-    <video
-      src="https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_20mb.mp4"
-      class="video"
-    ></video>
     <iframe
-      src="https://www.youtube.com/embed/dQw4w9WgXcQ"
+      src="https://www.youtube.com/embed/5he75Jftp1Y"
       frameborder="0"
       allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
       allowfullscreen
       class="video"
     ></iframe>
-    <iframe
-      src="https://player.twitch.tv/?channel=manvsgame&enableExtensions=true&muted=true&player=popout&volume=0.39"
-      frameborder="0"
-      allowfullscreen
-      class="video"
-    ></iframe>
-    <video
-      src="https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_20mb.mp4"
-      class="video"
-    ></video>
-    <video
-      src="https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_20mb.mp4"
-      class="video"
-    ></video>
-    <video
-      src="https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_20mb.mp4"
-      class="video"
-    ></video>
   </div>
 </template>
 
@@ -38,8 +16,8 @@ import _ from "@/functions/_"
 export default {
   mounted() {
     this.setProperSize()
-    this.setProperSizeThrottled = _.throttle(this.setProperSize, 100)
-    window.addEventListener("resize", this.setProperSizeThrottled)
+    window.addEventListener("resize", this.setProperSize)
+
     this.unsubscribeFromActions = this.$store.subscribeAction(async () => {
       await this.$nextTick()
       // TODO: check if event is of type scroll and throttle
@@ -48,7 +26,7 @@ export default {
   },
 
   beforeDestroy() {
-    window.removeEventListener("resize", this.setProperSizeThrottled)
+    window.removeEventListener("resize", this.setProperSize)
     this.unsubscribeFromActions()
   },
 
