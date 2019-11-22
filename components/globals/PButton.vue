@@ -10,8 +10,15 @@
 </template>
 
 <script>
-const variants = ["primary", "primary-hover", "white", "white-outline", "dark"]
-const sizes = ["sm", "md", "lg"]
+const variants = [
+  "none",
+  "primary",
+  "primary-hover",
+  "white",
+  "white-outline",
+  "dark"
+]
+const sizes = ["xs", "sm", "md", "lg"]
 
 export default {
   props: {
@@ -35,6 +42,8 @@ export default {
   computed: {
     computedSize() {
       switch (this.size) {
+        case "xs":
+          return "px-1"
         case "sm":
           return "py-1 px-2"
         case "md":

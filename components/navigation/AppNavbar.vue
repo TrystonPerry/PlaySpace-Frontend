@@ -28,9 +28,9 @@
         style="left:50%;transform:translateX(-50%)"
       >
         <li class="md:mr-2">
-          <img
-            src="https://pbs.twimg.com/profile_images/1108106619978547202/edEc1d0C_400x400.jpg"
-            alt=""
+          <p-avatar
+            :avatar="playSpace.avatar"
+            :alt="`${playSpace.username} - PlaySpace`"
             class="w-12 h-12 rounded-full p-1"
           />
         </li>
@@ -55,10 +55,19 @@
 
 <script>
 import { mapActions } from "vuex"
+import API from "@/api/server-api"
 
 import NavLink from "./NavLink"
 
 export default {
+  data: () => ({
+    playSpace: {}
+  }),
+
+  async mounted() {
+    this.playSpace = await API.getPlaySpace(this.$route.params.playspace)
+  },
+
   components: {
     NavLink
   },

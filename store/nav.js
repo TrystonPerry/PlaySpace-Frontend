@@ -2,7 +2,7 @@ export default {
   state: () => ({
     side: {
       left: {
-        isShown: false
+        isShown: true
       }
     }
   }),

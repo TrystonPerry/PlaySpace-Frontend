@@ -1,4 +1,6 @@
-const BASE_URL = process.env.VUE_APP_API_URL || "https://api.playspace.tv"
+const BASE_URL =
+  // process.env.VUE_APP_API_URL || "https://pstv-api-beta.herokuapp.com"
+  process.env.VUE_APP_API_URL || "https://api.playspace.tv"
 
 const handleError = error => {
   console.error(error) // TODO better error handling
@@ -41,15 +43,8 @@ export default {
     return axis.get("/channels")
   },
 
-  getLiveChannels() {
-    return axis.get("/channels/live")
-  },
-
-  getChannel(username) {
-    return axis.get(`/channels/c/${username}`)
-  },
-
-  getViewCount(username) {
-    return axis.get(`/channels/c/${username}/viewCount`)
+  getPlaySpace(handle) {
+    console.log(handle)
+    return axis.get(`/channels/c/${handle}`)
   }
 }

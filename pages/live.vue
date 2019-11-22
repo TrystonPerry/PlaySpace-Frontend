@@ -7,9 +7,12 @@
       <li
         v-for="playSpace in playSpaces"
         :key="playSpace.username"
-        class="live__item w-full sm:max-w-64 rounded-lg p-1"
+        class="live__item w-full sm:max-w-64 p-1"
       >
-        <PlaySpace :stream="playSpace" class="w-full h-full shadow-reg" />
+        <PlaySpace
+          :stream="playSpace"
+          class="w-full h-full rounded-md shadow-reg"
+        />
       </li>
     </ul>
     <div v-else class="text-center">
@@ -34,14 +37,11 @@ export default {
     PlaySpace
   },
 
-  head: {
-    title: "Live - PlaySpace",
-    meta: [
-      { name: "description", content: "Browse all live public PlaySpaces" }
-    ]
-  },
+  head: require("@/meta/live")({
+    title: "Hello World"
+  }),
 
-  async asyncData({ context }) {
+  async asyncData() {
     const playSpaces = await API.getPlaySpaces()
 
     return { playSpaces }

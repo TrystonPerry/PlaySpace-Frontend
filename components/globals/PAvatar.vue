@@ -1,7 +1,7 @@
 <template>
   <div class="inline-block">
     <img
-      :src="$attrs.img || 'https://i.imgur.com/cvrQlUP.png'"
+      :src="computedAvatar"
       v-bind="$attrs"
       class="rounded-full inline-block"
       :class="`w-${computedSize} h-${computedSize}`"
@@ -12,6 +12,7 @@
 <script>
 export default {
   props: {
+    avatar: String,
     size: {
       type: String,
       default: "md",
@@ -27,16 +28,19 @@ export default {
         case "xs":
           return "4"
         case "sm":
-          return "8"
+          return "6"
         case "md":
-          return "12"
+          return "10"
         case "lg":
           return "24"
       }
+    },
+
+    computedAvatar() {
+      return this.avatar || "https://i.imgur.com/cvrQlUP.png"
     }
   }
 }
 </script>
 
-<style>
-</style>
+<style></style>

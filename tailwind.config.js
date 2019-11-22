@@ -26,6 +26,14 @@ module.exports = {
       primary: "#009dee",
       white: "#fff"
     }),
+    borderRadius: {
+      none: "0",
+      sm: ".125rem",
+      default: ".25rem",
+      md: ".5rem",
+      lg: "1rem",
+      full: "9999px"
+    },
     boxShadow: {
       default: "0 1px 3px 0 rgba(0, 0, 0, .1), 0 1px 2px 0 rgba(0, 0, 0, .06)",
       md:
@@ -43,6 +51,8 @@ module.exports = {
       none: "none"
     },
     maxHeight: {
+      "12": "3rem",
+      "64": "16rem",
       "screen-90": "90vh"
     },
     maxWidth: {

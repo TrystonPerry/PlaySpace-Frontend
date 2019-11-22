@@ -8,7 +8,7 @@
       :style="`height: ${screenHeight}`"
     >
       <AppSidebar
-        v-if="$store.state.nav.side.left.isShown"
+        v-show="$store.state.nav.side.left.isShown"
         class="h-100 shadow-reg"
       />
       <div class="flex-grow overflow-y-auto p-2 h-100 bg-dark-1">

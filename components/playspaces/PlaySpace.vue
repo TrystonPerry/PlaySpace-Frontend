@@ -1,12 +1,12 @@
 <template>
-  <div class="playspace relative rounded-lg bg-gray-200">
+  <div class="playspace relative rounded-md bg-gray-200">
     <nuxt-link :to="`/p/${stream.username}`">
       <small
-        class="absolute bg-primary text-white rounded-lg m-2 py-1 px-2 uppercase"
+        class="absolute bg-primary text-white rounded-md m-2 py-1 px-2 uppercase"
       >
         live
       </small>
-      <div class="w-full overflow-hidden rounded-t-lg">
+      <div class="w-full overflow-hidden rounded-md">
         <img :src="stream.screenshot.url" />
       </div>
       <div class="relative p-3">
@@ -21,7 +21,11 @@
             {{ truncatedTitle }}
           </h2>
           <h3 class="mb-3">
-            <p-avatar :src="stream.avatar" :alt="stream.username" size="sm" />
+            <p-avatar
+              :avatar="stream.avatar"
+              :alt="stream.username"
+              size="sm"
+            />
             <span>{{ stream.username }}</span>
           </h3>
           <span

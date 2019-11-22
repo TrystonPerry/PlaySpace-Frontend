@@ -15,6 +15,26 @@ module.exports = {
         name: "description",
         content:
           "Watch your favorite content together with your friends all from the click of a few buttons. No software, no hastle, no BS."
+      },
+      {
+        hid: "og:image",
+        property: "og:image",
+        content: "https://i.imgur.com/t2wBi3E.png"
+      },
+      {
+        hid: "twitter:image",
+        property: "twitter:image",
+        content: "https://i.imgur.com/t2wBi3E.png"
+      },
+      {
+        hid: "og:type",
+        property: "og:type",
+        content: "website"
+      },
+      {
+        hid: "twitter-card",
+        property: "twitter:card",
+        content: "summary_large_image"
       }
     ],
     link: [

@@ -1,6 +1,6 @@
 .p-link,
 .p-btn {
-  transition-duration: 200ms;
+  transition-duration: 100ms;
   @apply text-gray-300;
 
   &:hover {
@@ -48,4 +48,26 @@
   width: 1px;
   height: 1px;
   overflow: hidden;
+}
+
+// class used for firefox (must add to any scrollable elements)
+.scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #727272 #303030;
+}
+
+// scrollbar settings used in chromium and safari
+/* width */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #303030;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #727272;
 }
