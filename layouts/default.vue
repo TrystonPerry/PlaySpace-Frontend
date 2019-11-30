@@ -12,6 +12,10 @@ import LandingNavbar from "@/components/navigation/LandingNavbar"
 export default {
   components: {
     LandingNavbar
+  },
+
+  mounted() {
+    this.$store.dispatch("user/loginWithToken")
   }
 }
 </script>
@@ -25,6 +29,10 @@ html {
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
   box-sizing: border-box;
+}
+
+body {
+  background: #202020;
 }
 
 *,

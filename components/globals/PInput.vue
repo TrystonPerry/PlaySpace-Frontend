@@ -7,19 +7,17 @@
         title="Required"
         aria-hidden
         class="text-red-500"
-      >
-        *
-      </span>
+      >*</span>
     </span>
     <input
       v-if="['text', 'email', 'password'].indexOf(type) > -1"
       :type="type"
       v-bind="$attrs"
-      v-on="$listeners"
+      @input="$emit('input', $event.target.value)"
       class="rounded text-xl border border-gray-400 h-10 py-2 px-3 w-full"
       :class="invalid ? 'border-red-500' : ''"
     />
-    <small v-if="invalid" class="text-red-500">Invalid code</small>
+    <small v-if="invalid" class="text-red-500"></small>
   </label>
 </template>
 

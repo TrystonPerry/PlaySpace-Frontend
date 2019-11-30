@@ -33,7 +33,7 @@
         <li class="hidden md:block lg:mr-2 font-medium text-lg">{{ playSpace.username }}</li>
         <li class="hidden lg:block">{{ playSpace.title }}</li>
       </ul>
-      <ul class="list-none flex items-center">
+      <ul v-if="!isLoggedIn" class="list-none flex items-center">
         <li class="hidden sm:block px-1 py-2">
           <p-link to="/login" variant="primary-hover" size="sm">Log In</p-link>
         </li>
@@ -41,13 +41,16 @@
           <p-link to="/signup" variant="primary" size="sm">Sign Up</p-link>
         </li>
       </ul>
+      <div v-else class="list-none flex items-center">
+        <span>{{ $store.state.user.username }}</span>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import { mapActions } from "vuex"
-import API from "@/api/server-api"
+import { mapGetters, mapActions } from "vuex"
+import API from "@/api/api"
 
 import NavLink from "./NavLink"
 
@@ -56,17 +59,28 @@ export default {
     playSpace: {}
   }),
 
-  async mounted() {
-    this.playSpace = await API.getPlaySpace(this.$route.params.playspace)
-  },
-
   components: {
     NavLink
   },
 
+  computed: {
+    ...mapGetters({
+      isLoggedIn: "user/isLoggedIn"
+    })
+  },
+
   watch: {
-    async "$route.params.playspace"(value) {
-      this.playSpace = await API.getPlaySpace(value)
+    "$route.params.playspace": {
+      async handler(value) {
+        const { data, success } = await API.getPlaySpace(value)
+
+        if (!success) {
+          return
+        }
+
+        this.playSpace = data
+      },
+      immediate: true
     }
   },
 

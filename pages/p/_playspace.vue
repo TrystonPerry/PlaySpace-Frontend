@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import sAPI from "@/api/server-api"
+import API from "@/api/api"
 
 import VideoContainer from "@/components/playspaces/VideoContainer"
 
@@ -30,16 +30,16 @@ export default {
   },
 
   async asyncData({ params, error }) {
-    const playSpace = await sAPI.getPlaySpace(params.playspace)
+    const { data, success } = await API.getPlaySpace(params.playspace)
 
-    if (!playSpace.success) {
-      error({
+    if (!success) {
+      return error({
         statusCode: 404,
         message: "No channel with that username exists"
       })
     }
 
-    return { playSpace }
+    return { playSpace: data }
   }
 }
 </script>

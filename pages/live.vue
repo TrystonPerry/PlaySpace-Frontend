@@ -1,34 +1,33 @@
 <template>
   <div class="mx-auto">
-    <h1 class="text-3xl text-primary text-center font-medium mt-6 mb-2">
-      Live PlaySpaces
-    </h1>
+    <h1 class="text-3xl text-primary text-center font-medium mt-6 mb-2">Live PlaySpaces</h1>
     <ul v-if="playSpaces.length" class="flex flex-wrap justify-center">
       <li
         v-for="playSpace in playSpaces"
         :key="playSpace.username"
         class="live__item w-full sm:max-w-64 p-1"
       >
-        <PlaySpace
-          :stream="playSpace"
-          class="w-full h-full rounded-md shadow-reg"
-        />
+        <PlaySpace :stream="playSpace" class="w-full h-full rounded-md shadow-reg" />
       </li>
     </ul>
     <div v-else class="text-center">
-      <h2 class="text-lg mb-3">
-        There are currently no live Public PlaySpaces
-      </h2>
-      <p-link to="/login" variant="primary-outline" size="sm">Log In</p-link>
-      <span> or </span>
-      <p-link to="/signup" variant="primary" size="sm">Sign Up</p-link>
-      <span> to create or join your own. </span>
+      <h2 class="text-lg mb-3">There are currently no live Public PlaySpaces</h2>
+      <div v-if="!$store.state.user.username">
+        <p-link to="/login" variant="primary-hover" size="sm">Log In</p-link>
+        <span>or</span>
+        <p-link to="/signup" variant="primary" size="sm">Sign Up</p-link>
+        <span>to create or join your own.</span>
+      </div>
+      <div v-else>
+        <nuxt-link to="/create">Create</nuxt-link>
+        <span>a your own.</span>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import API from "@/api/server-api"
+import API from "@/api/api"
 
 import PlaySpace from "@/components/playspaces/PlaySpace"
 
@@ -42,9 +41,9 @@ export default {
   }),
 
   async asyncData() {
-    const playSpaces = await API.getPlaySpaces()
+    const { data, success } = await API.getPlaySpaces()
 
-    return { playSpaces }
+    return { playSpaces: data }
   }
 }
 </script>

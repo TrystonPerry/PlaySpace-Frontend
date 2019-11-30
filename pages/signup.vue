@@ -6,12 +6,10 @@
         Sign up to create PlaySpaces, participate in chat, and claim your own
         username.
       </h2>
-      <p-link to="/login" variant="primary-outline" size="sm">
-        Log In Instead
-      </p-link>
+      <p-link to="/login" variant="primary-hover" size="sm">Log In Instead</p-link>
     </div>
     <div class="w-full md:w-6/12 p-2">
-      <p-card class="">
+      <p-card class>
         <SignupForm />
       </p-card>
     </div>

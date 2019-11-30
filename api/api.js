@@ -1,32 +1,26 @@
 const BASE_URL = "http://localhost:3500"
 
-import store from "./store/index"
+import store from "@/store/user"
 
 const handleError = error => {
   console.error(error) // TODO better error handling
 }
 
 function getUsername() {
-  return store.getters.username
+  return store.state.username
 }
 
 const axis = {
   get(url, options) {
     return fetch(`${BASE_URL}${url}`, {
-      ...options,
-      headers: {
-        Authorization: localStorage.getItem("playspace-token"),
-        username: getUsername()
-      }
+      ...options
     })
       .then(async res => {
         const { status } = res
         const data = await res.json()
 
-        if (status !== 200) {
+        if (status !== 200 || !data.success) {
           handleError(data.error)
-        } else {
-          data.success = true
         }
         return data
       })
@@ -49,10 +43,8 @@ const axis = {
         const { status } = res
         const data = await res.json()
 
-        if (status !== 200) {
+        if (status !== 200 || !data.success) {
           handleError(data.error)
-        } else {
-          data.success = true
         }
         return data
       })
@@ -75,10 +67,8 @@ const axis = {
         const { status } = res
         const data = await res.json()
 
-        if (status !== 200) {
+        if (status !== 200 || !data.success) {
           handleError(data.error)
-        } else {
-          data.success = true
         }
         return data
       })
@@ -99,60 +89,12 @@ export default {
   // Channels
   //
 
-  getChannels() {
+  getPlaySpaces() {
     return axis.get("/channels")
   },
 
-  getLiveChannels() {
-    return axis.get("/channels/live")
-  },
-
-  getChannel(username) {
-    return axis.get(`/channels/c/${username}`)
-  },
-
-  updateChannel(username, channel) {
-    return axis.put(`/channels/c/${username}`, {
-      body: { channel }
-    })
-  },
-
-  getViewCount(username) {
-    return axis.get(`/channels/c/${username}/viewCount`)
-  },
-
-  //
-  // Stream
-  //
-
-  uploadScreenshot(username, screenshotURI) {
-    return axis.post(`/stream/screenshot/${username}`, {
-      body: { screenshotURI }
-    })
-  },
-
-  //
-  // Helper
-  //
-
-  getIceServers() {
-    return axis.get("/helper/ice-servers")
-  },
-
-  //
-  // Chat
-  //
-
-  async banUser(banData) {
-    return axis.post(`/chat/${banData.channelId}/ban`, { body: banData })
-  },
-
-  async getGif(id) {
-    return axis.get(`/chat/gif/${id}`)
-  },
-
-  async getGifs(query, offset) {
-    return axis.get(`/chat/gif/search?q=${query}&offset=${offset}`)
+  getPlaySpace(handle) {
+    return axis.get(`/channels/c/${handle}`)
   },
 
   //

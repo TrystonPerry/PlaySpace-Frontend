@@ -8,11 +8,7 @@
           <p-icon icon="fas fa-bars" screen-reader-text="Menu" size="lg" />
         </button>
         <NavLink to="/live" class="font-bold">
-          <img
-            src="/img/playspace-icon-trans.png"
-            alt="PlaySpace logo"
-            class="h-full"
-          />
+          <img src="/img/playspace-icon-trans.png" alt="PlaySpace logo" class="h-full" />
           <span>PlaySpace</span>
         </NavLink>
         <NavLink to="/categories" class="hidden sm:block">
@@ -22,7 +18,7 @@
           <span>About</span>
         </NavLink>
       </ul>
-      <ul class="list-none flex items-center">
+      <ul v-if="!$store.state.user.username" class="list-none flex items-center">
         <li class="hidden sm:block px-1 py-2">
           <p-link to="/login" variant="primary-hover" size="sm">Log In</p-link>
         </li>
@@ -30,6 +26,10 @@
           <p-link to="/signup" variant="primary" size="sm">Sign Up</p-link>
         </li>
       </ul>
+      <button v-else class="px-3 font-medium">
+        <p-avatar :src="$store.state.user.avatar" size="sm" />
+        <span class="hidden sm:inline-block ml-1">{{ $store.state.user.fullUsername }}</span>
+      </button>
     </div>
     <LandingSidebar v-if="showSidebar" @close="showSidebar = false" />
   </div>
