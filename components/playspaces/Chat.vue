@@ -19,32 +19,25 @@ export default {
   },
 
   data: () => ({
-    messages: [
-      {
-        username: "trystonperry",
-        avatar: "",
-        text: "Hello world!"
-      },
-      {
-        username: "trystonperry",
-        avatar: "",
-        text: "https://i.imgur.com/pNGaJrs.png"
-      },
-      {
-        username: "trystonperry",
-        avatar: "",
-        text:
-          "I love PlaySpace, it's the best video sharing platform out there! I'm totally not biased. https://playspace.tv"
-      },
-      {
-        username: "trystonperry",
-        avatar: "",
-        text: "https://media3.giphy.com/media/3oEjHCACoXye1k10GY/giphy.gif"
+    messages: []
+  }),
+
+  mounted() {
+    this.$socket.API.emit("chat-join", { id: this.$route.params.playspace })
+  },
+
+  beforeDestroy() {
+    this.$socket.API.emit("chat-leave")
+  },
+
+  sockets: {
+    API: {
+      "chat-message"(message) {
+        this.messages.push(...message)
       }
-    ]
-  })
+    }
+  }
 }
 </script>
 
-<style>
-</style>
+<style></style>

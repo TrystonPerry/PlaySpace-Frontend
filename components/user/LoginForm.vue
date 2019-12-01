@@ -7,7 +7,6 @@
       type="text"
       label="Username or Email"
       required
-      :invalid="$v.username.$dirty"
       class="mb-2"
     />
     <p-input
@@ -16,7 +15,6 @@
       type="password"
       label="Password"
       required
-      :invalid="$v.password.$dirty"
       class="mb-2"
     />
     <p-input
@@ -25,7 +23,6 @@
       type="text"
       label="Google Authenticator Code (2FA)"
       required
-      :invalid="$v.code.$dirty"
       class="mb-2"
     />
     <small v-if="error" class="text-red-500">{{ error }}</small>
@@ -35,8 +32,16 @@
       type="submit"
       variant="primary"
       class="mt-4 w-full"
-    >Log In</p-btn>
-    <p-btn v-else @click="onTwoFALogin" type="submit" variant="primary" class="mt-4 w-full">Log In</p-btn>
+      >Log In</p-btn
+    >
+    <p-btn
+      v-else
+      @click="onTwoFALogin"
+      type="submit"
+      variant="primary"
+      class="mt-4 w-full"
+      >Log In</p-btn
+    >
   </form>
 </template>
 
@@ -61,8 +66,6 @@ export default {
     }),
 
     async onLogin() {
-      this.$v.$touch()
-
       const { data, success, error } = await this.login({
         username: this.username,
         password: this.password

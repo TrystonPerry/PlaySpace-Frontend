@@ -22,7 +22,10 @@
         <span>About</span>
       </NavLink>
       <div class="flex-grow"></div>
-      <ul class="list-none flex text-center px-1">
+      <ul
+        v-if="!$store.state.user.username"
+        class="list-none flex text-center px-1"
+      >
         <li class="px-1 py-2 w-6/12">
           <p-link to="/signup" variant="primary" size="sm" class="w-full">
             Sign Up

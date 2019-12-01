@@ -1,13 +1,7 @@
 const BASE_URL = "http://localhost:3500"
 
-import store from "@/store/user"
-
 const handleError = error => {
   console.error(error) // TODO better error handling
-}
-
-function getUsername() {
-  return store.state.username
 }
 
 const axis = {
@@ -33,8 +27,7 @@ const axis = {
       headers: {
         ...options.headers,
         "Content-Type": "application/json",
-        Authorization: localStorage.getItem("playspace-token"),
-        username: getUsername()
+        Authorization: localStorage.getItem("playspace-token")
       },
       body: JSON.stringify(options.body),
       method: "POST"
@@ -57,8 +50,7 @@ const axis = {
       headers: {
         ...options.headers,
         "Content-Type": "application/json",
-        Authorization: localStorage.getItem("playspace-token"),
-        username: getUsername()
+        Authorization: localStorage.getItem("playspace-token")
       },
       body: JSON.stringify(options.body),
       method: "PUT"
@@ -89,12 +81,20 @@ export default {
   // Channels
   //
 
-  getPlaySpaces() {
-    return axis.get("/channels")
+  async getPlaySpaces() {
+    return await axis.get("/channels")
   },
 
-  getPlaySpace(handle) {
-    return axis.get(`/channels/c/${handle}`)
+  async getPlaySpace(id) {
+    return await axis.get(`/channels/c/${id}`)
+  },
+
+  async createChannel(body) {
+    return await axis.post(`/channels/create`, { body })
+  },
+
+  async checkChannelId(id) {
+    return await axis.get(`/channels/create/id/${id}`)
   },
 
   //

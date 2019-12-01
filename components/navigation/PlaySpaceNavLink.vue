@@ -1,9 +1,19 @@
 <template>
-  <li class="bg-black-500 shadow hover:bg-black-400 hover:shadow-reg rounded-lg">
-    <nuxt-link :to="`/p/${playSpace.username}`" class="flex" :class="{ 'items-center': !isLive }">
-      <p-avatar :avatar="playSpace.avatar" size="md" class="flex-shrink-0 mr-1" />
+  <li
+    class="bg-black-500 shadow hover:bg-black-400 hover:shadow-reg rounded-lg"
+  >
+    <nuxt-link
+      :to="`/p/${playSpace.id}`"
+      class="flex"
+      :class="{ 'items-center': !isLive }"
+    >
+      <p-avatar
+        :avatar="playSpace.avatar"
+        size="md"
+        class="flex-shrink-0 mr-1"
+      />
       <div>
-        <h3 class="font-medium">{{ playSpace.username }}</h3>
+        <h3 class="font-medium">{{ playSpace.channelName }}</h3>
         <div v-if="isLive">
           <p class="font-thin text-sm">{{ playSpace.title }}</p>
           <div>

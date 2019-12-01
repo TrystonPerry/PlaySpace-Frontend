@@ -39,7 +39,7 @@ export default {
   actions: {
     async signup({ commit }, userData) {
       let res = await API.signup(userData)
-      if (!res.error) {
+      if (res.success) {
         commit("SET_USER", res.data)
       }
       return res

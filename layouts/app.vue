@@ -2,12 +2,19 @@
   <div>
     <AppNavbar />
     <div class="h-12"></div>
-    <div class="flex" style="overflow:hidden" :style="`height: ${screenHeight}`">
-      <AppSidebar v-show="$store.state.nav.side.left.isShown" class="h-100 shadow-reg" />
+    <div
+      class="flex"
+      style="overflow:hidden"
+      :style="`height: ${screenHeight}`"
+    >
+      <AppSidebar
+        v-show="$store.state.nav.side.left.isShown"
+        class="h-100 shadow-reg"
+      />
       <div class="flex-grow overflow-y-auto p-2 h-100 bg-dark-1">
         <nuxt />
       </div>
-      <PlaySpaceSidebar class="shadow-reg" />
+      <PlaySpaceSidebar :key="$route.params.playspace" class="shadow-reg" />
     </div>
   </div>
 </template>
