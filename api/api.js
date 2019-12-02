@@ -97,6 +97,10 @@ export default {
     return await axis.get(`/channels/create/id/${id}`)
   },
 
+  async updateChannel(id, body) {
+    return await axis.put(`/channels/c/${id}`, { body })
+  },
+
   //
   // User
   //

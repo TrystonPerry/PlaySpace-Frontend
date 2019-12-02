@@ -8,11 +8,7 @@
           <p-icon icon="fas fa-bars" screen-reader-text="Menu" size="lg" />
         </button>
         <NavLink to="/live" class="font-bold">
-          <img
-            src="/img/playspace-icon-trans.png"
-            alt="PlaySpace logo"
-            class="h-full"
-          />
+          <img src="/img/playspace-icon-trans.png" alt="PlaySpace logo" class="h-full" />
           <span>PlaySpace</span>
         </NavLink>
       </ul>
@@ -22,20 +18,23 @@
         style="left:50%;transform:translateX(-50%)"
       >
         <li class="md:mr-2">
-          <p-avatar
-            :avatar="playSpace.avatar"
-            class="w-12 h-12 rounded-full p-1"
-          />
+          <p-avatar :avatar="playSpace.avatar" class="w-12 h-12 rounded-full p-1" />
         </li>
         <li class="hidden md:block lg:mr-2 font-medium text-lg">
-          {{ playSpace.channelName }}
+          <p-tooltip :text="`/p/${playSpace.id}`">{{ playSpace.channelName }}</p-tooltip>
         </li>
-        <li class="hidden lg:block">{{ playSpace.title }}</li>
+        <li class="hidden lg:block">
+          <p-tooltip :text="playSpace.title">{{ playSpace.title | truncate(32) }}</p-tooltip>
+        </li>
+        <li>
+          <p-tooltip text="Edit PlaySpace">
+            <p-btn @click="isEdit = !isEdit" variant="none" size="sm" class="mx-1">
+              <i class="fas fa-cog"></i>
+            </p-btn>
+          </p-tooltip>
+        </li>
       </ul>
-      <ul
-        v-if="!$store.state.user.username"
-        class="list-none flex items-center"
-      >
+      <ul v-if="!$store.state.user.username" class="list-none flex items-center">
         <li class="hidden sm:block px-1 py-2">
           <p-link to="/login" variant="primary-hover" size="sm">Log In</p-link>
         </li>
@@ -45,6 +44,9 @@
       </ul>
       <AccountDropdown v-else />
     </div>
+    <p-modal v-model="isEdit" class="text-gray-200">
+      <EditPlaySpace @edit="isEdit = false" />
+    </p-modal>
   </div>
 </template>
 
@@ -54,15 +56,18 @@ import API from "@/api/api"
 
 import NavLink from "./NavLink"
 import AccountDropdown from "./AccountDropdown"
+import EditPlaySpace from "@/components/playspaces/EditPlaySpace"
 
 export default {
   components: {
     NavLink,
-    AccountDropdown
+    AccountDropdown,
+    EditPlaySpace
   },
 
   data: () => ({
-    playSpace: {}
+    playSpace: {},
+    isEdit: false
   }),
 
   computed: {

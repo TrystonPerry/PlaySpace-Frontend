@@ -65,7 +65,8 @@ module.exports = {
   plugins: [
     "~/plugins/plugins.js",
     "~/plugins/socket.js",
-    "~/plugins/globals.js"
+    "~/plugins/globals.js",
+    "~/plugins/filters.js"
   ],
   /*
    ** Nuxt.js dev-modules

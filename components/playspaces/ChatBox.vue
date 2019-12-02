@@ -2,30 +2,22 @@
   <div class="relative">
     <textarea
       v-model="text"
-      @keydown.enter="sendMessage"
+      @keydown.enter.prevent="sendMessage"
       class="w-full h-24 rounded-md bg-black-500 hover:bg-black-400 text-xs p-1"
       placeholder="Enter a message..."
-    >
-    </textarea>
+    ></textarea>
     <div class="absolute flex bottom-0 right-0 py-2 px-1 items-center">
       <p-btn variant="none" size="xs" class="text-gray-200 mr-1">
         <p-icon icon="far fa-smile" size="sm" />
       </p-btn>
-      <p-btn
-        variant="none"
-        size="xs"
-        class="text-gray-200 text-xs font-medium h-4 mr-1 rounded"
-      >
-        GIF
-      </p-btn>
+      <p-btn variant="none" size="xs" class="text-gray-200 text-xs font-medium h-4 mr-1 rounded">GIF</p-btn>
       <p-btn
         @click="sendMessage"
         variant="primary"
         size="xs"
+        :disabled="text.length > 280"
         class="text-xs px-2"
-      >
-        Send
-      </p-btn>
+      >Send</p-btn>
     </div>
   </div>
 </template>
@@ -56,17 +48,24 @@ export default {
     }
   },
 
+  sockets: {
+    API: {
+      reconnect() {
+        this.$socket.API.emit("chat-auth", {
+          id: this.$route.params.playspace,
+          token: this.$store.state.user.token
+        })
+      }
+    }
+  },
+
   methods: {
     sendMessage() {
-      try {
-        this.$socket.API.emit("chat-message", this.text)
-      } catch (err) {
-        console.error(err)
-      }
-      this.message = ""
-    },
+      if (this.text.length > 280) return
 
-    checkMessage() {}
+      this.$socket.API.emit("chat-message", this.text)
+      this.text = ""
+    }
   }
 }
 </script>

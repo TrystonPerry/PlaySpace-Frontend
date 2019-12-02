@@ -6,7 +6,7 @@
         type="checkbox"
         v-bind="$attrs"
         @input="$emit('input', !value)"
-        class="w-6 h-6 mr-2 flex-shrink-0"
+        class="w-6 h-6 mr-2 flex-shrink-0 bg-gray-200 text-gray-800 rounded border"
       />
       <span v-if="label" :class="{ 'visually-hidden': screenReaderOnly }">
         {{ label }}
@@ -15,13 +15,13 @@
           title="Required"
           aria-hidden
           class="text-red-500"
-          >*</span
-        >
+        >*</span>
       </span>
       <input
         v-if="['text', 'email', 'password'].indexOf(type) > -1"
         :type="type"
         v-bind="$attrs"
+        :value="value"
         @input="$emit('input', $event.target.value)"
         @blur="$emit('blur')"
         class="rounded text-xl border text-gray-800 h-10 py-2 px-3 w-full"
