@@ -7,12 +7,8 @@
       class="flex"
       :class="{ 'items-center': !isLive }"
     >
-      <p-avatar
-        :avatar="playSpace.avatar"
-        size="md"
-        class="flex-shrink-0 mr-1"
-      />
-      <div>
+      <p-avatar :avatar="playSpace.avatar" size="md" class="flex-shrink-0" />
+      <div class="hidden md:block ml-1">
         <h3 class="font-medium">{{ playSpace.channelName }}</h3>
         <div v-if="isLive">
           <p class="font-thin text-sm">{{ playSpace.title }}</p>

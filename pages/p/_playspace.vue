@@ -1,11 +1,17 @@
 <template>
-  <div class="playspace">
+  <div class="playspace h-full" style="max-height:100%">
     <div class="visually-hidden">
       <h1>{{ playSpace.username }}</h1>
       <h2>{{ playSpace.title }}</h2>
     </div>
-    <VideoContainer class="video-container" />
-    <div class="mt-3"></div>
+    <div class="flex flex-col h-full">
+      <VideoContainer class="video-container p-2" />
+      <PlaySpaceMobileSidebar
+        v-if="$store.state.nav.isMobile"
+        :key="$route.params.playspace"
+        class="flex-grow mt-2"
+      />
+    </div>
   </div>
 </template>
 
@@ -13,12 +19,14 @@
 import API from "@/api/api"
 
 import VideoContainer from "@/components/playspaces/VideoContainer"
+import PlaySpaceMobileSidebar from "@/components/navigation/PlaySpaceMobileSidebar"
 
 export default {
   layout: "app",
 
   components: {
-    VideoContainer
+    VideoContainer,
+    PlaySpaceMobileSidebar
   },
 
   head() {

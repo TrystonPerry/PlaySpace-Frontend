@@ -1,6 +1,7 @@
 <template>
   <div class="bg-black-500 rounded-md overflow-y-auto scrollbar relative" id="chat">
     <ul class="list-style-none flex flex-col">
+      <li class="opacity-50 text-xs px-2 py-1">Welcome to the chat, say hi and start a conversation!</li>
       <ChatMessage v-for="(message, i) in messages" :key="i" :message="message" />
     </ul>
   </div>
@@ -84,4 +85,8 @@ export default {
 }
 </script>
 
-<style></style>
+<style lang="scss" scoped>
+ul {
+  max-height: 1px;
+}
+</style>
