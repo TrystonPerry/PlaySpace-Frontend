@@ -6,18 +6,18 @@
       <div class="flex my-1">
         <p-btn
           @click="isTextChat = true"
-          :variant="isTextChat ? 'primary' : 'none'"
           size="sm"
-          class="w-6/12"
+          class="w-6/12 opacity-50"
+          :class="{ 'underline opacity-100': isTextChat }"
         >
           <p-icon icon="fas fa-comment-alt" />
           Text Chat
         </p-btn>
         <p-btn
           @click="isTextChat = false"
-          :variant="!isTextChat ? 'primary' : 'none'"
           size="sm"
-          class="w-6/12"
+          class="w-6/12 opacity-50"
+          :class="{ 'underline opacity-100': !isTextChat }"
         >
           <p-icon icon="fas fa-phone-alt" />
           Voice Chat

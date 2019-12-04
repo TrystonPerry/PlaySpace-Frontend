@@ -1,6 +1,6 @@
 <template>
   <div
-    class="playspace-sidebar flex flex-col bg-dark-3 text-gray-300 w-64 h-full min-w-64 px-1"
+    class="playspace-sidebar relative flex flex-col bg-dark-3 text-gray-300 w-64 h-full min-w-64 px-1"
   >
     <NavDivider class="w-full mt-2">
       <h2>Voice Chat</h2>
@@ -32,6 +32,7 @@
     </NavDivider>
     <Chat class="flex-grow mb-1" />
     <ChatBox />
+    <div class="playspace-sidebar__resize absolute top-0 h-full"></div>
   </div>
 </template>
 
@@ -55,6 +56,12 @@ export default {
 .playspace-sidebar {
   resize: horizontal;
   overflow-x: auto;
+
+  &__resize {
+    cursor: ew-resize;
+    width: 4px;
+    left: 0px;
+  }
 }
 li {
   transition-duration: 100ms;
