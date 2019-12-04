@@ -59,7 +59,7 @@ export default {
 </script>
 
 <style>
-input[:disabled] {
+input:disabled {
   @apply text-gray-600;
 }
 </style>
