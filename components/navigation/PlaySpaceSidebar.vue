@@ -1,5 +1,7 @@
 <template>
-  <div class="flex flex-col bg-dark-3 text-gray-300 h-full w-64 min-w-64 px-1">
+  <div
+    class="playspace-sidebar flex flex-col bg-dark-3 text-gray-300 w-64 h-full min-w-64 px-1"
+  >
     <NavDivider class="w-full mt-2">
       <h2>Voice Chat</h2>
     </NavDivider>
@@ -50,6 +52,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.playspace-sidebar {
+  resize: horizontal;
+  overflow-x: auto;
+}
 li {
   transition-duration: 100ms;
 }

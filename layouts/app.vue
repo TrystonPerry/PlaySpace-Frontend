@@ -11,10 +11,14 @@
         v-show="$store.state.nav.side.left.isShown"
         class="h-100 shadow-reg"
       />
-      <div class="flex-grow overflow-y-auto p-2 h-100 bg-dark-1">
+      <div class="flex-grow overflow-y-auto h-100 bg-dark-1">
         <nuxt />
       </div>
-      <PlaySpaceSidebar :key="$route.params.playspace" class="shadow-reg" />
+      <PlaySpaceSidebar
+        v-if="!$store.state.nav.isMobile"
+        :key="$route.params.playspace"
+        class="shadow-reg"
+      />
     </div>
   </div>
 </template>
@@ -36,17 +40,27 @@ export default {
   }),
 
   mounted() {
+    // Fetch localStorage data for
+    this.$store.dispatch("nav/loadFromLocalStorage")
+    // Attempt to login with user token
     this.$store.dispatch("user/loginWithToken")
-    this.updateScreenHeight()
-    window.addEventListener("resize", this.updateScreenHeight)
+    // Add listener for updating screen height
+    this.onResize()
+    window.addEventListener("resize", this.onResize)
   },
 
   beforeDestroy() {
-    window.removeEventListener("resize", this.updateScreenHeight)
+    window.removeEventListener("resize", this.onResize)
   },
 
   methods: {
-    updateScreenHeight() {
+    onResize(e) {
+      if (window.innerWidth < 768) {
+        this.$store.dispatch("nav/setMobile", true)
+      } else {
+        this.$store.dispatch("nav/setMobile", false)
+      }
+      // Update screen height
       this.screenHeight = window.innerHeight - 48 + "px"
     }
   }

@@ -1,8 +1,11 @@
 <template>
   <div class="relative">
+    <small v-if="errors.text" class="text-red-500">
+      {{ errors.text }}
+    </small>
     <textarea
       v-model="text"
-      @keydown.enter="sendMessage"
+      @keydown.prevent.enter="sendMessage"
       class="w-full h-24 rounded-md bg-black-500 hover:bg-black-400 text-xs p-1"
       placeholder="Enter a message..."
     >
@@ -27,13 +30,20 @@
         Send
       </p-btn>
     </div>
+    <div v-if="isLogin" class="absolute top-0 left-0 bg-black-300">
+      You need to login!
+    </div>
   </div>
 </template>
 
 <script>
 export default {
   data: () => ({
-    text: ""
+    text: "",
+    errors: {
+      text: ""
+    },
+    isLogin: false
   }),
 
   computed: {
@@ -43,6 +53,11 @@ export default {
   },
 
   watch: {
+    text() {
+      this.checkMessage()
+    },
+
+    // If user login state changes, authenticate user
     "$store.state.user.token": {
       handler(token) {
         if (token) {
@@ -50,6 +65,8 @@ export default {
             id: this.$route.params.playspace,
             token
           })
+        } else {
+          // TODO: de-auth user
         }
       },
       immediate: true
@@ -58,15 +75,34 @@ export default {
 
   methods: {
     sendMessage() {
-      try {
-        this.$socket.API.emit("chat-message", this.text)
-      } catch (err) {
-        console.error(err)
+      if (!this.isLoggedIn) {
+        this.isLogin = true
+        return
       }
-      this.message = ""
+
+      if (!this.checkMessage()) {
+        return
+      }
+
+      this.$socket.API.emit("chat-message", this.text)
+      this.text = ""
     },
 
-    checkMessage() {}
+    checkMessage() {
+      const { text } = this
+
+      if (!text.length) {
+        this.errors.text = ""
+        return false
+      }
+      if (text.length > 280) {
+        this.errors.text = "Your message must be less that 280 characters."
+        return false
+      }
+
+      this.errors.text = ""
+      return true
+    }
   }
 }
 </script>

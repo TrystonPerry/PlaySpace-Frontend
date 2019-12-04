@@ -1,18 +1,21 @@
 <template>
   <div
-    class="app-sidebar bg-dark-4 text-gray-300 h-full w-full max-w-64 min-w-64 shadow-reg"
+    class="app-sidebar bg-dark-4 text-gray-300 h-full w-12 min-w-12 flex-shrink-0 md:max-w-64 md:min-w-64 shadow-reg"
   >
     <ul class="flex flex-col list-style-none h-full">
-      <NavLink to="/live">
-        <span>Live</span>
+      <NavLink to="/live" class="w-full">
+        <i class="fas fa-globe"></i>
+        <span class="hidden md:block ml-2">Live</span>
       </NavLink>
-      <NavLink to="/categories">
-        <span>Browse</span>
+      <NavLink to="/categories" class="w-full">
+        <i class="fas fa-book"></i>
+        <span class="hidden md:block ml-2">Browse</span>
       </NavLink>
-      <NavLink to="/">
-        <span>About</span>
+      <NavLink to="/" class="w-full">
+        <i class="fab fa-amilia"></i>
+        <span class="hidden md:block ml-2">About</span>
       </NavLink>
-      <NavDivider>
+      <NavDivider class="hidden md:flex">
         <h2>Your PlaySpaces</h2>
       </NavDivider>
       <li class="flex-grow overflow-y-auto scrollbar">
