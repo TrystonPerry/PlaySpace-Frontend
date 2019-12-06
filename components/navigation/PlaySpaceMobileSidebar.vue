@@ -7,6 +7,7 @@
         <p-btn
           @click="isTextChat = true"
           size="sm"
+          variant="none"
           class="w-6/12 opacity-50"
           :class="{ 'underline opacity-100': isTextChat }"
         >
@@ -16,6 +17,7 @@
         <p-btn
           @click="isTextChat = false"
           size="sm"
+          variant="none"
           class="w-6/12 opacity-50"
           :class="{ 'underline opacity-100': !isTextChat }"
         >

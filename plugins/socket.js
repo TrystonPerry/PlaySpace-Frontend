@@ -6,7 +6,7 @@ if (process.client) {
   Vue.use(
     new VueSocketIO({
       debug: true,
-      connection: "http://localhost:3500",
+      connection: "https://pstv-api-super-beta.herokuapp.com",
       options: {
         useConnectionNamespace: true,
         namespaceName: "API"
@@ -14,14 +14,14 @@ if (process.client) {
     })
   )
 
-  // Vue.use(
-  //   new VueSocketIO({
-  //     debug: false,
-  //     connection: "https://sfu.beta.playspace.tv",
-  //     options: {
-  //       useConnectionNamespace: true,
-  //       namespaceName: "SFU"
-  //     }
-  //   })
-  // )
+  Vue.use(
+    new VueSocketIO({
+      debug: false,
+      connection: "http://localhost:3000",
+      options: {
+        useConnectionNamespace: true,
+        namespaceName: "SFU"
+      }
+    })
+  )
 }

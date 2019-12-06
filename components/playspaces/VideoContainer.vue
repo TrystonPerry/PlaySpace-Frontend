@@ -1,26 +1,36 @@
 <template>
-  <div ref="videos" class="relative flex flex-wrap items-center justify-center">
-    <iframe
-      src="https://www.youtube.com/embed/5he75Jftp1Y"
-      frameborder="0"
-      allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-      allowfullscreen
-      class="video"
-    ></iframe>
+  <div>
+    <div ref="videos" class="relative flex flex-wrap items-center justify-center">
+      <Producer v-if="$store.state.stream.video.producer" class="video" />
+    </div>
+    <!-- <div v-if="showControls && !$store.state.nav.isMobile"> -->
+      <AddVideoStream />
+    <!-- </div> -->
   </div>
 </template>
 
 <script>
 import _ from "@/functions/_"
 
+import Producer from "./stream/Producer"
+import AddVideoStream from "./stream/AddVideoStream"
+
 export default {
+  components: {
+    Producer,
+    AddVideoStream
+  },
+
+  data: () => ({
+    showControls: true
+  }),
+
   mounted() {
     this.setProperSize()
     window.addEventListener("resize", this.setProperSize)
 
     this.unsubscribeFromActions = this.$store.subscribeAction(async () => {
       await this.$nextTick()
-      // TODO: check if event is of type scroll and throttle
       this.setProperSize()
     })
   },
