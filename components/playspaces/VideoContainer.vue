@@ -1,6 +1,7 @@
 <template>
   <div>
     <div ref="videos" class="relative flex flex-wrap items-center justify-center">
+      <MultiConsumer v-if="producerIds.length" :producerIds="producerIds" class="video" />
       <Producer v-if="$store.state.stream.video.producer" class="video" />
     </div>
     <!-- <div v-if="showControls && !$store.state.nav.isMobile"> -->
@@ -12,13 +13,22 @@
 <script>
 import _ from "@/functions/_"
 
+import MultiConsumer from "./stream/MultiConsumer"
 import Producer from "./stream/Producer"
 import AddVideoStream from "./stream/AddVideoStream"
 
 export default {
   components: {
+    MultiConsumer,
     Producer,
     AddVideoStream
+  },
+
+  props: {
+    producerIds: {
+      type: Array,
+      required: true
+    }
   },
 
   data: () => ({

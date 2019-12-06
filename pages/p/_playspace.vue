@@ -1,11 +1,11 @@
 <template>
-  <div class="playspace h-full" style="max-height:100%">
+  <div :key="$route.params.playspace" class="playspace h-full" style="max-height:100%">
     <div class="visually-hidden">
-      <h1>{{ playSpace.username }}</h1>
+      <h1>{{ playSpace.channelName }}</h1>
       <h2>{{ playSpace.title }}</h2>
     </div>
     <div class="flex flex-col h-full">
-      <VideoContainer class="video-container p-2" />
+      <VideoContainer v-if="producerIds.length" :producerIds="producerIds" class="video-container p-2" />
       <PlaySpaceMobileSidebar
         v-if="$store.state.nav.isMobile"
         :key="$route.params.playspace"
@@ -42,6 +42,10 @@ export default {
     })
   },
 
+  data: () => ({
+    producerIds: []
+  }),
+
   async asyncData({ params, error }) {
     const { data, success } = await API.getPlaySpace(params.playspace)
 
@@ -74,6 +78,8 @@ export default {
         if (!con.device.canProduce("audio")) {
           return alert("You cant produce audio")
         }
+
+        this.producerIds = roomData.producerIds
       },
 
       "room-transport-created": async function(transportOptions) {
