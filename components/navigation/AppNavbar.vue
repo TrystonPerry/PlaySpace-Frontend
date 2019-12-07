@@ -79,6 +79,8 @@ export default {
   watch: {
     "$route.params.playspace": {
       async handler(value) {
+        if (!value) return
+
         const { data, success } = await API.getPlaySpace(value)
 
         if (!success) {
