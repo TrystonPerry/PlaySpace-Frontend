@@ -4,9 +4,9 @@
       <MultiConsumer v-if="producerIds.length && recvTransport" @connect="setProperSize" :producerIds="producerIds" :device="device" :recvTransport="recvTransport" class="video" />
       <Producer v-if="$store.state.stream.video.producer" :sendTransport="sendTransport" class="video" />
     </div>
-    <!-- <div v-if="showControls && !$store.state.nav.isMobile"> -->
+    <div v-if="showControls && !$store.state.nav.isMobile">
       <AddVideoStream />
-    <!-- </div> -->
+    </div>
   </div>
 </template>
 

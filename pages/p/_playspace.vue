@@ -96,6 +96,12 @@ export default {
 
         this.connectTransport(this.sendTransport)
         this.connectTransport(this.recvTransport)
+      },
+
+      "producer-stream": async function(producerOptions) {
+        const { id } = producerOptions
+        this.producerIds.push(id)
+        this.subscribeToProducerClosed(id)
       }
     }
   },
@@ -116,6 +122,12 @@ export default {
         })
 
         this.sockets.SFU.subscribe("room-transport-connected", callback)
+      })
+    },
+
+    subscribeToProducerClosed(producerId) {
+      this.sockets.SFU.subscribe(`producer-stream-closed-${producerId}`, () => {
+        this.producerIds.splice(this.producerIds.indexOf(producerId), 1)
       })
     }
   }
