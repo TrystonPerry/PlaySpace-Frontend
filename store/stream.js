@@ -1,5 +1,3 @@
-import { Device } from "mediasoup-client";
-
 export default {
   state: () => ({
     video: {
@@ -30,11 +28,19 @@ export default {
     SET_PRODUCER(state, { type, track }) {
       state[type].producer = track
     },
-    SET_SEND_TRANSPORT(state, sendTransport) {
-      state.sendTransport = sendTransport
-    },
-    SET_RECV_TRANSPORT(state, recvTransport) {
-      state.recvTransport = recvTransport
+    RESET(state) {
+      state.video = {
+        producer: null,
+        consumers: new Set()
+      }
+      state.audio = {
+        producer: null,
+        consumers: new Set()
+      }
+      state.mic = {
+        producers: null,
+        consumers: new Set()
+      }
     }
   },
 
@@ -42,11 +48,8 @@ export default {
     setProducer({ commit }, options) {
       commit("SET_PRODUCER", options)
     },
-    setSendTransport({ commit }, sendTransport) {
-      commit("SET_SEND_TRANSPORT", sendTransport)
-    },
-    setRecvTransport({ commit }, recvTransport) {
-      commit("SET_RECV_TRANSPORT", recvTransport)
+    reset({ commit }) {
+      commit("RESET")
     }
   }
 }

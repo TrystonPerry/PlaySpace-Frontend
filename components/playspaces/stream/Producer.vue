@@ -3,9 +3,13 @@
 </template>
 
 <script>
-import con from "@/con"
-
 export default {
+  props: {
+    sendTransport: {
+      required: true
+    }
+  },
+
   data: () => ({
     producer: null
   }),
@@ -16,23 +20,21 @@ export default {
 
   methods: {
     async produce() {
-      con.sendTransport.on("produce", (params, callback, errback) => {
+      this.sendTransport.on("produce", (params, callback, errback) => {
         this.$socket.SFU.emit("room-transport-produce", {
           producerOptions: {
-            transportId: con.sendTransport.id,
+            transportId: this.sendTransport.id,
             kind: params.kind,
             rtpParameters: params.rtpParameters
           },
           trackId: this.$store.state.stream.video.producer.id
         })
 
-        this.sockets.SFU.subscribe(`room-transport-produced-${this.$store.state.stream.video.producer.id}`, callback => {
-          this.$refs.video.srcObject = new MediaStream([this.$store.state.stream.video.producer])
-          callback()
-        })
+        this.sockets.SFU.subscribe(`room-transport-produced-${this.$store.state.stream.video.producer.id}`, callback)
+        this.$refs.video.srcObject = new MediaStream([this.$store.state.stream.video.producer])
       })
 
-      this.producer = await con.sendTransport.produce({
+      this.producer = await this.sendTransport.produce({
         track: this.$store.state.stream.video.producer,
         codecOptions: {
           videoGoogleMaxBitrate: 3500
@@ -40,7 +42,7 @@ export default {
       })
 
       this.sockets.SFU.subscribe(`producer-stream-closed-${this.producer.id}`, () => {
-        this.$emit("closed")
+        // TODO error handeling that your stream was closed
       })
     }
   }

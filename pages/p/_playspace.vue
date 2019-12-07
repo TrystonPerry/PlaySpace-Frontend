@@ -5,7 +5,7 @@
       <h2>{{ playSpace.title }}</h2>
     </div>
     <div class="flex flex-col h-full">
-      <VideoContainer v-if="producerIds.length" :producerIds="producerIds" class="video-container p-2" />
+      <VideoContainer :producerIds="producerIds" :device="device" :sendTransport="sendTransport" :recvTransport="recvTransport" class="video-container p-2" />
       <PlaySpaceMobileSidebar
         v-if="$store.state.nav.isMobile"
         :key="$route.params.playspace"
@@ -20,7 +20,6 @@ import { Device } from "mediasoup-client"
 import { mapActions } from "vuex"
 
 import API from "@/api/api"
-import con from "@/con"
 
 import VideoContainer from "@/components/playspaces/VideoContainer"
 import PlaySpaceMobileSidebar from "@/components/navigation/PlaySpaceMobileSidebar"
@@ -43,7 +42,10 @@ export default {
   },
 
   data: () => ({
-    producerIds: []
+    producerIds: [],
+    device: null,
+    sendTransport: null,
+    recvTransport: null
   }),
 
   async asyncData({ params, error }) {
@@ -64,18 +66,24 @@ export default {
     this.$socket.SFU.emit("room-transport-create")
   },
 
+  beforeDestroy() {
+    this.$socket.API.emit("room-leave")
+    this.$socket.SFU.emit("room-leave")
+    this.reset()
+  },
+
   sockets: {
     SFU: {
       "room-joined": async function(roomData) {
         const { routerRtpCapabilities } = roomData
         
-        con.device = new Device()
-        await con.device.load({ routerRtpCapabilities })
+        this.device = new Device()
+        await this.device.load({ routerRtpCapabilities })
 
-        if (!con.device.canProduce("video")) {
+        if (!this.device.canProduce("video")) {
           return alert("You cant produce video")
         }
-        if (!con.device.canProduce("audio")) {
+        if (!this.device.canProduce("audio")) {
           return alert("You cant produce audio")
         }
 
@@ -83,14 +91,11 @@ export default {
       },
 
       "room-transport-created": async function(transportOptions) {
-        con.sendTransport = await con.device.createSendTransport(transportOptions)
-        con.recvTransport = await con.device.createRecvTransport(transportOptions)
+        this.sendTransport = await this.device.createSendTransport(transportOptions)
+        this.recvTransport = await this.device.createRecvTransport(transportOptions)
 
-        this.connectTransport(con.sendTransport)
-        this.connectTransport(con.recvTransport)
-
-        this.setSendTransport(con.sendTransport)
-        this.setRecvTransport(con.recvTransport)
+        this.connectTransport(this.sendTransport)
+        this.connectTransport(this.recvTransport)
       }
     }
   },
@@ -99,7 +104,8 @@ export default {
     ...mapActions({
       "createDevice": "stream/createDevice",
       "setSendTransport": "stream/setSendTransport",
-      "setRecvTransport": "stream/setRecvTransport"
+      "setRecvTransport": "stream/setRecvTransport",
+      "reset": "stream/reset"
     }),
 
     connectTransport(transport) {

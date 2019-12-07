@@ -3,12 +3,16 @@
 </template>
 
 <script>
-import con from "@/con"
-
 export default {
   props: {
     producerIds: {
       type: Array,
+      required: true
+    },
+    device: {
+      required: true
+    },
+    recvTransport: {
       required: true
     }
   },
@@ -29,13 +33,13 @@ export default {
     async consume(producerId) {
       this.$socket.SFU.emit("room-transport-consume", {
         producerId,
-        rtpCapabilities: con.device.rtpCapabilities
+        rtpCapabilities: this.device.rtpCapabilities
       })
 
       this.sockets.SFU.subscribe(
         `room-transport-consumed-${producerId}`,
         async consumerOptions => {
-          this.consumer = await con.recvTransport.consume(consumerOptions)
+          this.consumer = await this.recvTransport.consume(consumerOptions)
 
           const { track } = this.consumer
           this.track = track
@@ -46,6 +50,8 @@ export default {
             consumerId: this.consumer.id,
             state: 'resume'
           })
+
+          this.$emit("connect")
         }
       )
     }

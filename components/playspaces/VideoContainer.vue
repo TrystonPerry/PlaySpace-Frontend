@@ -1,8 +1,8 @@
 <template>
   <div>
     <div ref="videos" class="relative flex flex-wrap items-center justify-center">
-      <MultiConsumer v-if="producerIds.length" :producerIds="producerIds" class="video" />
-      <Producer v-if="$store.state.stream.video.producer" class="video" />
+      <MultiConsumer v-if="producerIds.length && recvTransport" @connect="setProperSize" :producerIds="producerIds" :device="device" :recvTransport="recvTransport" class="video" />
+      <Producer v-if="$store.state.stream.video.producer" :sendTransport="sendTransport" class="video" />
     </div>
     <!-- <div v-if="showControls && !$store.state.nav.isMobile"> -->
       <AddVideoStream />
@@ -28,6 +28,15 @@ export default {
     producerIds: {
       type: Array,
       required: true
+    },
+    device: {
+      required: true
+    },
+    recvTransport: {
+      required: true
+    },
+    sendTransport: {
+      required: true
     }
   },
 
@@ -52,6 +61,8 @@ export default {
 
   methods: {
     setProperSize() {
+      // TODO figure out why $refs are undefined in mounted
+      if (!this.$refs.videos) return
       this.$refs.videos.style.height = "calc(100vh - 7rem)"
 
       const height = this.$refs.videos.offsetHeight

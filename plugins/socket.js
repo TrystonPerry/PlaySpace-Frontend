@@ -16,7 +16,7 @@ if (process.client) {
 
   Vue.use(
     new VueSocketIO({
-      debug: false,
+      debug: true,
       connection: "http://localhost:3000",
       options: {
         useConnectionNamespace: true,
