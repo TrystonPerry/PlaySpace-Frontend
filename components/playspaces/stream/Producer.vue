@@ -1,8 +1,14 @@
 <template>
-  <video ref="video" autoplay muted playsinline></video>
+  <div>
+    <video ref="video" id="local" autoplay muted playsinline></video>
+    <button @click="stopProduce" class="p-btn bg-red-400 text-white py-1 px-2">
+      End Desktop Stream
+    </button>
+  </div>
 </template>
 
 <script>
+import { mapActions } from 'vuex'
 export default {
   props: {
     sendTransport: {
@@ -11,14 +17,23 @@ export default {
   },
 
   data: () => ({
-    producer: null
+    producer: null,
+    stream: null
   }),
 
-  async mounted() {
+  mounted() {
     this.produce()
   },
 
+  beforeDestroy() {
+    this.stopProduce()
+  },
+
   methods: {
+    ...mapActions({
+      "setProducer": "stream/setProducer"
+    }),
+
     async produce() {
       this.sendTransport.on("produce", (params, callback, errback) => {
         this.$socket.SFU.emit("room-transport-produce", {
@@ -31,7 +46,9 @@ export default {
         })
 
         this.sockets.SFU.subscribe(`room-transport-produced-${this.$store.state.stream.video.producer.id}`, callback)
-        this.$refs.video.srcObject = new MediaStream([this.$store.state.stream.video.producer])
+        this.stream = new MediaStream([this.$store.state.stream.video.producer])
+        // this.$refs.video.srcObject = this.stream
+        document.getElementById("local").srcObject = this.stream
       })
 
       this.producer = await this.sendTransport.produce({
@@ -44,6 +61,18 @@ export default {
       this.sockets.SFU.subscribe(`producer-stream-closed-${this.producer.id}`, () => {
         // TODO error handeling that your stream was closed
       })
+    },
+
+    stopProduce() {
+      // Prevent this function from being called twice
+      if (!this.producer) return
+      
+      // Tell SFU to delete producer
+      this.$socket.SFU.emit("room-producer-close", this.producer.id)
+      this.$refs.video.srcObject = null
+      this.producer = null
+      this.stream.getTracks().forEach(track => track.stop())
+      this.setProducer({ type: "video", track: null })
     }
   }
 }

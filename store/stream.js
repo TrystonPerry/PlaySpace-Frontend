@@ -2,15 +2,15 @@ export default {
   state: () => ({
     video: {
       producer: null,
-      consumers: new Set()
+      consumers: {}
     },
     audio: {
       producer: null,
-      consumers: new Set()
+      consumers: {}
     },
     mic: {
       producer: null,
-      consumers: new Set()
+      consumers: {}
     },
   }),
 
@@ -27,6 +27,13 @@ export default {
   mutations: {
     SET_PRODUCER(state, { type, track }) {
       state[type].producer = track
+    },
+    SET_CONSUMER(state, { type, producerId, track }) {
+      if (track) {
+        state[type].consumers[producerId] = track
+      } else {
+        delete state[type].consumers[producerId]
+      }
     },
     RESET(state) {
       state.video = {
@@ -47,6 +54,9 @@ export default {
   actions: {
     setProducer({ commit }, options) {
       commit("SET_PRODUCER", options)
+    },
+    setConsumer({ commit }, options) {
+      commit("SET_CONSUMER", options)
     },
     reset({ commit }) {
       commit("RESET")

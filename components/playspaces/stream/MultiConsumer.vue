@@ -3,6 +3,8 @@
 </template>
 
 <script>
+import { mapActions } from "vuex"
+
 export default {
   props: {
     producerIds: {
@@ -19,8 +21,7 @@ export default {
 
   data: () => ({
     producerId: "",
-    producers: [],
-    consumer: null,
+    consumers: {},
     track: null
   }),
 
@@ -30,6 +31,10 @@ export default {
   },
 
   methods: {
+    ...mapActions({
+      "setConsumer": "stream/setConsumer"
+    }),
+
     async consume(producerId) {
       this.$socket.SFU.emit("room-transport-consume", {
         producerId,
@@ -39,16 +44,27 @@ export default {
       this.sockets.SFU.subscribe(
         `room-transport-consumed-${producerId}`,
         async consumerOptions => {
-          this.consumer = await this.recvTransport.consume(consumerOptions)
 
-          const { track } = this.consumer
+          const consumer = await this.recvTransport.consume(consumerOptions)
+          this.consumers[producerId] = consumer
+
+          const { track } = consumer
           this.track = track
+
+          this.setConsumer({ type: "video", producerId, track })
+
           const video = document.getElementById("video")
           video.srcObject = new MediaStream([this.track])
 
           this.$socket.SFU.emit("room-consumer-pause", {
-            consumerId: this.consumer.id,
+            consumerId: consumer.id,
             state: 'resume'
+          })
+
+          this.sockets.SFU.subscribe(`producer-stream-closed-${producerId}`, () => {
+            // CRITICAL TODO tell server to delete this consumer (maybe have server delete all consumers based on that closed producer anyways)
+            delete this.consumers[producerId]
+            this.setConsumer({ type: "video", producerId })
           })
 
           this.$emit("connect")

@@ -5,7 +5,7 @@
       <Producer v-if="$store.state.stream.video.producer" :sendTransport="sendTransport" class="video" />
     </div>
     <div v-if="showControls && !$store.state.nav.isMobile">
-      <AddVideoStream />
+      <AddVideoStream v-if="!$store.state.stream.video.producer" />
     </div>
   </div>
 </template>

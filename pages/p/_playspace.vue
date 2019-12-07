@@ -19,6 +19,7 @@
 import { Device } from "mediasoup-client"
 import { mapActions } from "vuex"
 
+import Vue from "vue"
 import API from "@/api/api"
 
 import VideoContainer from "@/components/playspaces/VideoContainer"
@@ -63,11 +64,10 @@ export default {
 
   mounted() {
     this.$socket.SFU.emit("room-join", { roomId: this.$route.params.playspace })
-    this.$socket.SFU.emit("room-transport-create")
+    this.$notify("Hello World")
   },
 
   beforeDestroy() {
-    this.$socket.API.emit("room-leave")
     this.$socket.SFU.emit("room-leave")
     this.reset()
   },
@@ -87,14 +87,20 @@ export default {
           return alert("You cant produce audio")
         }
 
+        this.$socket.SFU.emit("room-transport-create", "send")
+        this.$socket.SFU.emit("room-transport-create", "recv")
+
         this.producerIds = roomData.producerIds
+        this.producerIds.forEach(this.subscribeToProducerClosed)
       },
 
-      "room-transport-created": async function(transportOptions) {
+      "room-sendtransport-created": async function(transportOptions) {
         this.sendTransport = await this.device.createSendTransport(transportOptions)
-        this.recvTransport = await this.device.createRecvTransport(transportOptions)
-
         this.connectTransport(this.sendTransport)
+      },
+
+      "room-recvtransport-created": async function(transportOptions) {
+        this.recvTransport = await this.device.createRecvTransport(transportOptions)
         this.connectTransport(this.recvTransport)
       },
 
@@ -102,23 +108,31 @@ export default {
         const { id } = producerOptions
         this.producerIds.push(id)
         this.subscribeToProducerClosed(id)
+      },
+
+      disconnect() {
+        this.producerIds = []
+      },
+
+      reconnect() {
+        this.$socket.SFU.emit("room-join", { roomId: this.$route.params.playspace })
       }
-    }
+    },
   },
 
   methods: {
     ...mapActions({
-      "createDevice": "stream/createDevice",
-      "setSendTransport": "stream/setSendTransport",
-      "setRecvTransport": "stream/setRecvTransport",
       "reset": "stream/reset"
     }),
 
     connectTransport(transport) {
       transport.on("connect", ({ dtlsParameters }, callback, errback) => {
         this.$socket.SFU.emit("room-transport-connect", {
-          transportId: transport.id,
-          dtlsParameters
+          type: transport.direction,
+          transportOptions: {
+            transportId: transport.id,
+            dtlsParameters
+          }
         })
 
         this.sockets.SFU.subscribe("room-transport-connected", callback)
