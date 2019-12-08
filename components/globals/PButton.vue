@@ -16,7 +16,8 @@ const variants = [
   "primary-hover",
   "white",
   "white-outline",
-  "dark"
+  "dark",
+  "primary-dashed"
 ]
 const sizes = ["xs", "sm", "md", "lg"]
 

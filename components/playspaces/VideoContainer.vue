@@ -1,11 +1,19 @@
 <template>
-  <div>
+  <div class="bg-black">
     <div ref="videos" class="relative flex flex-wrap items-center justify-center">
-      <MultiConsumer v-if="producerIds.length && recvTransport" @connect="setProperSize" :producerIds="producerIds" :device="device" :recvTransport="recvTransport" class="video" />
-      <Producer v-if="$store.state.stream.video.producer" :sendTransport="sendTransport" class="video" />
-    </div>
-    <div v-if="showControls && !$store.state.nav.isMobile">
-      <AddVideoStream v-if="!$store.state.stream.video.producer" />
+      <MultiConsumer 
+        v-if="producerIds.length && recvTransport" 
+        @connect="setProperSize" 
+        :producerIds="producerIds" 
+        :device="device" 
+        :recvTransport="recvTransport" 
+        class="video" 
+      />
+      <Producer 
+        v-if="$store.state.stream.video.producer" 
+        :sendTransport="sendTransport"
+        class="video relative w-full h-full"
+      />
     </div>
   </div>
 </template>
@@ -93,11 +101,11 @@ export default {
         }
       }
 
-      this.$refs.videos.style.height = `${rowsCount * bestHeight}px`
+      this.$refs.videos.style.height = `${Math.floor(rowsCount * bestHeight)}px`
 
       videos.forEach(video => {
-        video.style.height = `${Math.floor(bestHeight) - 4}px`
-        video.style.width = `${Math.floor(bestWidth) - 4}px`
+        video.style.height = `${Math.floor(bestHeight)}px`
+        video.style.width = `${Math.floor(bestWidth)}px`
       })
     }
   }

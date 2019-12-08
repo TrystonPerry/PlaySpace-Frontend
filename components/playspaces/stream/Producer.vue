@@ -1,9 +1,9 @@
 <template>
-  <div>
+  <div class="flex items-center justify-center">
     <div class="flex items-center justify-center w-full h-full">
       <video ref="video" id="local" class="w-full" autoplay muted playsinline></video>
     </div>
-    <button @click="stopProduce" class="p-btn bg-red-400 text-white py-1 px-2">
+    <button @click="stopProduce" class="absolute p-btn bg-red-400 text-white py-1 px-2">
       End Desktop Stream
     </button>
   </div>
@@ -41,6 +41,8 @@ export default {
 
   methods: {
     ...mapActions({
+      "incrementTotalVideos": "stream/incrementTotalVideos",
+      "decrementTotalVideos": "stream/decrementTotalVideos",
       "setProducer": "stream/setProducer"
     }),
 
@@ -56,9 +58,12 @@ export default {
         })
 
         this.sockets.SFU.subscribe(`room-transport-produced-${this.$store.state.stream.video.producer.id}`, callback)
+
         this.stream = new MediaStream([this.$store.state.stream.video.producer])
+
         // this.$refs.video.srcObject = this.stream
         document.getElementById("local").srcObject = this.stream
+        this.incrementTotalVideos()
       })
 
       this.producer = await this.sendTransport.produce({
@@ -85,6 +90,7 @@ export default {
       this.producer = null
       this.stream.getTracks().forEach(track => track.stop())
       this.setProducer({ type: "video", track: null })
+      this.decrementTotalVideos()
     }
   }
 }

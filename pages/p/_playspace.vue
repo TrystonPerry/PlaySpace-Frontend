@@ -1,17 +1,32 @@
 <template>
-  <div :key="$route.params.playspace" class="playspace h-full" style="max-height:100%">
+  <div :key="$route.params.playspace" class="relative playspace h-full" style="max-height:100%">
     <div class="visually-hidden">
       <h1>{{ playSpace.channelName }}</h1>
       <h2>{{ playSpace.title }}</h2>
     </div>
     <div class="flex flex-col h-full">
-      <VideoContainer :producerIds="producerIds" :device="device" :sendTransport="sendTransport" :recvTransport="recvTransport" class="video-container p-2" />
+      <client-only>
+        <div v-if="!$store.state.stream.totalVideos" class="text-center text-gray-300 my-5">
+          <h3 class="text-2xl font-bold">It's lonely here :(</h3>
+          <h4>Click below to share your desktop, a YouTube video, or Twitch Stream</h4>
+          <AddVideoStream class="max-w-48 w-full mx-auto mt-5" />
+        </div>
+      </client-only>
+
+      <VideoContainer 
+        :producerIds="producerIds" 
+        :device="device" 
+        :sendTransport="sendTransport" 
+        :recvTransport="recvTransport" 
+        class="video-container" 
+      />
       <PlaySpaceMobileSidebar
         v-if="$store.state.nav.isMobile"
         :key="$route.params.playspace"
         class="flex-grow mt-2"
       />
     </div>
+    <AddVideoStream v-if="$store.state.stream.totalVideos" drop-up class="absolute bottom-0 left-0 m-2" />
   </div>
 </template>
 
@@ -24,13 +39,15 @@ import API from "@/api/api"
 
 import VideoContainer from "@/components/playspaces/VideoContainer"
 import PlaySpaceMobileSidebar from "@/components/navigation/PlaySpaceMobileSidebar"
+import AddVideoStream from "@/components/playspaces/stream/AddVideoStream"
 
 export default {
   layout: "app",
 
   components: {
     VideoContainer,
-    PlaySpaceMobileSidebar
+    PlaySpaceMobileSidebar,
+    AddVideoStream
   },
 
   head() {
@@ -64,11 +81,11 @@ export default {
 
   mounted() {
     this.$socket.SFU.emit("room-join", { roomId: this.$route.params.playspace })
-    this.$notify("Hello World")
   },
 
   beforeDestroy() {
     this.$socket.SFU.emit("room-leave")
+    this.setTotalVideos(0)
     this.reset()
   },
 
@@ -122,6 +139,9 @@ export default {
 
   methods: {
     ...mapActions({
+      "setTotalVideos": "stream/setTotalVideos",
+      "decrementTotalVideos": "stream/decrementTotalVideos",
+      "incrementTotalVideos": "stream/incrementTotalVideos",
       "reset": "stream/reset"
     }),
 
@@ -140,7 +160,9 @@ export default {
     },
 
     subscribeToProducerClosed(producerId) {
+      this.incrementTotalVideos()
       this.sockets.SFU.subscribe(`producer-stream-closed-${producerId}`, () => {
+        this.decrementTotalVideos()
         this.producerIds.splice(this.producerIds.indexOf(producerId), 1)
       })
     }

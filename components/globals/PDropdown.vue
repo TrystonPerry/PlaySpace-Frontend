@@ -1,5 +1,5 @@
 <template>
-  <div class="relative" :id="id">
+  <div v-click-out="close" :id="id">
     <button @click="isVisible = !isVisible" :class="btnClasses">
       <slot></slot>
     </button>
@@ -26,6 +26,12 @@ export default {
       return Math.random()
         .toString(36)
         .substr(2, 9)
+    }
+  },
+
+  methods: {
+    close() {
+      this.isVisible = false
     }
   }
 

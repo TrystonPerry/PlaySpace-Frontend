@@ -1,5 +1,6 @@
 export default {
   state: () => ({
+    totalVideos: 0,
     localStream: null,
     video: {
       producer: null,
@@ -26,6 +27,17 @@ export default {
   },
 
   mutations: {
+    SET_TOTAL_VIDEOS(state, count) {
+      state.totalVideos = count
+    },
+    DECREMENT_TOTAL_VIDEOS(state) {
+      if (state > 0) {
+        state.totalVideos--
+      }
+    },
+    INCREMENT_TOTAL_VIDEOS(state) {
+      state.totalVideos++
+    },
     SET_LOCAL_STREAM(state, stream) {
       state.localStream = stream
     },
@@ -56,6 +68,15 @@ export default {
   },
 
   actions: {
+    setTotalVideos({ commit }, count) {
+      commit("SET_TOTAL_VIDEOS", count)
+    },
+    decrementTotalVideos({ commit }) {
+      commit("DECREMENT_TOTAL_VIDEOS")
+    },
+    incrementTotalVideos({ commit }) {
+      commit("INCREMENT_TOTAL_VIDEOS")
+    },
     setLocalStream({ commit }, stream) {
       commit("SET_LOCAL_STREAM", stream)
     },

@@ -6,6 +6,7 @@
         autoplay 
         muted 
         playsinline
+        controls
         class="w-full"
       ></video>
       <!-- :class="activeProducerId === producerId ? 'block' : 'hidden'"  -->      
