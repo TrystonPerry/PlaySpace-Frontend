@@ -1,5 +1,6 @@
 export default {
   state: () => ({
+    localStream: null,
     video: {
       producer: null,
       consumers: {}
@@ -25,6 +26,9 @@ export default {
   },
 
   mutations: {
+    SET_LOCAL_STREAM(state, stream) {
+      state.localStream = stream
+    },
     SET_PRODUCER(state, { type, track }) {
       state[type].producer = track
     },
@@ -52,6 +56,9 @@ export default {
   },
 
   actions: {
+    setLocalStream({ commit }, stream) {
+      commit("SET_LOCAL_STREAM", stream)
+    },
     setProducer({ commit }, options) {
       commit("SET_PRODUCER", options)
     },

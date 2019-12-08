@@ -15,6 +15,7 @@ import { mapActions } from "vuex"
 export default {
   methods: {
     ...mapActions({
+      "setLocalStream": "stream/setLocalStream",
       "setProducer": "stream/setProducer"
     }),
 
@@ -33,7 +34,9 @@ export default {
         return
       }
       
-      const track = res.stream.getVideoTracks()[0]
+      this.setLocalStream(res.stream)
+
+      const track = this.$store.state.stream.localStream.getVideoTracks()[0]
 
       this.setProducer({ type: "video", track })
     }

@@ -1,6 +1,8 @@
 <template>
   <div>
-    <video ref="video" id="local" autoplay muted playsinline></video>
+    <div class="flex items-center justify-center w-full h-full">
+      <video ref="video" id="local" class="w-full" autoplay muted playsinline></video>
+    </div>
     <button @click="stopProduce" class="p-btn bg-red-400 text-white py-1 px-2">
       End Desktop Stream
     </button>
@@ -27,6 +29,14 @@ export default {
 
   beforeDestroy() {
     this.stopProduce()
+  },
+
+  watch: {
+    "$store.state.stream.video.producer"(track) {
+      if (!track) {
+        this.stopProduce()
+      }
+    }
   },
 
   methods: {
@@ -57,6 +67,8 @@ export default {
           videoGoogleMaxBitrate: 3500
         }
       })
+
+      this.$store.state.stream.video.producer.onended = this.stopProduce
 
       this.sockets.SFU.subscribe(`producer-stream-closed-${this.producer.id}`, () => {
         // TODO error handeling that your stream was closed
