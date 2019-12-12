@@ -1,90 +1,55 @@
 export default {
   state: () => ({
-    totalVideos: 0,
-    localStream: null,
-    video: {
-      producer: null,
-      consumers: {}
+    tracks: {
+      video: null,
+      mic: null,
     },
-    audio: {
-      producer: null,
-      consumers: {}
-    },
-    mic: {
-      producer: null,
-      consumers: {}
-    },
+    streams: {
+      video: [],
+      external: [],
+      mic: []
+    }
   }),
 
   getters: {
-    isStreaming(state) {
-      return !!state.videos.producer
-    },
-
-    isVoiceChatting() {
-      return !!state.mic.producer
+    totalStreams(state) {
+      return state.streams.video.length + state.streams.external.length + !!state.tracks.video
     }
   },
 
   mutations: {
-    SET_TOTAL_VIDEOS(state, count) {
-      state.totalVideos = count
+    SET_VIDEO_TRACK(state, { type, track }) {
+      state.tracks[type] = track
     },
-    DECREMENT_TOTAL_VIDEOS(state) {
-      if (state > 0) {
-        state.totalVideos--
-      }
+    ADD_STREAM(state, { type, stream }) {
+      state.streams[type].push(stream)
     },
-    INCREMENT_TOTAL_VIDEOS(state) {
-      state.totalVideos++
-    },
-    SET_LOCAL_STREAM(state, stream) {
-      state.localStream = stream
-    },
-    SET_PRODUCER(state, { type, track }) {
-      state[type].producer = track
-    },
-    SET_CONSUMER(state, { type, producerId, track }) {
-      if (track) {
-        state[type].consumers[producerId] = track
-      } else {
-        delete state[type].consumers[producerId]
-      }
+    REMOVE_STREAM(state, { type, stream }) {
+      const i = state.streams[type].indexOf(stream)
+      state.streams[type].splice(i, 1)
     },
     RESET(state) {
-      state.video = {
-        producer: null,
-        consumers: new Set()
+      state.tracks = {
+        video: null,
+        mic: null
       }
-      state.audio = {
-        producer: null,
-        consumers: new Set()
-      }
-      state.mic = {
-        producers: null,
-        consumers: new Set()
+      state.streams = {
+        video: [],
+        external: [],
+        mic: []
       }
     }
   },
 
   actions: {
-    setTotalVideos({ commit }, count) {
-      commit("SET_TOTAL_VIDEOS", count)
+    setVideoTrack({ commit }, options) {
+      commit("SET_VIDEO_TRACK", options)
     },
-    decrementTotalVideos({ commit }) {
-      commit("DECREMENT_TOTAL_VIDEOS")
+    addStream({ commit }, info) {
+      commit("ADD_STREAM", info)
     },
-    incrementTotalVideos({ commit }) {
-      commit("INCREMENT_TOTAL_VIDEOS")
-    },
-    setLocalStream({ commit }, stream) {
-      commit("SET_LOCAL_STREAM", stream)
-    },
-    setProducer({ commit }, options) {
-      commit("SET_PRODUCER", options)
-    },
-    setConsumer({ commit }, options) {
-      commit("SET_CONSUMER", options)
+    removeStream({ commit }, info) {
+      commit("REMOVE_STREAM", info)
     },
     reset({ commit }) {
       commit("RESET")

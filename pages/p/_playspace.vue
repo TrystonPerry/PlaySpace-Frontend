@@ -6,7 +6,7 @@
     </div>
     <div class="flex flex-col h-full">
       <client-only>
-        <div v-if="!$store.state.stream.totalVideos" class="text-center text-gray-300 my-5">
+        <div v-if="!totalStreams" class="text-center text-gray-300 my-5">
           <h3 class="text-2xl font-bold">It's lonely here :(</h3>
           <h4>Click below to share your desktop, a YouTube video, or Twitch Stream</h4>
           <AddVideoStream class="max-w-48 w-full mx-auto mt-5" />
@@ -14,7 +14,6 @@
       </client-only>
 
       <VideoContainer 
-        :producerIds="producerIds" 
         :device="device" 
         :sendTransport="sendTransport" 
         :recvTransport="recvTransport" 
@@ -26,13 +25,13 @@
         class="flex-grow mt-2"
       />
     </div>
-    <AddVideoStream v-if="$store.state.stream.totalVideos" drop-up class="absolute bottom-0 left-0 m-2" />
+    <AddVideoStream v-if="totalStreams" drop-up class="absolute bottom-0 left-0 m-2" />
   </div>
 </template>
 
 <script>
 import { Device } from "mediasoup-client"
-import { mapActions } from "vuex"
+import { mapGetters, mapActions } from "vuex"
 
 import Vue from "vue"
 import API from "@/api/api"
@@ -60,7 +59,6 @@ export default {
   },
 
   data: () => ({
-    producerIds: [],
     device: null,
     sendTransport: null,
     recvTransport: null
@@ -77,6 +75,12 @@ export default {
     }
 
     return { playSpace: data }
+  },
+
+  computed: {
+    ...mapGetters({
+      "totalStreams": "stream/totalStreams"
+    })
   },
 
   mounted() {
@@ -107,8 +111,7 @@ export default {
         this.$socket.SFU.emit("room-transport-create", "send")
         this.$socket.SFU.emit("room-transport-create", "recv")
 
-        this.producerIds = roomData.producerIds
-        this.producerIds.forEach(this.subscribeToProducerClosed)
+        this.addStreams(roomData.streams)
       },
 
       "room-sendtransport-created": async function(transportOptions) {
@@ -121,14 +124,12 @@ export default {
         this.connectTransport(this.recvTransport)
       },
 
-      "producer-stream": async function(producerOptions) {
-        const { id } = producerOptions
-        this.producerIds.push(id)
-        this.subscribeToProducerClosed(id)
+      "producer-stream": async function(stream) {
+        this.addStream({ type: "video", stream })
       },
 
       disconnect() {
-        this.producerIds = []
+        this.reset()
       },
 
       reconnect() {
@@ -140,8 +141,7 @@ export default {
   methods: {
     ...mapActions({
       "setTotalVideos": "stream/setTotalVideos",
-      "decrementTotalVideos": "stream/decrementTotalVideos",
-      "incrementTotalVideos": "stream/incrementTotalVideos",
+      "addStream": "stream/addStream",
       "reset": "stream/reset"
     }),
 
@@ -159,11 +159,13 @@ export default {
       })
     },
 
-    subscribeToProducerClosed(producerId) {
-      this.incrementTotalVideos()
-      this.sockets.SFU.subscribe(`producer-stream-closed-${producerId}`, () => {
-        this.decrementTotalVideos()
-        this.producerIds.splice(this.producerIds.indexOf(producerId), 1)
+    // Add streams recieved from server to vue store
+    addStreams(streams) {
+      const keys = Object.keys(streams)
+      keys.forEach(key => {
+        streams[key].forEach(stream => {
+          this.addStream({ type: key, stream })
+        })
       })
     }
   }

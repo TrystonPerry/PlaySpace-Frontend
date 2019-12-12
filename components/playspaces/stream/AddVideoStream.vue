@@ -44,8 +44,7 @@ export default {
 
   methods: {
     ...mapActions({
-      "setLocalStream": "stream/setLocalStream",
-      "setProducer": "stream/setProducer"
+      "setVideoTrack": "stream/setVideoTrack"
     }),
 
     async getDesktopStream() {
@@ -62,12 +61,10 @@ export default {
       if (!res.success) {
         return
       }
-      
-      this.setLocalStream(res.stream)
 
-      const track = this.$store.state.stream.localStream.getVideoTracks()[0]
+      const track = res.stream.getVideoTracks()[0]
 
-      this.setProducer({ type: "video", track })
+      this.setVideoTrack({ type: "video", track })
     }
   }
 }

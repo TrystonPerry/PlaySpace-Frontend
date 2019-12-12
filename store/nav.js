@@ -47,7 +47,9 @@ export default {
 
     setMobile({ commit }, value) {
       commit("SET_MOBILE", value)
-    }
+    },
+
+    updateVideoContainer() {}
   }
 }
 

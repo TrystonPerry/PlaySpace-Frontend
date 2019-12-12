@@ -2,15 +2,14 @@
   <div class="bg-black">
     <div ref="videos" class="relative flex flex-wrap items-center justify-center">
       <MultiConsumer 
-        v-if="producerIds.length && recvTransport" 
+        v-if="$store.state.stream.streams.video.length && recvTransport" 
         @connect="setProperSize" 
-        :producerIds="producerIds" 
         :device="device" 
         :recvTransport="recvTransport" 
         class="video" 
       />
       <Producer 
-        v-if="$store.state.stream.video.producer" 
+        v-if="$store.state.stream.tracks.video" 
         :sendTransport="sendTransport"
         class="video relative w-full h-full"
       />
@@ -33,10 +32,6 @@ export default {
   },
 
   props: {
-    producerIds: {
-      type: Array,
-      required: true
-    },
     device: {
       required: true
     },

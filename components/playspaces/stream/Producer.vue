@@ -1,7 +1,7 @@
 <template>
   <div class="flex items-center justify-center">
     <div class="flex items-center justify-center w-full h-full">
-      <video ref="video" id="local" class="w-full" autoplay muted playsinline></video>
+      <video ref="video" id="local" class="w-full h-full" autoplay muted playsinline></video>
     </div>
     <button @click="stopProduce" class="absolute p-btn bg-red-400 text-white py-1 px-2">
       End Desktop Stream
@@ -41,9 +41,7 @@ export default {
 
   methods: {
     ...mapActions({
-      "incrementTotalVideos": "stream/incrementTotalVideos",
-      "decrementTotalVideos": "stream/decrementTotalVideos",
-      "setProducer": "stream/setProducer"
+      "setVideoTrack": "stream/setVideoTrack"
     }),
 
     async produce() {
@@ -54,26 +52,25 @@ export default {
             kind: params.kind,
             rtpParameters: params.rtpParameters
           },
-          trackId: this.$store.state.stream.video.producer.id
+          trackId: this.$store.state.stream.tracks.video.id
         })
 
-        this.sockets.SFU.subscribe(`room-transport-produced-${this.$store.state.stream.video.producer.id}`, callback)
+        this.sockets.SFU.subscribe(`room-transport-produced-${this.$store.state.stream.tracks.video.id}`, callback)
 
-        this.stream = new MediaStream([this.$store.state.stream.video.producer])
+        this.stream = new MediaStream([this.$store.state.stream.tracks.video])
 
         // this.$refs.video.srcObject = this.stream
         document.getElementById("local").srcObject = this.stream
-        this.incrementTotalVideos()
       })
 
       this.producer = await this.sendTransport.produce({
-        track: this.$store.state.stream.video.producer,
+        track: this.$store.state.stream.tracks.video,
         codecOptions: {
           videoGoogleMaxBitrate: 3500
         }
       })
 
-      this.$store.state.stream.video.producer.onended = this.stopProduce
+      this.$store.state.stream.tracks.video.onended = this.stopProduce
 
       this.sockets.SFU.subscribe(`producer-stream-closed-${this.producer.id}`, () => {
         // TODO error handeling that your stream was closed
@@ -89,8 +86,7 @@ export default {
       this.$refs.video.srcObject = null
       this.producer = null
       this.stream.getTracks().forEach(track => track.stop())
-      this.setProducer({ type: "video", track: null })
-      this.decrementTotalVideos()
+      this.setVideoTrack({ type: "video", track: null })
     }
   }
 }

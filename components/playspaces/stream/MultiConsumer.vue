@@ -1,25 +1,29 @@
 <template>
   <div class="relative">
-    <div v-for="producerId in producerIds" :key="`video-container-${producerId}`" :ref="`video-container-${producerId}`"  class="absolute w-full h-full flex items-center justify-center">
+    <div 
+      v-for="stream in streams" 
+      :key="`video-container-${stream.producerId}`" 
+      :ref="`video-container-${stream.producerId}`"  
+      class="absolute w-full h-full flex items-center justify-center"
+    >
       <video 
-        :id="`video-${producerId}`" 
+        :id="`video-${stream.producerId}`" 
         autoplay 
         muted 
         playsinline
         controls
-        class="w-full"
+        class="w-full h-full"
       ></video>
-      <!-- :class="activeProducerId === producerId ? 'block' : 'hidden'"  -->      
     </div>
     <div class="absolute bottom-0 text-center w-full pb-2" style="z-index:10">
       <p-btn 
-        v-for="producerId in producerIds" 
-        :key="producerId" 
-        :variant="activeProducerId === producerId ? 'primary' : 'primary-hover'"
-        @click="activeProducerId = producerId"
+        v-for="stream in streams" 
+        :key="stream.producerId" 
+        :variant="activeProducerId === stream.producerId ? 'primary' : 'primary-hover'"
+        @click="activeProducerId = stream.producerId"
         size="xs"
       >
-        {{ producerId | truncate(4) }}
+        {{ stream.producerId | truncate(4) }}
       </p-btn>
     </div>
   </div>
@@ -30,10 +34,6 @@ import { mapActions } from "vuex"
 
 export default {
   props: {
-    producerIds: {
-      type: Array,
-      required: true
-    },
     device: {
       required: true
     },
@@ -47,29 +47,18 @@ export default {
     consumers: {}
   }),
 
+  computed: {
+    streams() {
+      return this.$store.state.stream.streams.video
+    }
+  },
+
   mounted() {
-    this.producerIds.forEach(this.consume)
+    this.$store.state.stream.streams.video.forEach(this.consume)
   },
 
   watch: {
-    producerIds(producerIds) {
-      console.log(producerIds)
-      const oldProducerIds = Object.keys(this.consumers)
-      if (producerIds.length > oldProducerIds.length) {
-        let newItems = 0
-        for (let i = 0; i < producerIds.length; i++) {
-          if (producerIds[i] !== oldProducerIds[i - newItems]) {
-
-            this.consume(producerIds[i])
-            newItems++
-          }
-        }
-      }
-    },
-
     async activeProducerId(producerId, lastProducerId) {
-      const track = this.$store.state.stream.video.consumers[producerId]
-      if (!track) return
       const consumer = this.consumers[producerId]
       this.$socket.SFU.emit("room-consumer-pause", { consumerId: consumer.id, state: "resume" })
       setTimeout(() => {
@@ -87,10 +76,12 @@ export default {
 
   methods: {
     ...mapActions({
-      "setConsumer": "stream/setConsumer"
+      "removeStream": "stream/removeStream"
     }),
 
-    async consume(producerId) {
+    async consume(stream) {
+      const { producerId } = stream
+
       this.$socket.SFU.emit("room-transport-consume", {
         producerId,
         rtpCapabilities: this.device.rtpCapabilities
@@ -106,7 +97,6 @@ export default {
           const { track } = consumer
 
           this.activeProducerId = producerId
-          this.setConsumer({ type: "video", producerId, track })
 
           document.getElementById(`video-${producerId}`).srcObject = new MediaStream([track])
 
@@ -115,17 +105,27 @@ export default {
             state: 'resume'
           })
 
+          this.$store.dispatch("nav/updateVideoContainer")
+
           this.sockets.SFU.subscribe(`producer-stream-closed-${producerId}`, () => {
             // CRITICAL TODO tell server to delete this consumer (maybe have server delete all consumers based on that closed producer anyways)
             delete this.consumers[producerId]
-            const random = Math.floor(Math.random() * this.producerIds.length)
-            this.activeProducerId = this.producerIds[random]
-            this.setConsumer({ type: "video", producerId })
-          })
 
-          this.$emit("connect")
+            const random = Math.floor(Math.random() * this.streams.length)
+            this.activeProducerId = this.streams[random].producerId
+
+            this.removeStream({ type: "video", stream })
+          })
         }
       )
+    }
+  },
+
+  sockets: {
+    SFU: {
+      "producer-stream": function(stream) {
+        this.consume(stream)
+      }
     }
   }
 }
