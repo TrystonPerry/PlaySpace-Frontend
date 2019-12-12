@@ -19,7 +19,8 @@ export default {
   },
 
   data: () => ({
-    producer: null,
+    videoProducer: null,
+    audioProducer: null,
     stream: null
   }),
 
@@ -41,7 +42,7 @@ export default {
 
   methods: {
     ...mapActions({
-      "setVideoTrack": "stream/setVideoTrack"
+      "setLocalTrack": "stream/setLocalTrack"
     }),
 
     async produce() {
@@ -52,41 +53,82 @@ export default {
             kind: params.kind,
             rtpParameters: params.rtpParameters
           },
-          trackId: this.$store.state.stream.tracks.video.id
+          trackId: this.$store.state.stream.tracks[params.kind].id
         })
 
-        this.sockets.SFU.subscribe(`room-transport-produced-${this.$store.state.stream.tracks.video.id}`, callback)
-
-        this.stream = new MediaStream([this.$store.state.stream.tracks.video])
-
-        // this.$refs.video.srcObject = this.stream
-        document.getElementById("local").srcObject = this.stream
+        this.sockets.SFU.subscribe(`room-transport-produced-${this.$store.state.stream.tracks[params.kind].id}`, callback)
       })
 
-      this.producer = await this.sendTransport.produce({
-        track: this.$store.state.stream.tracks.video,
+      const videoTrack = this.$store.state.stream.tracks.video
+      const audioTrack = this.$store.state.stream.tracks.audio
+      await this.produceVideo(videoTrack)
+      await this.produceAudio(audioTrack)
+
+      this.$socket.SFU.emit("room-stream-video", {
+        producerId: this.videoProducer.id,
+        audio: !audioTrack ? undefined : {
+          producerId: this.audioProducer.id
+        }
+      })
+
+      this.stream = new MediaStream([videoTrack, audioTrack].filter(t => t))
+      document.getElementById("local").srcObject = this.stream
+
+      this.$store.state.stream.tracks.video.onended = this.stopProduce
+    },
+
+    async produceVideo(track) {
+      if (!track) return
+
+      this.videoProducer = await this.sendTransport.produce({
+        track,
         codecOptions: {
           videoGoogleMaxBitrate: 3500
         }
       })
 
-      this.$store.state.stream.tracks.video.onended = this.stopProduce
-
-      this.sockets.SFU.subscribe(`producer-stream-closed-${this.producer.id}`, () => {
+      this.sockets.SFU.subscribe(`producer-stream-closed-${this.videoProducer.id}`, () => {
         // TODO error handeling that your stream was closed
       })
     },
 
+    async produceAudio(track) {
+      if (!track) return
+
+      this.audioProducer = await this.sendTransport.produce({
+        track,
+        codecOptions: {
+          videoGoogleMaxBitrate: 128
+        }
+      })
+
+      this.sockets.SFU.subscribe(`producer-stream-closed-${this.audioProducer.id}`, () => {
+        // TODO error handeling that your stream was closed
+      })
+    },
+
+    // Stop producing all tracks
     stopProduce() {
-      // Prevent this function from being called twice
-      if (!this.producer) return
-      
-      // Tell SFU to delete producer
-      this.$socket.SFU.emit("room-producer-close", this.producer.id)
+      // Prevent this function from being called multiple times
+      if (!this.videoProducer) return
+
+      // Close local video tracks
       this.$refs.video.srcObject = null
-      this.producer = null
       this.stream.getTracks().forEach(track => track.stop())
-      this.setVideoTrack({ type: "video", track: null })
+
+      // Delete server and local instance of video producer
+      this.$socket.SFU.emit("room-producer-close", this.videoProducer.id)
+      this.videoProducer = null
+
+      // Delete server and local instance of audio producer
+      if (this.audioProducer) {
+        this.$socket.SFU.emit("room-producer-close", this.audioProducer.id)
+        this.audioProducer = null
+      }
+
+      // Remove tracks from store
+      this.setLocalTrack({ type: "video", track: null })
+      this.setLocalTrack({ type: "audio", track: null })
     }
   }
 }

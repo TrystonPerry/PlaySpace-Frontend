@@ -89,7 +89,6 @@ export default {
 
   beforeDestroy() {
     this.$socket.SFU.emit("room-leave")
-    this.setTotalVideos(0)
     this.reset()
   },
 
@@ -124,7 +123,7 @@ export default {
         this.connectTransport(this.recvTransport)
       },
 
-      "producer-stream": async function(stream) {
+      "room-stream-video": async function(stream) {
         this.addStream({ type: "video", stream })
       },
 
@@ -140,7 +139,6 @@ export default {
 
   methods: {
     ...mapActions({
-      "setTotalVideos": "stream/setTotalVideos",
       "addStream": "stream/addStream",
       "reset": "stream/reset"
     }),

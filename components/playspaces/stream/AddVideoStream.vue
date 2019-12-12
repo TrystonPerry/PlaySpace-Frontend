@@ -44,7 +44,7 @@ export default {
 
   methods: {
     ...mapActions({
-      "setVideoTrack": "stream/setVideoTrack"
+      "setLocalTrack": "stream/setLocalTrack"
     }),
 
     async getDesktopStream() {
@@ -59,12 +59,12 @@ export default {
       const res = await WebRTC.getDisplayMedia(constraints)
 
       if (!res.success) {
+        // TODO error alert
         return
       }
 
-      const track = res.stream.getVideoTracks()[0]
-
-      this.setVideoTrack({ type: "video", track })
+      this.setLocalTrack({ type: "video", track: res.stream.getVideoTracks()[0] })
+      this.setLocalTrack({ type: "audio", track: res.stream.getAudioTracks()[0] })
     }
   }
 }

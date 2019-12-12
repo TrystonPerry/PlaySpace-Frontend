@@ -2,6 +2,7 @@ export default {
   state: () => ({
     tracks: {
       video: null,
+      audio: null,
       mic: null,
     },
     streams: {
@@ -18,7 +19,7 @@ export default {
   },
 
   mutations: {
-    SET_VIDEO_TRACK(state, { type, track }) {
+    SET_LOCAL_TRACK(state, { type, track }) {
       state.tracks[type] = track
     },
     ADD_STREAM(state, { type, stream }) {
@@ -42,8 +43,8 @@ export default {
   },
 
   actions: {
-    setVideoTrack({ commit }, options) {
-      commit("SET_VIDEO_TRACK", options)
+    setLocalTrack({ commit }, options) {
+      commit("SET_LOCAL_TRACK", options)
     },
     addStream({ commit }, info) {
       commit("ADD_STREAM", info)

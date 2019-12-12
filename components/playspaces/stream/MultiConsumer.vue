@@ -23,7 +23,7 @@
         @click="activeProducerId = stream.producerId"
         size="xs"
       >
-        {{ stream.producerId | truncate(4) }}
+        {{ stream.username | truncate(4) }}
       </p-btn>
     </div>
   </div>
@@ -82,48 +82,92 @@ export default {
     async consume(stream) {
       const { producerId } = stream
 
-      this.$socket.SFU.emit("room-transport-consume", {
-        producerId,
-        rtpCapabilities: this.device.rtpCapabilities
-      })
+      await this.consumeVideo(producerId)
+      if (stream.audio) {
+        await this.consumeAudio(stream.audio.producerId)
+      }
+      
+      const videoTrack = this.consumers[producerId].track
+      let audioTrack
+      if (stream.audio) {
+        audioTrack = this.consumers[stream.audio.producerId].track
+      }
 
-      this.sockets.SFU.subscribe(
-        `room-transport-consumed-${producerId}`,
-        async consumerOptions => {
+      const mediaStream = new MediaStream([videoTrack, audioTrack].filter(t => t))
+      document.getElementById(`video-${producerId}`).srcObject = mediaStream
 
-          const consumer = await this.recvTransport.consume(consumerOptions)
-          this.consumers[producerId] = consumer
+      this.$store.dispatch("nav/updateVideoContainer")
 
-          const { track } = consumer
-
-          this.activeProducerId = producerId
-
-          document.getElementById(`video-${producerId}`).srcObject = new MediaStream([track])
-
-          this.$socket.SFU.emit("room-consumer-pause", {
-            consumerId: consumer.id,
-            state: 'resume'
-          })
-
-          this.$store.dispatch("nav/updateVideoContainer")
-
-          this.sockets.SFU.subscribe(`producer-stream-closed-${producerId}`, () => {
-            // CRITICAL TODO tell server to delete this consumer (maybe have server delete all consumers based on that closed producer anyways)
-            delete this.consumers[producerId]
-
-            const random = Math.floor(Math.random() * this.streams.length)
-            this.activeProducerId = this.streams[random].producerId
-
-            this.removeStream({ type: "video", stream })
-          })
+      this.sockets.SFU.subscribe(`producer-stream-closed-${producerId}`, () => {
+        // CRITICAL TODO tell server to delete this consumer (maybe have server delete all consumers based on that closed producer anyways)
+        delete this.consumers[producerId]
+        if (stream.audio) {
+          delete this.consumers[stream.audio.producerId]
         }
-      )
+
+        const random = Math.floor(Math.random() * this.streams.length)
+        this.activeProducerId = this.streams[random].producerId
+
+        this.removeStream({ type: "video", stream })
+      })
+    },
+
+    async consumeVideo(producerId) {
+      return await new Promise((resolve, reject) => {
+        this.$socket.SFU.emit("room-transport-consume", {
+          producerId,
+          rtpCapabilities: this.device.rtpCapabilities
+        })
+
+        this.sockets.SFU.subscribe(
+          `room-transport-consumed-${producerId}`,
+          async consumerOptions => {
+            
+            const videoConsumer = await this.recvTransport.consume(consumerOptions)
+            this.consumers[producerId] = videoConsumer
+
+            this.activeProducerId = producerId
+
+            this.$socket.SFU.emit("room-consumer-pause", {
+              consumerId: videoConsumer.id,
+              state: 'resume'
+            })
+
+            resolve()
+          }
+        )
+      })
+    },
+
+    async consumeAudio(producerId) {
+      return await new Promise((resolve, reject) => {
+        this.$socket.SFU.emit("room-transport-consume", {
+          producerId,
+          rtpCapabilities: this.device.rtpCapabilities
+        })
+
+        this.sockets.SFU.subscribe(
+          `room-transport-consumed-${producerId}`,
+          async consumerOptions => {
+            
+            const audioConsumer = await this.recvTransport.consume(consumerOptions)
+            this.consumers[producerId] = audioConsumer
+
+            this.$socket.SFU.emit("room-consumer-pause", {
+              consumerId: audioConsumer.id,
+              state: 'resume'
+            })
+
+            resolve()
+          }
+        )
+      })
     }
   },
 
   sockets: {
     SFU: {
-      "producer-stream": function(stream) {
+      "room-stream-video": function(stream) {
         this.consume(stream)
       }
     }
