@@ -13,6 +13,12 @@
         :sendTransport="sendTransport"
         class="video relative w-full h-full"
       />
+      <ExternalStream
+        v-for="stream in $store.state.stream.streams.external"
+        :key="stream.id"
+        :stream="stream"
+        class="video"
+      />
     </div>
   </div>
 </template>
@@ -23,12 +29,14 @@ import _ from "@/functions/_"
 import MultiConsumer from "./stream/MultiConsumer"
 import Producer from "./stream/Producer"
 import AddVideoStream from "./stream/AddVideoStream"
+import ExternalStream from "./stream/ExternalStream"
 
 export default {
   components: {
     MultiConsumer,
     Producer,
-    AddVideoStream
+    AddVideoStream,
+    ExternalStream
   },
 
   props: {

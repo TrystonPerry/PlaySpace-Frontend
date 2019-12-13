@@ -14,13 +14,13 @@
         </button>
       </li>
       <li>
-        <button class="text-gray-300 py-2 w-full" style="background:#FE0200;">
+        <button @click="addYouTubeStream" class="text-gray-300 py-2 w-full" style="background:#FE0200;">
           <p-icon icon="fab fa-youtube"  />
           YouTube
         </button>
       </li>
       <li>
-        <button class="text-gray-300 py-2 w-full" style="background:#9047FF">
+        <button @click="addTwitchStream" class="text-gray-300 py-2 w-full" style="background:#9047FF">
           <p-icon icon="fab fa-twitch"  />
           Twitch
         </button>
@@ -65,6 +65,20 @@ export default {
 
       this.setLocalTrack({ type: "video", track: res.stream.getVideoTracks()[0] })
       this.setLocalTrack({ type: "audio", track: res.stream.getAudioTracks()[0] })
+    },
+
+    addTwitchStream() {
+      this.$socket.SFU.emit("room-stream-external", {
+        type: "twitch",
+        id: "summit1g"
+      })
+    },
+
+    addYouTubeStream() {
+      this.$socket.SFU.emit("room-stream-external", {
+        type: "youtube",
+        id: "ShsI4BtBkI4"
+      })
     }
   }
 }

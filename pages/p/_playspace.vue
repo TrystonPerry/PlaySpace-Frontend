@@ -127,6 +127,10 @@ export default {
         this.addStream({ type: "video", stream })
       },
 
+      "room-stream-external"(stream) {
+        this.addStream({ type: "external", stream })
+      },
+
       disconnect() {
         this.reset()
       },
