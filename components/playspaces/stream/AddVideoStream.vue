@@ -70,14 +70,14 @@ export default {
     addTwitchStream() {
       this.$socket.SFU.emit("room-stream-external", {
         type: "twitch",
-        id: "summit1g"
+        username: "summit1g"
       })
     },
 
     addYouTubeStream() {
       this.$socket.SFU.emit("room-stream-external", {
         type: "youtube",
-        id: "ShsI4BtBkI4"
+        videoId: "ShsI4BtBkI4"
       })
     }
   }

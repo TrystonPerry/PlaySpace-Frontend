@@ -52,6 +52,9 @@ module.exports = {
       {
         src: "https://kit.fontawesome.com/af0f8191a0.js",
         crossorigin: "anonymous"
+      },
+      {
+        src: "https://www.youtube.com/iframe_api"
       }
     ]
   },
