@@ -1,7 +1,6 @@
 <template>
   <p-dropdown btn-classes="p-btn btn-primary-dashed w-48">
-    <p-icon icon="fas fa-plus" />
-    Add Video
+    <p-icon icon="fas fa-plus" />Add Video
     <ul
       slot="content"
       class="absolute list-style-none bg-dark-5 shadow-reg w-48"
@@ -9,20 +8,25 @@
     >
       <li>
         <button @click="getDesktopStream" class="bg-primary font-bold text-gray-300 py-2 w-full">
-          <p-icon icon="fas fa-desktop" />
-          Desktop
+          <p-icon icon="fas fa-desktop" />Desktop
         </button>
       </li>
       <li>
-        <button @click="addYouTubeStream" class="text-gray-300 py-2 w-full" style="background:#FE0200;">
-          <p-icon icon="fab fa-youtube"  />
-          YouTube
+        <button
+          @click="addYouTubeStream"
+          class="text-gray-300 py-2 w-full"
+          style="background:#FE0200;"
+        >
+          <p-icon icon="fab fa-youtube" />YouTube
         </button>
       </li>
       <li>
-        <button @click="addTwitchStream" class="text-gray-300 py-2 w-full" style="background:#9047FF">
-          <p-icon icon="fab fa-twitch"  />
-          Twitch
+        <button
+          @click="addTwitchStream"
+          class="text-gray-300 py-2 w-full"
+          style="background:#9047FF"
+        >
+          <p-icon icon="fab fa-twitch" />Twitch
         </button>
       </li>
     </ul>
@@ -42,16 +46,21 @@ export default {
     }
   },
 
+  data: () => ({
+    youtubeUrl: "",
+    twitchUsername: ""
+  }),
+
   methods: {
     ...mapActions({
-      "setLocalTrack": "stream/setLocalTrack"
+      setLocalTrack: "stream/setLocalTrack"
     }),
 
     async getDesktopStream() {
       const constraints = {
         video: {
-          "width": "1280",
-          "height": "720"
+          width: "1280",
+          height: "720"
         },
         audio: true
       }
@@ -63,21 +72,31 @@ export default {
         return
       }
 
-      this.setLocalTrack({ type: "video", track: res.stream.getVideoTracks()[0] })
-      this.setLocalTrack({ type: "audio", track: res.stream.getAudioTracks()[0] })
+      this.setLocalTrack({
+        type: "video",
+        track: res.stream.getVideoTracks()[0]
+      })
+      this.setLocalTrack({
+        type: "audio",
+        track: res.stream.getAudioTracks()[0]
+      })
     },
 
     addTwitchStream() {
+      const answer = prompt("Enter a twitch username")
+
       this.$socket.SFU.emit("room-stream-external", {
         type: "twitch",
-        username: "summit1g"
+        username: answer
       })
     },
 
     addYouTubeStream() {
+      const answer = prompt("Enter a youtube video id")
+
       this.$socket.SFU.emit("room-stream-external", {
         type: "youtube",
-        videoId: "ShsI4BtBkI4"
+        videoId: answer
       })
     }
   }
@@ -85,5 +104,4 @@ export default {
 </script>
 
 <style>
-
 </style>
