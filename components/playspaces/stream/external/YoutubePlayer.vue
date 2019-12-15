@@ -1,5 +1,46 @@
 <template>
-  <div :id="stream.id" :src="src" frameborder="0" class="w-full h-full"></div>
+  <div @mouseenter="controls = true" @mouseleave="controls = false" class="h-full w-full relative">
+    <div :id="stream.id" :src="src" frameborder="0" class="w-full h-full"></div>
+    <p-modal v-model="isAddVideo" class="text-left text-gray-200">
+      <div class="flex items-center">
+      <p-icon icon="fab fa-youtube text-4xl" style="color:#FE0200;" />
+        <h2 class="text-2xl ml-2 font-medium">
+        Add a YouTube Video
+      </h2>
+      </div>
+      <h3 class="text-lg font-medium mb-2">
+        Enter the video URL below
+      </h3>
+      <div class="flex">
+        <p-input v-model="youtubeUrl" placeholder="https://www.youtube.com/watch?v=dQw4w9WgXcQ" class="flex-grow" />
+        <p-btn @click="addYouTubeStream" variant="primary" class="h-full">
+          Add
+        </p-btn>
+      </div>
+    </p-modal>
+    <div v-if="controls" class="absolute right-0 mr-1" style="top:50%;transform:translateY(-50%)">
+      <p-tooltip text="Add Video" position="left">
+        <p-btn
+          @click="isAddVideo = !isAddVideo"
+          variant="none"
+          size="sm"
+          class="bg-green-400 mb-1"  
+        >
+          <p-icon icon="fas fa-plus" screen-reader-text="Add Video" />
+        </p-btn>
+      </p-tooltip>
+      <p-tooltip text="Remove Player" position="left">
+        <p-btn 
+          @click="$socket.SFU.emit('room-stream-external-close', stream.id)" 
+          variant="none" 
+          size="sm" 
+          class="bg-red-400"
+        >
+          <p-icon icon="fas fa-minus" screen-reader-text="Remove Player" />
+        </p-btn>
+      </p-tooltip>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -18,7 +59,12 @@ export default {
   data: () => ({
     player: null,
     ignoreEvents: true,
-    isBuffering: true
+    isBuffering: true,
+
+    controls: true,
+    isAddVideo: true,
+    youtubeUrl: "",
+    videos: []
   }),
 
   mounted() {
@@ -143,7 +189,9 @@ export default {
       this.ignoreEvents = true;
       this.player.pauseVideo();
       this.ignoreEvents = false;
-    }
+    },
+
+    addYouTubeStream() {}
   }
 }
 </script>

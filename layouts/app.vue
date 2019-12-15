@@ -13,6 +13,7 @@
         class="shadow-reg"
       />
     </div>
+    <div id="modal-container"></div>
   </div>
 </template>
 

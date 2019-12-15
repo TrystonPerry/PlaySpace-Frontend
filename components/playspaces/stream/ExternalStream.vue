@@ -1,15 +1,7 @@
 <template>
-  <div class="h-full w-full relative">
+  <div>
     <YoutubePlayer v-if="stream.type === 'youtube'" :src="src" :stream="stream" class="h-full w-full" />
     <iframe v-else :src="src" frameborder="0" class="w-full h-full"></iframe>
-    <p-btn 
-      @click="$socket.SFU.emit('room-stream-external-close', stream.id)" 
-      variant="none" 
-      size="sm" 
-      class="absolute top-0 right-0 bg-red-400 m-2"
-    >
-      <p-icon icon="fas fa-minus" />
-    </p-btn>
   </div>
 </template>
 
