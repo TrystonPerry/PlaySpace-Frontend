@@ -1,10 +1,27 @@
 <template>
   <div @mouseenter="controls = true" @mouseleave="controls = false" class="h-full w-full relative">
-    <div :id="stream.id" :src="src" frameborder="0" class="w-full h-full"></div>
+    <div v-show="stream.queue.length > 0" class="h-full w-full">
+      <div :id="stream.id" :src="src" frameborder="0" class="w-full h-full"></div>
+    </div>
+    <div v-show="stream.queue.length === 0" class="flex items-center justify-center text-center h-full w-full text-gray-300">
+      <div>
+        <p-icon icon="fab fa-youtube text-4xl" style="color:#FE0200;" />
+        <h2 class="text-2xl font-medium">The Queue is Empty</h2>
+        <p>Add videos to the queue to continue watching!</p>
+        <p-btn
+          @click="isAddVideo = !isAddVideo"
+          variant="none"
+          class="bg-green-700 mb-1"  
+        >
+          <p-icon icon="fas fa-plus" />
+          Add Video
+        </p-btn>
+      </div>
+    </div>
     <p-modal v-model="isAddVideo" class="text-left text-gray-200">
       <div class="flex items-center">
       <p-icon icon="fab fa-youtube text-4xl" style="color:#FE0200;" />
-        <h2 class="text-2xl ml-2 font-medium">
+      <h2 class="text-2xl ml-2 font-medium">
         Add a YouTube Video
       </h2>
       </div>
@@ -17,6 +34,26 @@
           Add
         </p-btn>
       </div>
+      <h2 class="text-2xl">
+        Player Queue
+      </h2>
+      <ul class="list-style-none">
+        <li v-for="(videoId, i) in stream.queue" :key="i" class="flex items-center">
+          <h3 class="flex-grow">
+            {{ videoId }}
+          </h3>
+          <p-tooltip text="Remove" position="left">
+            <p-btn 
+             @click="$socket.SFU.emit(`room-stream-youtube-skip-video`, { id: stream.id, index: i })"
+              variant="none"
+              size="xs"
+              class="bg-red-400"
+            >
+              <p-icon icon="fas fa-trash" />
+            </p-btn>
+          </p-tooltip>
+        </li>
+      </ul>
     </p-modal>
     <div v-if="controls" class="absolute right-0 mr-1" style="top:50%;transform:translateY(-50%)">
       <p-tooltip text="Add Video" position="left">
@@ -24,9 +61,9 @@
           @click="isAddVideo = !isAddVideo"
           variant="none"
           size="sm"
-          class="bg-green-400 mb-1"  
+          class="bg-green-700 mb-1"  
         >
-          <p-icon icon="fas fa-plus" screen-reader-text="Add Video" />
+          <p-icon icon="fas fa-plus" />
         </p-btn>
       </p-tooltip>
       <p-tooltip text="Remove Player" position="left">
@@ -36,7 +73,7 @@
           size="sm" 
           class="bg-red-400"
         >
-          <p-icon icon="fas fa-minus" screen-reader-text="Remove Player" />
+          <p-icon icon="fas fa-minus" />
         </p-btn>
       </p-tooltip>
     </div>
@@ -44,6 +81,12 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex';
+
+const regex = {
+  youtubeUrl: /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#\&\?]*).*/
+}
+
 export default {
   props: {
     src: {
@@ -61,15 +104,14 @@ export default {
     ignoreEvents: true,
     isBuffering: true,
 
-    controls: true,
-    isAddVideo: true,
+    controls: false,
+    isAddVideo: false,
     youtubeUrl: "",
-    videos: []
   }),
 
   mounted() {
     this.player = new YT.Player(this.stream.id, {
-      videoId: this.stream.videoId,
+      videoId: this.stream.queue[0],
       events: {
         onReady: this.onPlayerReady,
         onStateChange: this.onPlayerStateChange
@@ -81,7 +123,7 @@ export default {
 
       this.player.seekTo(this.stream.time, true);
       if (this.stream.state !== 1) {
-        this.player.pauseVideo();
+        // this.player.pauseVideo();
       }
       
       this.ignoreEvents = false;
@@ -116,9 +158,28 @@ export default {
     this.sockets.SFU.subscribe(`room-stream-youtube-${this.stream.id}-played`, this.playVideoAnon)
 
     this.sockets.SFU.subscribe(`room-stream-youtube-${this.stream.id}-paused`, this.pauseVideoAnon)
+
+    this.sockets.SFU.subscribe(`room-stream-youtube-${this.stream.id}-add-video`, videoId => {
+      this.addVideoToYouTubeQueue({ stream: this.stream, videoId })
+      if (this.stream.queue.length === 1) {
+        this.player.loadVideoById(this.stream.queue[0])
+      }
+    })
+
+    this.sockets.SFU.subscribe(`room-stream-youtube-${this.stream.id}-skip-video`, index => {
+      this.removeVideoFromYouTubeQueue({ stream: this.stream, index })
+      if (index === 0) {
+        this.player.loadVideoById(this.stream.queue[0])
+      }
+    })
   },
 
   methods: {
+    ...mapActions({
+      "addVideoToYouTubeQueue": "stream/addVideoToYouTubeQueue",
+      "removeVideoFromYouTubeQueue": "stream/removeVideoFromYouTubeQueue"
+    }),
+
     onPlayerReady(event) {},
 
     onPlayerStateChange(event) {
@@ -191,7 +252,19 @@ export default {
       this.ignoreEvents = false;
     },
 
-    addYouTubeStream() {}
+    addYouTubeStream() {
+      const match = this.youtubeUrl.match(regex.youtubeUrl)
+
+      const url = match && match[7].length === 11 ? match[7] : false
+
+      // TODO notify that it's an invalid URL
+      if (!url) return
+
+      this.$socket.SFU.emit("room-stream-youtube-add-video", {
+        id: this.stream.id,
+        videoId: url
+      })
+    }
   }
 }
 </script>

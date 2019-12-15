@@ -1,5 +1,5 @@
 <template>
-  <div v-if="value" class="modal flex items-center justify-center">
+  <div v-show="value" class="modal flex items-center justify-center">
     <div class="modal__box bg-dark-5 shadow-reg overflow-auto">
       <button @click="$emit('input', false)" class="btn btn-close">X</button>
       <slot></slot>
