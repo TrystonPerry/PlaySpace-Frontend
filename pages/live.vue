@@ -19,7 +19,7 @@
       <h2 class="text-lg mb-3">
         There are currently no live Public PlaySpaces
       </h2>
-      <div v-if="!$store.state.user.username">
+      <!-- <div v-if="!$store.state.user.username">
         <p-link to="/login" variant="primary-hover" size="sm">Log In</p-link>
         <span>or</span>
         <p-link to="/signup" variant="primary" size="sm">Sign Up</p-link>
@@ -28,7 +28,18 @@
       <div v-else>
         <nuxt-link to="/create">Create</nuxt-link>
         <span>a your own.</span>
-      </div>
+      </div> -->
+    </div>
+    <div class="text-center">
+      <h1 class="text-2xl text-primary text-center font-medium mt-6 mb-2">
+        Create a PlaySpace
+      </h1>
+      <h2 class="text-lg mb-3 mx-auto" style="max-width:450px;">
+        Create a PlaySpace to watch your favorite videos, games, and more; together!
+      </h2>
+      <p-link variant="primary" to="/create">
+        Create my PlaySpace
+      </p-link>
     </div>
   </div>
 </template>
@@ -43,9 +54,7 @@ export default {
     PlaySpace
   },
 
-  head: require("@/meta/live")({
-    title: "Hello World"
-  }),
+  head: require("@/meta/live")(),
 
   async asyncData() {
     const { data, success } = await API.getPlaySpaces()

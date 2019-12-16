@@ -8,7 +8,7 @@
           You have lost connection to chat.
         </p>
         <p-btn
-          @click="attemptReconnect"
+          @click="attemptConnect"
           variant="none"
           class="bg-red-500 text-sm px-2"
           size="xs"
@@ -46,7 +46,6 @@ export default {
   sockets: {
     API: {
       "chat-message"(messages) {
-        console.log(messages)
         if (this.messages.length > 99) {
           this.messages.shift()
         }
@@ -77,13 +76,18 @@ export default {
       },
 
       reconnect() {
-        this.attemptReconnect()
+        this.attemptConnect()
       },
 
       async disconnect() {
         this.disconnected = true
         await this.$nextTick()
         this.doScroll()
+        this.$notify({
+          type: "error",
+          title: "Connection lost",
+          text: "Lost connection to PlaySpace chat. Check your internet connection."
+        })
       }
     }
   },
@@ -105,16 +109,35 @@ export default {
       }
     },
 
-    attemptReconnect() {
-      if (this.$socket.API.connected) return
-
-      // TODO notify that user isnt online
+    attemptConnect() {
       // TODO store online status in vuex store
-      if (!navigator.onLine) return
+      if (!navigator.onLine){
+        this.$notify({
+          type: "error",
+          title: "Connection refused",
+          text: "Check your internet connection, you apear to have gone offline."
+        })
+        return
+      }
+
+      if (this.$socket.API.connected) {
+        this.$notify({
+          type: "error",
+          title: "Connection refused",
+          text: "Can't connect to PlaySpace servers, this might be an error on our part."
+        })
+        return
+      }
       
       this.messages = []
       this.$socket.API.emit("chat-join", { id: this.$route.params.playspace })
       this.disconnected = false
+
+      this.$notify({
+        type: "success",
+        title: "Reconnected!",
+        text: "You've regained connection to PlaySpace chat!"
+      })
     }
   }
 }

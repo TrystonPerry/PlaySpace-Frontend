@@ -39,6 +39,9 @@
           Add a YouTube Video
         </h2>
       </div>
+      <a href="https://youtube.com" target="_blank" class="text-primary hover:underline my-2 block">
+        Browse YouTube in new Tab
+      </a>
       <h3 class="text-lg font-medium mb-2">
         Enter the video URL below
       </h3>
@@ -56,6 +59,9 @@
           Add a Twitch Stream
         </h2>
       </div>
+      <a href="https://twitch.tv" target="_blank" class="text-primary hover:underline my-2 block">
+        Browse Twitch in new Tab
+      </a>
       <h3 class="text-lg font-medium mb-2">
         Enter the Twitch URL or username below
       </h3>

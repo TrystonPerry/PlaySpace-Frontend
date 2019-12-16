@@ -42,7 +42,18 @@
           <p-link to="/signup" variant="primary" size="sm">Sign Up</p-link>
         </li>
       </ul>
-      <AccountDropdown v-else />
+      <ul v-else class="list-style-none flex">
+        <li class="px-1 py-2">
+          <p-tooltip text="Create a PlaySpace">
+            <p-link to="/create" variant="primary" size="sm">
+              Create
+            </p-link>
+          </p-tooltip>
+        </li>
+        <li>
+          <AccountDropdown />
+        </li>
+      </ul>
     </div>
     <p-modal v-model="isEdit" class="text-gray-200">
       <EditPlaySpace @edit="onEdit" />
@@ -99,7 +110,6 @@ export default {
     }),
 
     onEdit(playSpace) {
-      console.log(playSpace)
       this.playSpace = playSpace
       this.isEdit = false
     }

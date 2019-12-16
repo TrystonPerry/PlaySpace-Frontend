@@ -84,12 +84,15 @@
   padding: 10px;
   margin: 0 5px 5px;
   z-index: 1040;
- 
   font-size: 12px;
  
   color: #ffffff;
   background: #44A4FC;
   border-left: 5px solid #187FE7;
+
+  .notification-title {
+    font-weight: bold;
+  }
  
   &.warn {
     background: #ffb648;
@@ -102,7 +105,7 @@
   }
  
   &.success {
-    background: #68CD86;
-    border-left-color: #42A85F;
+    background: #42864A;
+    border-left-color: rgb(31, 100, 39);
   }
 }

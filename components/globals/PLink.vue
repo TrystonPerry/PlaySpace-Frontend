@@ -1,7 +1,7 @@
 <template>
   <nuxt-link
     v-bind="$attrs"
-    class="p-link inline-block rounded font-medium"
+    class="p-link inline-block rounded font-bold"
     :class="`btn-${variant} ${computedSize}`"
   >
     <slot></slot>
@@ -9,8 +9,16 @@
 </template>
 
 <script>
-const variants = ["primary", "primary-hover", "white", "white-outline"]
-const sizes = ["sm", "md", "lg"]
+const variants = [
+  "none",
+  "primary",
+  "primary-hover",
+  "white",
+  "white-outline",
+  "dark",
+  "primary-dashed"
+]
+const sizes = ["xs", "sm", "md", "lg"]
 
 export default {
   props: {

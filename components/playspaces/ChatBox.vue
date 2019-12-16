@@ -111,8 +111,6 @@ export default {
         return
       }
 
-      console.log(this.text)
-
       this.$socket.API.emit("chat-message", this.text)
       this.text = ""
     },

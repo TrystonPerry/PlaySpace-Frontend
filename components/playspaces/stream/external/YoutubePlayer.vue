@@ -222,8 +222,6 @@ export default {
 
       if (this.ignoreEvents) return;
 
-      console.log(event.data)
-
       switch (event.data) {
         // Unstarted
         case -1:

@@ -11,7 +11,7 @@
           <p-link to="/live" variant="primary" class="mr-2 mb-2 text-center">
             Join a PlaySpace
           </p-link>
-          <p-link to="/signup" variant="primary-hover" class="text-center">
+          <p-link to="/create" variant="primary-hover" class="text-center">
             Create a PlaySpace
           </p-link>
         </div>

@@ -8,21 +8,21 @@
       slot="content"
       class="absolute right-0 list-style-none bg-dark-5 px-2 py-1 shadow-reg mb-0 text-right w-48"
     >
-      <li>
+      <!-- <li>
         <nuxt-link :to="`/profile/${$store.state.user.username}`">
           My Profile
         </nuxt-link>
-      </li>
-      <li>
+      </li> -->
+      <!-- <li>
         <nuxt-link to="/playspaces">
           My PlaySpaces
         </nuxt-link>
-      </li>
-      <li>
+      </li> -->
+      <!-- <li>
         <nuxt-link to="/account">
           My Account
         </nuxt-link>
-      </li>
+      </li> -->
       <li>
         <a href="#" @click.prevent="$store.dispatch('user/logout')">
           Log Out

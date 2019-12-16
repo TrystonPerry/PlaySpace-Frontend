@@ -1,18 +1,23 @@
 <template>
   <div>
-    <AppNavbar />
-    <div class="h-12"></div>
-    <div class="flex" style="overflow:hidden" :style="`height: ${screenHeight}`">
-      <AppSidebar v-show="$store.state.nav.side.left.isShown" class="h-100 shadow-reg" />
-      <div class="flex-grow overflow-y-auto h-100 bg-dark-1">
-        <nuxt />
+    <div>
+      <AppNavbar />
+      <div class="h-12"></div>
+      <div class="flex" style="overflow:hidden" :style="`height: ${screenHeight}`">
+        <AppSidebar v-show="$store.state.nav.side.left.isShown" class="h-100 shadow-reg" />
+        <div class="flex-grow overflow-y-auto h-100 bg-dark-1">
+          <nuxt />
+        </div>
+        <PlaySpaceSidebar
+          v-if="!$store.state.nav.isMobile"
+          :key="$route.params.playspace"
+          class="shadow-reg"
+        />
+
+        <notifications position="bottom center" class="fixed" />
       </div>
-      <PlaySpaceSidebar
-        v-if="!$store.state.nav.isMobile"
-        :key="$route.params.playspace"
-        class="shadow-reg"
-      />
     </div>
+
     <portal-target name="modal-container">
     </portal-target>
   </div>
