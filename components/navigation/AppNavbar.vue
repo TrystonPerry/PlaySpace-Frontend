@@ -102,7 +102,4 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.app-navbar {
-  z-index: 1018;
-}
 </style>

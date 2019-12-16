@@ -1,6 +1,7 @@
 import Vue from "vue"
 
 import Vuelidate from "vuelidate"
+import PortalVue from "portal-vue"
 
 Vue.directive("click-out", {
   bind(el, binding, vnode) {
@@ -18,3 +19,4 @@ Vue.directive("click-out", {
 })
 
 Vue.use(Vuelidate)
+Vue.use(PortalVue)

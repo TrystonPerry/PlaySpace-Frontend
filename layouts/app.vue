@@ -13,7 +13,8 @@
         class="shadow-reg"
       />
     </div>
-    <div id="modal-container"></div>
+    <portal-target name="modal-container">
+    </portal-target>
   </div>
 </template>
 

@@ -1,11 +1,13 @@
 <template>
-  <div v-if="value" class="modal flex items-center justify-center">
-    <div class="modal__box bg-dark-5 shadow-reg overflow-auto">
-      <button @click="$emit('input', false)" class="btn btn-close">X</button>
-      <slot></slot>
+  <portal to="modal-container">
+    <div v-if="value" class="modal flex items-center justify-center">
+      <div class="modal__box bg-dark-5 shadow-reg overflow-auto text-gray-300">
+        <button @click="$emit('input', false)" class="btn btn-close">X</button>
+        <slot></slot>
+      </div>
+      <div @click="$emit('input', false)" class="modal__bg"></div>
     </div>
-    <div @click="$emit('input', false)" class="modal__bg"></div>
-  </div>
+  </portal>
 </template>
 
 <script>
@@ -37,14 +39,14 @@ export default {
 
 <style lang="scss">
 .modal {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
 
   &__box {
-    position: absolute;
+    position: fixed;
     padding: 20px;
     border-radius: 4px;
     width: 100%;
