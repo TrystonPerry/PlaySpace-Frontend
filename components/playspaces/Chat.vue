@@ -3,6 +3,20 @@
     <ul class="list-style-none flex flex-col">
       <li class="opacity-50 text-xs px-2 py-1">Welcome to the chat, say hi and start a conversation!</li>
       <ChatMessage v-for="(message, i) in messages" :key="i" :message="message" />
+      <ul v-if="disconnected" class="list-style-none text-center">
+        <p class="p-1 text-sm text-red-500">
+          You have lost connection to chat.
+        </p>
+        <p-btn
+          @click="attemptReconnect"
+          variant="none"
+          class="bg-red-500 text-sm px-2"
+          size="xs"
+        >
+          Reconnect
+        </p-btn>
+        <p-loading class="py-2" />
+      </ul>
     </ul>
   </div>
 </template>
@@ -17,7 +31,8 @@ export default {
 
   data: () => ({
     messages: [],
-    isScrolled: true
+    isScrolled: true,
+    disconnected: false
   }),
 
   mounted() {
@@ -31,6 +46,7 @@ export default {
   sockets: {
     API: {
       "chat-message"(messages) {
+        console.log(messages)
         if (this.messages.length > 99) {
           this.messages.shift()
         }
@@ -50,6 +66,7 @@ export default {
         }
       },
 
+      // TODO add way to ban a user
       "chat-ban"(username) {
         this.messages.forEach((message, i) => {
           if (message.username === username) {
@@ -60,7 +77,13 @@ export default {
       },
 
       reconnect() {
-        this.$socket.API.emit("chat-join", { id: this.$route.params.playspace })
+        this.attemptReconnect()
+      },
+
+      async disconnect() {
+        this.disconnected = true
+        await this.$nextTick()
+        this.doScroll()
       }
     }
   },
@@ -80,6 +103,18 @@ export default {
           behavior: "smooth"
         })
       }
+    },
+
+    attemptReconnect() {
+      if (this.$socket.API.connected) return
+
+      // TODO notify that user isnt online
+      // TODO store online status in vuex store
+      if (!navigator.onLine) return
+      
+      this.messages = []
+      this.$socket.API.emit("chat-join", { id: this.$route.params.playspace })
+      this.disconnected = false
     }
   }
 }

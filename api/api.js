@@ -1,4 +1,5 @@
 const BASE_URL = "https://pstv-api-super-beta.herokuapp.com"
+// const BASE_URL = "http://localhost:3500"
 
 const handleError = error => {
   console.error(error) // TODO better error handling

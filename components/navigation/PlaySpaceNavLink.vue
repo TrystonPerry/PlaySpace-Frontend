@@ -11,7 +11,7 @@
       <div class="hidden md:block ml-1">
         <h3 class="font-medium">{{ playSpace.channelName }}</h3>
         <div v-if="isLive">
-          <p class="font-thin text-sm">{{ playSpace.title }}</p>
+          <p class="font-thin text-sm">{{ playSpace.title | truncate(24) }}</p>
           <div>
             <small class="bg-green-400 pr-1 rounded text-xs">
               <p-icon icon="fas fa-game" />Game

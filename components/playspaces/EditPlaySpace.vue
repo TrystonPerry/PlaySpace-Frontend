@@ -82,7 +82,7 @@ export default {
           return alert(error)
         }
 
-        this.$emit("edit")
+        this.$emit("edit", data)
       }
     },
 

@@ -1,9 +1,11 @@
 <template>
   <portal to="modal-container">
     <div v-if="value" class="modal flex items-center justify-center">
-      <div class="modal__box bg-dark-5 shadow-reg scrollbar overflow-auto text-gray-300">
-        <button @click="$emit('input', false)" class="btn btn-close">X</button>
-        <slot></slot>
+      <div class="modal__box-container">
+        <div class="modal__box bg-dark-5 shadow-reg scrollbar overflow-auto text-gray-300">
+          <button @click="$emit('input', false)" class="btn btn-close">X</button>
+          <slot></slot>
+        </div>
       </div>
       <div @click="$emit('input', false)" class="modal__bg"></div>
     </div>
@@ -19,6 +21,12 @@ export default {
     }
   },
 
+  computed: {
+    id() {
+      return Math.random().toString(36).substr(2, 9)
+    }
+  },
+
   mounted() {
     window.addEventListener("keydown", this.onKeyDown)
   },
@@ -26,6 +34,21 @@ export default {
   beforeDestroy() {
     window.removeEventListener("keydown", this.onKeyDown)
   },
+
+  // TODO fix input focus :(((((
+  // watch: {
+  //   async value(value) {
+  //     if (value === true) {
+  //       await this.$nextTick()
+  //       const modal = document.getElementById(this.id)
+  //       console.log(modal, this.id)
+  //       const input = modal.querySelector("input")
+  //       if (input) {
+  //         input.focus()
+  //       }
+  //     }
+  //   }
+  // },
 
   methods: {
     onKeyDown(e) {
@@ -44,16 +67,13 @@ export default {
   left: 0;
   width: 100vw;
   height: 100vh;
+  z-index: 1030;
 
   &__box {
-    position: fixed;
     padding: 20px;
+    position: relative;
     border-radius: 4px;
-    width: 100%;
-    max-width: 600px;
     max-height: 75vh;
-    z-index: 1030;
-    margin: 10px;
     box-sizing: border-box;
 
     .btn-close {
@@ -67,6 +87,15 @@ export default {
       position: absolute;
       right: 10px;
       top: 10px;
+    }
+
+    &-container {
+      position: fixed;
+      z-index: 1030;
+      padding: 1rem;
+      width: 100%;
+      max-width: 600px;
+      margin: auto;
     }
   }
 

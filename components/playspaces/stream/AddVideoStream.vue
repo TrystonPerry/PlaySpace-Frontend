@@ -15,7 +15,7 @@
         <li>
           <button
             @click="isYoutube = true"
-            class="text-gray-300 py-2 w-full"
+            class="text-gray-300 py-2 w-full font-bold"
             style="background:#FE0200;"
           >
             <p-icon icon="fab fa-youtube" />YouTube
@@ -24,7 +24,7 @@
         <li>
           <button
             @click="isTwitch = true"
-            class="text-gray-300 py-2 w-full"
+            class="text-gray-300 py-2 w-full font-bold"
             style="background:#9047FF"
           >
             <p-icon icon="fab fa-twitch" />Twitch

@@ -1,5 +1,5 @@
 <template>
-  <div v-click-out="close" :id="id">
+  <div v-click-out="close" :id="id" class="p-dropdown">
     <button @click="isVisible = !isVisible" :class="btnClasses">
       <slot></slot>
     </button>
@@ -57,4 +57,5 @@ export default {
 }
 </script>
 
-<style></style>
+<style>
+</style>

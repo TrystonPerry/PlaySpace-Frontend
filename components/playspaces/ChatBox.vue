@@ -20,18 +20,46 @@
         class="text-xs px-2"
       >Send</p-btn>
     </div>
-    <div v-if="isLogin" class="absolute top-0 left-0 bg-black-300">You need to login!</div>
+    <p-modal v-model="showLogin">
+      <div class="flex mb-4">
+        <button
+          @click="isLogin = false"
+          class="w-6/12 p-2 select-none"
+          :class="!isLogin ? 'border-b-2 border-primary text-primary font-bold' : ''"
+        >
+          Sign Up
+        </button>
+        <button
+          @click="isLogin = true"
+          class="w-6/12 select-none"
+          :class="isLogin ? 'border-b-2 border-primary text-primary font-bold' : ''"
+        >
+          Log In
+        </button>
+      </div>
+      <LoginForm v-if="isLogin" @login="showLogin = false" />
+      <SignupForm v-else @signup="showLogin = false" />
+    </p-modal>
   </div>
 </template>
 
 <script>
+import LoginForm from "@/components/user/LoginForm"
+import SignupForm from "@/components/user/SignupForm"
+
 export default {
+  components: {
+    LoginForm,
+    SignupForm
+  },
+
   data: () => ({
     text: "",
     errors: {
       text: ""
     },
-    isLogin: false
+    isLogin: false,
+    showLogin: false
   }),
 
   computed: {
@@ -75,13 +103,15 @@ export default {
   methods: {
     sendMessage() {
       if (!this.isLoggedIn) {
-        this.isLogin = true
+        this.showLogin = true
         return
       }
 
       if (!this.checkMessage()) {
         return
       }
+
+      console.log(this.text)
 
       this.$socket.API.emit("chat-message", this.text)
       this.text = ""

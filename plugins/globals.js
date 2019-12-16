@@ -10,6 +10,7 @@ import PLink from "@/components/globals/PLink"
 import PDropdown from "@/components/globals/PDropdown"
 import PModal from "@/components/globals/PModal"
 import PTooltip from "@/components/globals/PTooltip"
+import PLoading from "@/components/globals/PLoading"
 
 Vue.component("popper", Popper)
 Vue.component("p-avatar", PAvatar)
@@ -21,3 +22,4 @@ Vue.component("p-link", PLink)
 Vue.component("p-dropdown", PDropdown)
 Vue.component("p-modal", PModal)
 Vue.component("p-tooltip", PTooltip)
+Vue.component("p-loading", PLoading)

@@ -1,24 +1,37 @@
 <template>
-  <li class="flex flex-column hover:bg-black-300 px-1">
-    <p-avatar
-      avatar="https://i.imgur.com/cvrQlUP.png"
-      size="xs"
-      class="flex-shrink-0"
-    />
-    <div class="w-full ml-1 max-h-64 overflow-hidden rounded-md">
-      <h3 class="text-sm font-medium">{{ message.username }}</h3>
-      <p
-        v-if="type === 'text'"
-        class="text-xs break-words"
-        v-html="computedMessage"
-      ></p>
-      <img
-        v-else-if="type === 'img'"
-        :src="computedMessage"
-        class="w-full rounded-md"
+  <!-- <popper trigger="hover"> -->
+    <!-- <small class="text-gray-200 py-1 px-2 text-center">
+      <p-btn
+        variant="none"
+        size="xs"
+        class="bg-red-500 text-xs"
+      >
+        <p-tooltip :text="`Perma-ban ${message.username}`">
+          <p-icon icon="fas fa-trash p-1" />
+        </p-tooltip>
+      </p-btn>
+    </small> -->
+    <li slot="reference" class="flex flex-column hover:bg-black-300 px-1">
+      <p-avatar
+        avatar="https://i.imgur.com/cvrQlUP.png"
+        size="xs"
+        class="flex-shrink-0"
       />
-    </div>
-  </li>
+      <div class="w-full ml-1 max-h-64 overflow-hidden rounded-md">
+        <h3 class="text-sm font-medium">{{ message.username }}</h3>
+        <p
+          v-if="type === 'text'"
+          class="text-xs break-words"
+          v-html="computedMessage"
+        ></p>
+        <img
+          v-else-if="type === 'img'"
+          :src="computedMessage"
+          class="w-full rounded-md"
+        />
+      </div>
+    </li>
+  <!-- </popper> -->
 </template>
 
 <script>

@@ -45,7 +45,7 @@
       <AccountDropdown v-else />
     </div>
     <p-modal v-model="isEdit" class="text-gray-200">
-      <EditPlaySpace @edit="isEdit = false" />
+      <EditPlaySpace @edit="onEdit" />
     </p-modal>
   </div>
 </template>
@@ -96,10 +96,19 @@ export default {
   methods: {
     ...mapActions({
       toggleLeftSidebar: "nav/toggleLeftSidebar"
-    })
+    }),
+
+    onEdit(playSpace) {
+      console.log(playSpace)
+      this.playSpace = playSpace
+      this.isEdit = false
+    }
   }
 }
 </script>
 
 <style lang="scss" scoped>
+.app-navbar {
+  z-index: 1000;
+}
 </style>
