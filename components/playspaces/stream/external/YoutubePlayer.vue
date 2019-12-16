@@ -5,16 +5,26 @@
     </div>
     <div v-show="stream.queue.length === 0" class="flex items-center justify-center text-center h-full w-full text-gray-300">
       <div>
-        <p-icon icon="fab fa-youtube text-4xl" style="color:#FE0200;" />
-        <h2 class="text-2xl font-medium">The Queue is Empty</h2>
-        <p>Add videos to the queue to continue watching!</p>
+        <div class="mb-2">
+          <p-icon icon="fab fa-youtube text-4xl" style="color:#FE0200;" />
+          <h2 class="text-2xl font-medium">The Queue is Empty</h2>
+          <p>Add videos to the queue to continue watching!</p>
+        </div>
         <p-btn
           @click="isAddVideo = !isAddVideo"
           variant="none"
-          class="bg-green-700 mb-1"  
+          class="bg-green-700"  
         >
           <p-icon icon="fas fa-plus" />
           Add Video
+        </p-btn>
+        <p-btn 
+          @click="$socket.SFU.emit('room-stream-external-close', stream.id)" 
+          variant="none" 
+          class="bg-red-400"
+        >
+          <p-icon icon="fas fa-minus" />
+          Remove Player
         </p-btn>
       </div>
     </div>
@@ -28,34 +38,40 @@
       <h3 class="text-lg font-medium mb-2">
         Enter the video URL below
       </h3>
-      <div class="flex">
+      <form @submit.prevent="addYouTubeStream" class="flex">
         <p-input v-model="youtubeUrl" placeholder="https://www.youtube.com/watch?v=dQw4w9WgXcQ" class="flex-grow" />
-        <p-btn @click="addYouTubeStream" variant="primary" class="h-full">
+        <p-btn variant="primary" type="submit" class="h-full">
           Add
         </p-btn>
+      </form>
+      <div v-if="stream.queue.length > 0" class="mt-2">
+        <h2 class="text-2xl">
+          Player Queue
+        </h2>
+        <ul class="queue list-style-none overflow-y-auto">
+          <li 
+            v-for="(videoId, i) in stream.queue" 
+            :key="i" 
+            class="flex items-center mb-1 rounded p-1"
+          >
+            <h3 class="flex-grow">
+              {{ videoId }}
+            </h3>
+            <p-tooltip text="Remove" position="left">
+              <p-btn 
+              @click="$socket.SFU.emit(`room-stream-youtube-skip-video`, { id: stream.id, index: i })"
+                variant="none"
+                size="xs"
+                class="bg-red-400"
+              >
+                <p-icon icon="fas fa-trash" />
+              </p-btn>
+            </p-tooltip>
+          </li>
+        </ul>
       </div>
-      <h2 class="text-2xl">
-        Player Queue
-      </h2>
-      <ul class="list-style-none">
-        <li v-for="(videoId, i) in stream.queue" :key="i" class="flex items-center">
-          <h3 class="flex-grow">
-            {{ videoId }}
-          </h3>
-          <p-tooltip text="Remove" position="left">
-            <p-btn 
-             @click="$socket.SFU.emit(`room-stream-youtube-skip-video`, { id: stream.id, index: i })"
-              variant="none"
-              size="xs"
-              class="bg-red-400"
-            >
-              <p-icon icon="fas fa-trash" />
-            </p-btn>
-          </p-tooltip>
-        </li>
-      </ul>
     </p-modal>
-    <div v-if="controls" class="absolute right-0 mr-1" style="top:50%;transform:translateY(-50%)">
+    <div v-if="controls" class="controls absolute right-0 mr-1" style="top:50%;transform:translateY(-50%)">
       <p-tooltip text="Add Video" position="left">
         <p-btn
           @click="isAddVideo = !isAddVideo"
@@ -64,6 +80,16 @@
           class="bg-green-700 mb-1"  
         >
           <p-icon icon="fas fa-plus" />
+        </p-btn>
+      </p-tooltip>
+      <p-tooltip v-if="stream.queue.length > 1" text="Next Video" position="left">
+        <p-btn
+          @click="skipCurrentVideo"
+          variant="none"
+          size="sm"
+          class="bg-blue-400 mb-1"
+        >
+          <p-icon icon="fas fa-forward" />
         </p-btn>
       </p-tooltip>
       <p-tooltip text="Remove Player" position="left">
@@ -123,13 +149,14 @@ export default {
 
       this.player.seekTo(this.stream.time, true);
       if (this.stream.state !== 1) {
-        // this.player.pauseVideo();
+        this.pauseVideoAnon()
       }
       
       this.ignoreEvents = false;
     }, 2000);
 
     this.sockets.SFU.subscribe(`room-stream-youtube-${this.stream.id}-player-time`, () => {
+      if (this.stream.queue.length === 0) return
       const value = this.player.getCurrentTime();
       if (!value) return
       this.$socket.SFU.emit(`room-steam-youtube-player-time`, {
@@ -152,7 +179,7 @@ export default {
     })
 
     this.sockets.SFU.subscribe(`room-stream-youtube-${this.stream.id}-unstarted`, () => {
-      this.player.playVideo()
+      this.playVideoAnon()
     })
 
     this.sockets.SFU.subscribe(`room-stream-youtube-${this.stream.id}-played`, this.playVideoAnon)
@@ -161,15 +188,17 @@ export default {
 
     this.sockets.SFU.subscribe(`room-stream-youtube-${this.stream.id}-add-video`, videoId => {
       this.addVideoToYouTubeQueue({ stream: this.stream, videoId })
+      // If this video is the only video in queue, play it
       if (this.stream.queue.length === 1) {
-        this.player.loadVideoById(this.stream.queue[0])
+        this.loadVideoAnon(this.stream.queue[0])
       }
     })
 
     this.sockets.SFU.subscribe(`room-stream-youtube-${this.stream.id}-skip-video`, index => {
       this.removeVideoFromYouTubeQueue({ stream: this.stream, index })
+      // If skipped video is current playing video, load next video
       if (index === 0) {
-        this.player.loadVideoById(this.stream.queue[0])
+        this.loadVideoAnon(this.stream.queue[0])
       }
     })
   },
@@ -192,6 +221,8 @@ export default {
       }
 
       if (this.ignoreEvents) return;
+
+      console.log(event.data)
 
       switch (event.data) {
         // Unstarted
@@ -240,6 +271,15 @@ export default {
 
     onPlayerCued() {},
 
+    loadVideoAnon(videoId) {
+      this.ignoreEvents = true;
+      this.player.loadVideoById(videoId)
+      setTimeout(() => {
+        this.playVideoAnon()
+        this.ignoreEvents = false;
+      }, 2000)
+    },
+
     playVideoAnon() {
       this.ignoreEvents = true;
       this.player.playVideo();
@@ -264,11 +304,30 @@ export default {
         id: this.stream.id,
         videoId: url
       })
+
+      this.youtubeUrl = ""
+    },
+
+    skipCurrentVideo() {
+      this.$socket.SFU.emit(`room-stream-youtube-skip-video`, {
+        id: this.stream.id,
+        index: 0
+      })
     }
   }
 }
 </script>
 
-<style>
-
+<style lang="scss" scoped>
+.controls {
+  button.p-btn {
+    height: 32px;
+    width: 32px;
+  }
+}
+.queue {
+  li:nth-child(even) {
+    @apply bg-dark-4;
+  }
+}
 </style>

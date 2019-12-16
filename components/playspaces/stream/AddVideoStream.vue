@@ -23,7 +23,7 @@
         </li>
         <li>
           <button
-            @click="addTwitchStream"
+            @click="isTwitch = true"
             class="text-gray-300 py-2 w-full"
             style="background:#9047FF"
           >
@@ -32,7 +32,7 @@
         </li>
       </ul>
     </p-dropdown>
-    <p-modal v-model="isYoutube" class="text-left text-gray-200">
+    <p-modal v-model="isYoutube" class="text-left">
       <div class="flex items-center">
         <p-icon icon="fab fa-youtube text-4xl" style="color:#FE0200;" />
           <h2 class="text-2xl ml-2 font-medium">
@@ -42,12 +42,29 @@
       <h3 class="text-lg font-medium mb-2">
         Enter the video URL below
       </h3>
-      <div class="flex">
+      <form @submit.prevent="addYouTubeStream" class="flex">
         <p-input v-model="youtubeUrl" placeholder="https://www.youtube.com/watch?v=dQw4w9WgXcQ" class="flex-grow" />
-        <p-btn @click="addYouTubeStream" variant="primary" class="h-full">
+        <p-btn variant="primary" type="submit" class="h-full">
           Add
         </p-btn>
+      </form>
+    </p-modal>
+    <p-modal v-model="isTwitch">
+      <div class="flex items-center">
+        <p-icon icon="fab fa-twitch text-4xl" style="color:#9047FF" />
+          <h2 class="text-2xl ml-2 font-medium">
+          Add a Twitch Stream
+        </h2>
       </div>
+      <h3 class="text-lg font-medium mb-2">
+        Enter the Twitch URL or username below
+      </h3>
+      <form @submit.prevent="addTwitchStream" class="flex">
+        <p-input v-model="twitchUsername" placeholder="https://www.twitch.tv/drdisrespect or drdisrespect" class="flex-grow" />
+        <p-btn variant="primary" type="submit" class="h-full">
+          Add
+        </p-btn>
+      </form>
     </p-modal>
   </div>
 </template>
@@ -58,7 +75,8 @@ import WebRTC from "@/functions/webrtc"
 import { mapActions } from "vuex"
 
 const regex = {
-  youtubeUrl: /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#\&\?]*).*/
+  youtubeUrl: /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#\&\?]*).*/,
+  twitchUrl: /^(https?:\/\/twitch.tv\/)?(\w+)$/
 }
 
 export default {
@@ -71,6 +89,7 @@ export default {
 
   data: () => ({
     isYoutube: false,
+    isTwitch: false,
     youtubeUrl: "",
     twitchUsername: ""
   }),
@@ -107,12 +126,19 @@ export default {
     },
 
     addTwitchStream() {
-      const answer = prompt("Enter a twitch username")
+      const match = this.twitchUsername.match(regex.twitchUrl)
+
+      const username = match && match[2]
+
+      // TODO notif
+      if (!username) return 
 
       this.$socket.SFU.emit("room-stream-external", {
         type: "twitch",
-        username: answer
+        username
       })
+
+      this.isTwitch = false
     },
 
     addYouTubeStream() {
@@ -127,6 +153,7 @@ export default {
         type: "youtube",
         videoId: url
       })
+      
       this.isYoutube = false
     }
   }

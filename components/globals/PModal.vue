@@ -1,7 +1,7 @@
 <template>
   <portal to="modal-container">
     <div v-if="value" class="modal flex items-center justify-center">
-      <div class="modal__box bg-dark-5 shadow-reg overflow-auto text-gray-300">
+      <div class="modal__box bg-dark-5 shadow-reg scrollbar overflow-auto text-gray-300">
         <button @click="$emit('input', false)" class="btn btn-close">X</button>
         <slot></slot>
       </div>
