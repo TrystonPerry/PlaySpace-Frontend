@@ -120,8 +120,6 @@ export default {
 
       const url = match && match[7].length === 11 ? match[7] : false
 
-      console.log(this.youtubeUrl, match, url)
-
       // TODO notify that it's an invalid URL
       if (!url) return
 
