@@ -17,7 +17,7 @@ if (process.client) {
   Vue.use(
     new VueSocketIO({
       debug: false,
-      connection: "http://localhost:3000",
+      connection: "https://sfu.beta.playspace.tv",
       options: {
         useConnectionNamespace: true,
         namespaceName: "SFU"
