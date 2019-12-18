@@ -6,7 +6,7 @@ if (process.client) {
   Vue.use(
     new VueSocketIO({
       debug: false,
-      connection: "https://pstv-api-super-beta.herokuapp.com",
+      connection: "http://localhost:3500",
       options: {
         useConnectionNamespace: true,
         namespaceName: "API"

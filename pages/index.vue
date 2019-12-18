@@ -1,26 +1,30 @@
 <template>
   <div class="landing container px-2 mx-auto my-6 py-6 text-gray-400">
-    <div class="flex flex-wrap items-center">
-      <div class="w-full md:w-6/12 text-center md:text-left">
+    <div>
+      <div class="w-full md:w-6/12 mx-auto text-center">
         <h1 class="text-5xl font-medium text-primary">PlaySpace</h1>
-        <h2 class="text-thin text-gray-400 mt-1 mb-4">
+        <h2 class="text-gray-400 mt-1 mb-4">
           Watch videos, play games, or browse the internet with your friends.
           All from your web browser, no software needed.
         </h2>
         <div class="mb-2">
           <p-link to="/live" variant="primary" class="mr-2 mb-2 text-center">
-            Join a PlaySpace
+            Browse PlaySpaces
           </p-link>
           <p-link to="/create" variant="primary-hover" class="text-center">
             Create a PlaySpace
           </p-link>
         </div>
         <ul
-          class="flex justify-center md:justify-start social-media list-style-none pl-0 text-gray-400"
+          class="flex justify-center social-media list-style-none pl-0 text-gray-400"
           aria-label="PlaySpace's Social Media"
         >
           <li class="mr-2">
-            <a href="https://twitter.com/playspacetv" target="_blank">
+            <a
+              href="https://twitter.com/playspacetv"
+              target="_blank"
+              class="text-primary"
+            >
               <p-icon
                 icon="fab fa-twitter"
                 screen-reader-text="PlaySpace Twitter"
@@ -28,7 +32,11 @@
             </a>
           </li>
           <li class="mr-2">
-            <a href="https://discord.gg/WwewP4D" target="_blank">
+            <a
+              href="https://discord.gg/WwewP4D"
+              target="_blank"
+              class="text-primary"
+            >
               <p-icon
                 icon="fab fa-discord"
                 screen-reader-text="PlaySpace Discord"
@@ -36,7 +44,11 @@
             </a>
           </li>
           <li class="mr-2">
-            <a href="https://medium.com/@playspacetv" target="_blank">
+            <a
+              href="https://medium.com/@playspacetv"
+              target="_blank"
+              class="text-primary"
+            >
               <p-icon
                 icon="fab fa-medium"
                 screen-reader-text="PlaySpace Medium"
@@ -47,6 +59,7 @@
             <a
               href="https://www.youtube.com/channel/UC7Uqb7o-sthQtJLarbBGIcg"
               target="_blank"
+              class="text-primary"
             >
               <p-icon
                 icon="fab fa-youtube"
@@ -55,7 +68,11 @@
             </a>
           </li>
           <li class="mr-2">
-            <a href="https://reddit.com/r/playspacetv" target="_blank">
+            <a
+              href="https://reddit.com/r/playspacetv"
+              target="_blank"
+              class="text-primary"
+            >
               <p-icon
                 icon="fab fa-reddit"
                 screen-reader-text="PlaySpace Reddit"
@@ -63,7 +80,11 @@
             </a>
           </li>
           <li class="mr-2">
-            <a href="https://instagram.com/playspacetv" target="_blank">
+            <a
+              href="https://instagram.com/playspacetv"
+              target="_blank"
+              class="text-primary"
+            >
               <p-icon
                 icon="fab fa-instagram"
                 screen-reader-text="PlaySpace Instagram"
@@ -72,24 +93,13 @@
           </li>
         </ul>
       </div>
-      <!-- <div class="w-full md:w-6/12">
-        <img src="https://i.imgur.com/NVAaY3Q.png" class="w-100" />
-      </div> -->
+      <div class="w-full mx-auto mt-6">
+        <img src="https://i.imgur.com/rVvXT9C.jpg" class="w-full" />
+      </div>
     </div>
 
-    <!-- <div class="relative">
-      <video
-        src="https://trystonperry.com/public/videos/PlaySpace-Demo.mp4"
-        muted
-        class="hero__video hero__video-md"
-      ></video>
-    </div> -->
-
     <!-- What is a PlaySpace? -->
-    <div
-      class="container text-center md:text-right my-6 py-6 ml-auto"
-      style="padding-top:15rem"
-    >
+    <!-- <div class="container text-center md:text-right my-6 ml-auto">
       <h1 class="text-2xl font-medium text-primary">What is a PlaySpace?</h1>
       <h2 class="text-xl md:w-6/12 ml-auto mb-3">
         A PlaySpace is a virtual room you can create to easily share gameplay,
@@ -112,10 +122,10 @@
           </h3>
         </div>
       </div>
-    </div>
+    </div> -->
 
     <!-- Use Cases -->
-    <div class="container mt-5">
+    <div class="container my-6">
       <h1 class="text-3xl font-medium text-primary">Use Cases</h1>
       <p>What is PlaySpace great for?</p>
       <div class="flex flex-wrap -mx-2">
@@ -149,15 +159,19 @@
       </div>
     </div>
 
+    <h2 class="text-center text-2xl font-bold">
+      More coming to this page soon...
+    </h2>
+
     <!-- Quote Statement -->
-    <div class="fav-content">
+    <!-- <div class="fav-content">
       <h1 class="container-sm text-5xl font-medium mb-4">
         Your favorite content was meant to be watched together.
       </h1>
-    </div>
+    </div> -->
 
     <!-- Browser Support -->
-    <div class="container container-sm mt-5 text-center">
+    <!-- <div class="container container-sm mt-5 text-center">
       <h1 class="font-lg mb-3">Browser Support</h1>
       <div class="mb-4">
         <h2 class="font-md mt-0 font-weight-normal">
@@ -205,7 +219,7 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -227,7 +241,7 @@ export default {
       {
         title: "Long Distance Relationships",
         desc:
-          "Do you and your special other live apart from each other? PlaySpace’s Private rooms are a great way to spend time together YouTube or browsing the internet together."
+          "Do you and your special other live apart from each other? PlaySpace’s Private rooms are a great way to spend time together watching YouTube or browsing the internet together."
       },
       {
         title: "Live Game Show",

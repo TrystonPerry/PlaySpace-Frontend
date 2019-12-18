@@ -109,7 +109,7 @@ export default {
           return (this.errors.general = error)
         }
 
-        this.$emit("create", this.id)
+        this.$emit("create", data.id)
       }
     },
 

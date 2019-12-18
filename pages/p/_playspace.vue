@@ -1,23 +1,50 @@
 <template>
-  <div :key="$route.params.playspace" class="relative playspace h-full" style="max-height:100%">
+  <div
+    :key="$route.params.playspace"
+    class="relative playspace h-full"
+    style="max-height:100%"
+  >
     <div class="visually-hidden">
       <h1>{{ playSpace.channelName }}</h1>
       <h2>{{ playSpace.title }}</h2>
     </div>
     <div class="flex flex-col h-full">
       <client-only>
-        <div v-if="!totalStreams" class="text-center text-gray-300 my-5">
-          <h3 class="text-2xl font-bold">It's lonely here :(</h3>
-          <h4>Click below to share your desktop, a YouTube video, or Twitch Stream</h4>
-          <AddVideoStream class="max-w-48 w-full mx-auto mt-5" />
+        <div v-if="!totalStreams" class="text-center text-gray-300 py-5">
+          <div v-if="canStream && !$store.state.nav.isMobile">
+            <h3 class="text-2xl font-bold">It's lonely here :(</h3>
+            <h4>
+              Click below to share your desktop, a YouTube video, or Twitch
+              Stream
+            </h4>
+            <AddVideoStream class="max-w-48 w-full mx-auto mt-5" />
+          </div>
+          <div v-else>
+            <p-avatar :avatar="playSpace.avatar" size="lg" />
+            <h3 class="text-2xl font-bold">
+              {{ playSpace.channelName }}
+            </h3>
+            <h4>{{ playSpace.title }}</h4>
+            <h3 class="text-2xl mt-4 font-bold">
+              Users
+            </h3>
+            <ul class="list-style-none">
+              <li v-for="user in users" :key="user.username">
+                <h4 class="text-lg font-bold inline-block">
+                  {{ user.username }}
+                </h4>
+                <span> - {{ user.rank }} </span>
+              </li>
+            </ul>
+          </div>
         </div>
       </client-only>
 
-      <VideoContainer 
-        :device="device" 
-        :sendTransport="sendTransport" 
-        :recvTransport="recvTransport" 
-        class="video-container" 
+      <VideoContainer
+        :device="device"
+        :sendTransport="sendTransport"
+        :recvTransport="recvTransport"
+        class="video-container"
       />
       <PlaySpaceMobileSidebar
         v-if="$store.state.nav.isMobile"
@@ -25,7 +52,11 @@
         class="flex-grow mt-2"
       />
     </div>
-    <AddVideoStream v-if="totalStreams" drop-up class="absolute bottom-0 left-0 m-2" />
+    <AddVideoStream
+      v-if="totalStreams && canStream"
+      drop-up
+      class="absolute bottom-0 left-0 m-2"
+    />
   </div>
 </template>
 
@@ -79,8 +110,24 @@ export default {
 
   computed: {
     ...mapGetters({
-      "totalStreams": "stream/totalStreams"
-    })
+      totalStreams: "stream/totalStreams"
+    }),
+
+    canStream() {
+      if (!this.playSpace.users) return false
+      const { username } = this.$store.state.user
+      return username && !!this.playSpace.users[username]
+    },
+
+    users() {
+      const keys = Object.keys(this.playSpace.users)
+      const values = Object.values(this.playSpace.users)
+      let arr = []
+      for (let i = 0; i < keys.length; i++) {
+        arr.push({ username: keys[i], rank: values[i] })
+      }
+      return arr
+    }
   },
 
   mounted() {
@@ -96,7 +143,7 @@ export default {
     SFU: {
       "room-joined": async function(roomData) {
         const { routerRtpCapabilities } = roomData
-        
+
         this.device = new Device()
         await this.device.load({ routerRtpCapabilities })
 
@@ -114,12 +161,16 @@ export default {
       },
 
       "room-sendtransport-created": async function(transportOptions) {
-        this.sendTransport = await this.device.createSendTransport(transportOptions)
+        this.sendTransport = await this.device.createSendTransport(
+          transportOptions
+        )
         this.connectTransport(this.sendTransport)
       },
 
       "room-recvtransport-created": async function(transportOptions) {
-        this.recvTransport = await this.device.createRecvTransport(transportOptions)
+        this.recvTransport = await this.device.createRecvTransport(
+          transportOptions
+        )
         this.connectTransport(this.recvTransport)
       },
 
@@ -136,15 +187,17 @@ export default {
       },
 
       reconnect() {
-        this.$socket.SFU.emit("room-join", { roomId: this.$route.params.playspace })
+        this.$socket.SFU.emit("room-join", {
+          roomId: this.$route.params.playspace
+        })
       }
-    },
+    }
   },
 
   methods: {
     ...mapActions({
-      "addStream": "stream/addStream",
-      "reset": "stream/reset"
+      addStream: "stream/addStream",
+      reset: "stream/reset"
     }),
 
     connectTransport(transport) {

@@ -9,17 +9,23 @@
       </small>
       <div class="w-full overflow-hidden rounded-md">
         <img
-          :src="stream.screenshot.url || 'https://i.imgur.com/TuxBNtk.jpg'"
+          :src="
+            (stream.screenshot && stream.screenshot.url) ||
+              'https://i.imgur.com/TuxBNtk.jpg'
+          "
         />
       </div>
       <div class="relative p-3">
-        <span
-          class="playspace__viewcount absolute bg-dark-5 rounded-full py-2 px-4 shadow-reg"
-        >
-          <i class="fa fa-user"></i>
-          {{ stream.viewerCount }} viewers
-        </span>
-        <div class="mt-4">
+        <div v-if="stream.isLive">
+          <span
+            class="playspace__viewcount absolute bg-dark-5 rounded-full py-2 px-4 shadow-reg"
+          >
+            <i class="fa fa-user"></i>
+            {{ stream.viewerCount }} viewers
+          </span>
+          <div class="mb-4"></div>
+        </div>
+        <div>
           <h2 class="font-bold mb-1" :title="stream.title">
             {{ truncatedTitle }}
           </h2>
@@ -27,7 +33,7 @@
             <p-avatar :avatar="stream.avatar" size="sm" />
             <span>{{ stream.channelName }}</span>
           </h3>
-          <span
+          <!-- <span
             class="mr-2 bg-green-500 text-white rounded py-1 px-2"
             title="Category"
           >
@@ -37,7 +43,7 @@
           <span v-if="stream.game" title="Game">
             <p-icon icon="fa fa-gamepad" />
             <span>{{ stream.game }}</span>
-          </span>
+          </span> -->
         </div>
       </div>
     </nuxt-link>

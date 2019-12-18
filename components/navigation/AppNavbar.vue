@@ -8,7 +8,11 @@
           <p-icon icon="fas fa-bars" screen-reader-text="Menu" size="lg" />
         </button>
         <NavLink to="/live" class="font-bold">
-          <img src="/img/playspace-icon-trans.png" alt="PlaySpace logo" class="h-full" />
+          <img
+            src="/img/playspace-icon-trans.png"
+            alt="PlaySpace logo"
+            class="h-full"
+          />
           <span>PlaySpace</span>
         </NavLink>
       </ul>
@@ -18,23 +22,38 @@
         style="left:50%;transform:translateX(-50%)"
       >
         <li class="md:mr-2">
-          <p-avatar :avatar="playSpace.avatar" class="w-12 h-12 rounded-full p-1" />
+          <p-avatar
+            :avatar="playSpace.avatar"
+            class="w-12 h-12 rounded-full p-1"
+          />
         </li>
         <li class="hidden md:block lg:mr-2 font-medium text-lg">
-          <p-tooltip :text="`/p/${playSpace.id}`">{{ playSpace.channelName }}</p-tooltip>
+          <p-tooltip :text="`/p/${playSpace.id}`">
+            {{ playSpace.channelName }}
+          </p-tooltip>
         </li>
         <li class="hidden lg:block">
-          <p-tooltip :text="playSpace.title">{{ playSpace.title | truncate(32) }}</p-tooltip>
+          <p-tooltip :text="playSpace.title">
+            {{ playSpace.title | truncate(32) }}
+          </p-tooltip>
         </li>
-        <li>
+        <li v-if="isOwner">
           <p-tooltip text="Edit PlaySpace">
-            <p-btn @click="isEdit = !isEdit" variant="none" size="sm" class="mx-1">
+            <p-btn
+              @click="isEdit = !isEdit"
+              variant="none"
+              size="sm"
+              class="mx-1"
+            >
               <i class="fas fa-cog"></i>
             </p-btn>
           </p-tooltip>
         </li>
       </ul>
-      <ul v-if="!$store.state.user.username" class="list-none flex items-center">
+      <ul
+        v-if="!$store.state.user.username"
+        class="list-none flex items-center"
+      >
         <li class="hidden sm:block px-1 py-2">
           <p-link to="/login" variant="primary-hover" size="sm">Log In</p-link>
         </li>
@@ -43,11 +62,20 @@
         </li>
       </ul>
       <ul v-else class="list-style-none flex">
-        <li class="px-1 py-2">
+        <!-- TODO: DONT SHOW IF USER HAS HIT MAX PLAYSPACES -->
+        <li v-if="!$route.params.playspace" class="px-1 py-2">
           <p-tooltip text="Create a PlaySpace">
             <p-link to="/create" variant="primary" size="sm">
               Create
             </p-link>
+          </p-tooltip>
+        </li>
+        <li v-else class="px-1 py-2">
+          <p-tooltip text="Copy Sharable Link">
+            <p-btn variant="primary" size="sm">
+              <p-icon icon="fas fa-user-plus" />
+              Share
+            </p-btn>
           </p-tooltip>
         </li>
         <li>
@@ -84,7 +112,13 @@ export default {
   computed: {
     ...mapGetters({
       isLoggedIn: "user/isLoggedIn"
-    })
+    }),
+
+    isOwner() {
+      if (!this.playSpace.users) return false
+      const rank = this.playSpace.users[this.$store.state.user.username]
+      return !!rank && rank === "owner"
+    }
   },
 
   watch: {
@@ -110,7 +144,10 @@ export default {
     }),
 
     onEdit(playSpace) {
-      this.playSpace = playSpace
+      this.playSpace = {
+        ...this.playSpace,
+        ...playSpace
+      }
       this.isEdit = false
     }
   }

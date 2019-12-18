@@ -1,5 +1,24 @@
 <template>
   <div class="mx-auto">
+    <client-only>
+      <div v-if="myPlaySpaces.length && $store.state.user.username">
+        <h1 class="text-3xl text-primary text-center font-medium mt-6 mb-2">
+          My PlaySpaces
+        </h1>
+        <ul class="flex flex-wrap justify-center">
+          <li
+            v-for="playSpace in myPlaySpaces"
+            :key="playSpace.username"
+            class="live__item w-full sm:max-w-64 p-1"
+          >
+            <PlaySpace
+              :stream="playSpace"
+              class="w-full h-full rounded-md shadow-reg"
+            />
+          </li>
+        </ul>
+      </div>
+    </client-only>
     <h1 class="text-3xl text-primary text-center font-medium mt-6 mb-2">
       Live PlaySpaces
     </h1>
@@ -35,7 +54,8 @@
         Create a PlaySpace
       </h1>
       <h2 class="text-lg mb-3 mx-auto" style="max-width:450px;">
-        Create a PlaySpace to watch your favorite videos, games, and more; together!
+        Create a PlaySpace to watch your favorite videos, games, and more;
+        together!
       </h2>
       <p-link variant="primary" to="/create">
         Create my PlaySpace
@@ -56,10 +76,27 @@ export default {
 
   head: require("@/meta/live")(),
 
+  data: () => ({
+    myPlaySpaces: []
+  }),
+
   async asyncData() {
-    const { data, success } = await API.getPlaySpaces()
+    const { data, success } = await API.getLivePlaySpaces()
 
     return { playSpaces: data }
+  },
+
+  watch: {
+    "$store.state.user.username": {
+      async handler(value) {
+        if (!value) return
+
+        const { data, success } = await API.getUsersPlaySpaces()
+
+        this.myPlaySpaces = data
+      },
+      immediate: true
+    }
   }
 }
 </script>

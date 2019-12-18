@@ -5,19 +5,19 @@
     <nuxt-link
       :to="`/p/${playSpace.id}`"
       class="flex"
-      :class="{ 'items-center': !isLive }"
+      :class="{ 'items-center': !stream.isLive }"
     >
       <p-avatar :avatar="playSpace.avatar" size="md" class="flex-shrink-0" />
       <div class="hidden md:block ml-1">
         <h3 class="font-medium">{{ playSpace.channelName }}</h3>
-        <div v-if="isLive">
+        <div v-if="stream.isLive">
           <p class="font-thin text-sm">{{ playSpace.title | truncate(24) }}</p>
-          <div>
+          <!-- <div>
             <small class="bg-green-400 pr-1 rounded text-xs">
               <p-icon icon="fas fa-game" />Game
             </small>
             <small class="ml-2 text-xs">{{ playSpace.game }}</small>
-          </div>
+          </div> -->
         </div>
       </div>
     </nuxt-link>
@@ -34,8 +34,8 @@ export default {
   },
 
   computed: {
-    isLive() {
-      return Math.random() < 0.25
+    stream() {
+      return this.playSpace.stream || {}
     }
   }
 }

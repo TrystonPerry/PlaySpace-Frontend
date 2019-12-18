@@ -1,5 +1,5 @@
 <template>
-  <div class="add-video-stream">
+  <div v-if="!$store.state.nav.isMobile" class="add-video-stream">
     <p-dropdown btn-classes="p-btn btn-primary-dashed w-48">
       <p-icon icon="fas fa-plus" />Add Video
       <ul
@@ -7,7 +7,12 @@
         class="absolute list-style-none bg-dark-5 shadow-reg w-48"
         :style="dropUp ? 'bottom:44px' : ''"
       >
-        <li>
+        <li
+          v-if="
+            $store.state.stream.streams.video.length < 2 &&
+              !$store.state.stream.tracks.video
+          "
+        >
           <button
             @click="getDesktopStream"
             class="bg-primary font-bold text-gray-300 py-2 w-full"
@@ -15,7 +20,7 @@
             <p-icon icon="fas fa-desktop" />Desktop
           </button>
         </li>
-        <li>
+        <li v-if="$store.state.stream.streams.external.length < 5">
           <button
             @click="isYoutube = true"
             class="text-gray-300 py-2 w-full font-bold"
@@ -24,7 +29,7 @@
             <p-icon icon="fab fa-youtube" />YouTube
           </button>
         </li>
-        <li>
+        <li v-if="$store.state.stream.streams.external.length < 5">
           <button
             @click="isTwitch = true"
             class="text-gray-300 py-2 w-full font-bold"

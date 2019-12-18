@@ -24,6 +24,11 @@
         </nuxt-link>
       </li> -->
       <li>
+        <nuxt-link to="/create">
+          Create a PlaySpace
+        </nuxt-link>
+      </li>
+      <li>
         <a href="#" @click.prevent="$store.dispatch('user/logout')">
           Log Out
         </a>

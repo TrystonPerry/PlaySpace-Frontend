@@ -15,10 +15,13 @@
         <i class="fab fa-amilia"></i>
         <span class="hidden md:block ml-2">About</span>
       </NavLink>
-      <NavDivider class="hidden md:flex">
+      <NavDivider v-if="$store.state.user.username" class="hidden md:flex">
         <h2>Your PlaySpaces</h2>
       </NavDivider>
-      <li class="flex-grow overflow-y-auto scrollbar">
+      <li
+        v-if="$store.state.user.username"
+        class="flex-grow overflow-y-auto scrollbar"
+      >
         <ul class="list-style-none px-1">
           <PlaySpaceNavLink
             v-for="playSpace in playSpaces"
@@ -50,14 +53,21 @@ export default {
     playSpaces: []
   }),
 
-  async created() {
-    const { data, success } = await API.getPlaySpaces()
+  watch: {
+    "$store.state.user.username": {
+      async handler(value) {
+        if (!value) return
 
-    if (!success) {
-      return
+        const { data, success } = await API.getUsersPlaySpaces()
+
+        if (!success) {
+          return
+        }
+
+        this.playSpaces = data
+      },
+      immediate: true
     }
-
-    this.playSpaces = data
   }
 }
 </script>

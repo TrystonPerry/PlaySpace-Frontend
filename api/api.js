@@ -1,14 +1,28 @@
-const BASE_URL = "https://pstv-api-super-beta.herokuapp.com"
-// const BASE_URL = "http://localhost:3500"
+// const BASE_URL = "https://pstv-api-super-beta.herokuapp.com"
+const BASE_URL = "http://localhost:3500"
+
+import Vue from "vue"
 
 const handleError = error => {
   console.error(error) // TODO better error handling
+  Vue.notify({
+    type: "error",
+    message: error
+  })
 }
 
 const axis = {
-  get(url, options) {
+  get(url, options = {}) {
     return fetch(`${BASE_URL}${url}`, {
-      ...options
+      ...options,
+      headers: {
+        ...options.headers,
+        "Content-Type": "application/json",
+        Authorization:
+          typeof localStorage !== "undefined"
+            ? localStorage.getItem("playspace-token")
+            : ""
+      }
     })
       .then(async res => {
         const { status } = res
@@ -28,7 +42,7 @@ const axis = {
       headers: {
         ...options.headers,
         "Content-Type": "application/json",
-        Authorization: localStorage.getItem("playspace-token")
+        Authorization: localStorage && localStorage.getItem("playspace-token")
       },
       body: JSON.stringify(options.body),
       method: "POST"
@@ -51,7 +65,7 @@ const axis = {
       headers: {
         ...options.headers,
         "Content-Type": "application/json",
-        Authorization: localStorage.getItem("playspace-token")
+        Authorization: localStorage && localStorage.getItem("playspace-token")
       },
       body: JSON.stringify(options.body),
       method: "PUT"
@@ -84,6 +98,10 @@ export default {
 
   async getPlaySpaces() {
     return await axis.get("/channels")
+  },
+
+  async getLivePlaySpaces() {
+    return await axis.get("/channels/live")
   },
 
   async getPlaySpace(id) {
@@ -150,5 +168,9 @@ export default {
     })
     if (!res.error) return true
     return false
+  },
+
+  async getUsersPlaySpaces() {
+    return await axis.get(`/user/playspaces`)
   }
 }
