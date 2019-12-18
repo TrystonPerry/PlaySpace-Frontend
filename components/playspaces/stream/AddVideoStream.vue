@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="add-video-stream">
     <p-dropdown btn-classes="p-btn btn-primary-dashed w-48">
       <p-icon icon="fas fa-plus" />Add Video
       <ul
@@ -8,7 +8,10 @@
         :style="dropUp ? 'bottom:44px' : ''"
       >
         <li>
-          <button @click="getDesktopStream" class="bg-primary font-bold text-gray-300 py-2 w-full">
+          <button
+            @click="getDesktopStream"
+            class="bg-primary font-bold text-gray-300 py-2 w-full"
+          >
             <p-icon icon="fas fa-desktop" />Desktop
           </button>
         </li>
@@ -35,18 +38,26 @@
     <p-modal v-model="isYoutube" class="text-left">
       <div class="flex items-center">
         <p-icon icon="fab fa-youtube text-4xl" style="color:#FE0200;" />
-          <h2 class="text-2xl ml-2 font-medium">
+        <h2 class="text-2xl ml-2 font-medium">
           Add a YouTube Video
         </h2>
       </div>
-      <a href="https://youtube.com" target="_blank" class="text-primary hover:underline my-2 block">
+      <a
+        href="https://youtube.com"
+        target="_blank"
+        class="text-primary hover:underline my-2 block"
+      >
         Browse YouTube in new Tab
       </a>
       <h3 class="text-lg font-medium mb-2">
         Enter the video URL below
       </h3>
       <form @submit.prevent="addYouTubeStream" class="flex">
-        <p-input v-model="youtubeUrl" placeholder="https://www.youtube.com/watch?v=dQw4w9WgXcQ" class="flex-grow" />
+        <p-input
+          v-model="youtubeUrl"
+          placeholder="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+          class="flex-grow"
+        />
         <p-btn variant="primary" type="submit" class="h-full">
           Add
         </p-btn>
@@ -55,18 +66,26 @@
     <p-modal v-model="isTwitch">
       <div class="flex items-center">
         <p-icon icon="fab fa-twitch text-4xl" style="color:#9047FF" />
-          <h2 class="text-2xl ml-2 font-medium">
+        <h2 class="text-2xl ml-2 font-medium">
           Add a Twitch Stream
         </h2>
       </div>
-      <a href="https://twitch.tv" target="_blank" class="text-primary hover:underline my-2 block">
+      <a
+        href="https://twitch.tv"
+        target="_blank"
+        class="text-primary hover:underline my-2 block"
+      >
         Browse Twitch in new Tab
       </a>
       <h3 class="text-lg font-medium mb-2">
         Enter the Twitch URL or username below
       </h3>
       <form @submit.prevent="addTwitchStream" class="flex">
-        <p-input v-model="twitchUsername" placeholder="https://www.twitch.tv/drdisrespect or drdisrespect" class="flex-grow" />
+        <p-input
+          v-model="twitchUsername"
+          placeholder="https://www.twitch.tv/drdisrespect or drdisrespect"
+          class="flex-grow"
+        />
         <p-btn variant="primary" type="submit" class="h-full">
           Add
         </p-btn>
@@ -137,7 +156,7 @@ export default {
       const username = match && match[2]
 
       // TODO notif
-      if (!username) return 
+      if (!username) return
 
       this.$socket.SFU.emit("room-stream-external", {
         type: "twitch",
@@ -159,12 +178,11 @@ export default {
         type: "youtube",
         videoId: url
       })
-      
+
       this.isYoutube = false
     }
   }
 }
 </script>
 
-<style>
-</style>
+<style lang="scss" scoped></style>

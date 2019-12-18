@@ -3,7 +3,7 @@
     <button @click="isVisible = !isVisible" :class="btnClasses">
       <slot></slot>
     </button>
-    <slot v-if="isVisible" name="content"></slot>
+    <slot v-if="isVisible" name="content" class="p-dropdown__content"></slot>
   </div>
 </template>
 
@@ -57,5 +57,8 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss" scoped>
+* {
+  z-index: 100;
+}
 </style>
