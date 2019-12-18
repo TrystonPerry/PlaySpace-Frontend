@@ -1,16 +1,7 @@
 <template>
-  <div
-    @mouseenter="controls = true"
-    @mouseleave="controls = false"
-    class="h-full w-full relative"
-  >
+  <div @mouseenter="controls = true" @mouseleave="controls = false" class="h-full w-full relative">
     <div v-show="stream.queue.length > 0" class="h-full w-full">
-      <div
-        :id="stream.id"
-        :src="src"
-        frameborder="0"
-        class="w-full h-full"
-      ></div>
+      <div :id="stream.id" :src="src" frameborder="0" class="w-full h-full"></div>
     </div>
     <div
       v-show="stream.queue.length === 0"
@@ -22,57 +13,41 @@
           <h2 class="text-2xl font-medium">The Queue is Empty</h2>
           <p>Add videos to the queue to continue watching!</p>
         </div>
-        <p-btn
-          @click="isAddVideo = !isAddVideo"
-          variant="none"
-          class="bg-green-700"
-        >
-          <p-icon icon="fas fa-plus" />
-          Add Video
+        <p-btn @click="isAddVideo = !isAddVideo" variant="none" class="bg-green-700">
+          <p-icon icon="fas fa-plus" />Add Video
         </p-btn>
         <p-btn
           @click="$socket.SFU.emit('room-stream-external-close', stream.id)"
           variant="none"
           class="bg-red-400"
         >
-          <p-icon icon="fas fa-minus" />
-          Remove Player
+          <p-icon icon="fas fa-minus" />Remove Player
         </p-btn>
       </div>
     </div>
     <p-modal v-model="isAddVideo" class="text-left text-gray-200">
       <div class="flex items-center">
         <p-icon icon="fab fa-youtube text-4xl" style="color:#FE0200;" />
-        <h2 class="text-2xl ml-2 font-medium">
-          Add a YouTube Video
-        </h2>
+        <h2 class="text-2xl ml-2 font-medium">Add a YouTube Video</h2>
       </div>
-      <h3 class="text-lg font-medium mb-2">
-        Enter the video URL below
-      </h3>
+      <h3 class="text-lg font-medium mb-2">Enter the video URL below</h3>
       <form @submit.prevent="addYouTubeStream" class="flex">
         <p-input
           v-model="youtubeUrl"
           placeholder="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
           class="flex-grow"
         />
-        <p-btn variant="primary" type="submit" class="h-full">
-          Add
-        </p-btn>
+        <p-btn variant="primary" type="submit" class="h-full">Add</p-btn>
       </form>
       <div v-if="stream.queue.length > 0" class="mt-2">
-        <h2 class="text-2xl">
-          Player Queue
-        </h2>
+        <h2 class="text-2xl">Player Queue</h2>
         <ul class="queue list-style-none overflow-y-auto">
           <li
             v-for="(videoId, i) in stream.queue"
             :key="i"
             class="flex items-center mb-1 rounded p-1"
           >
-            <h3 class="flex-grow">
-              {{ videoId }}
-            </h3>
+            <h3 class="flex-grow">{{ videoId }}</h3>
             <p-tooltip text="Remove" position="left">
               <p-btn
                 @click="
@@ -98,26 +73,12 @@
       style="top:50%;transform:translateY(-50%)"
     >
       <p-tooltip text="Add Video" position="left">
-        <p-btn
-          @click="isAddVideo = !isAddVideo"
-          variant="none"
-          size="sm"
-          class="bg-green-700 mb-1"
-        >
+        <p-btn @click="isAddVideo = !isAddVideo" variant="none" size="sm" class="bg-green-700 mb-1">
           <p-icon icon="fas fa-plus" />
         </p-btn>
       </p-tooltip>
-      <p-tooltip
-        v-if="stream.queue.length > 1"
-        text="Next Video"
-        position="left"
-      >
-        <p-btn
-          @click="skipCurrentVideo"
-          variant="none"
-          size="sm"
-          class="bg-blue-400 mb-1"
-        >
+      <p-tooltip v-if="stream.queue.length > 1" text="Next Video" position="left">
+        <p-btn @click="skipCurrentVideo" variant="none" size="sm" class="bg-blue-400 mb-1">
           <p-icon icon="fas fa-forward" />
         </p-btn>
       </p-tooltip>
@@ -255,6 +216,17 @@ export default {
     )
   },
 
+  computed: {
+    isAuthorized() {
+      const playSpace = this.$store.state.playSpace.current
+      if (!playSpace) return false
+      if (!this.$store.state.user.username) return false
+      if (playSpace.users[this.$store.state.user.username] === "owner") {
+        return true
+      }
+    }
+  },
+
   methods: {
     ...mapActions({
       addVideoToYouTubeQueue: "stream/addVideoToYouTubeQueue",
@@ -272,7 +244,7 @@ export default {
         this.player.playVideo()
       }
 
-      if (this.ignoreEvents) return
+      if (this.ignoreEvents || !this.isAuthorized) return
 
       switch (event.data) {
         // Unstarted

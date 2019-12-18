@@ -1,9 +1,5 @@
 <template>
-  <div
-    :key="$route.params.playspace"
-    class="relative playspace h-full"
-    style="max-height:100%"
-  >
+  <div :key="$route.params.playspace" class="relative playspace h-full" style="max-height:100%">
     <div class="visually-hidden">
       <h1>{{ playSpace.channelName }}</h1>
       <h2>{{ playSpace.title }}</h2>
@@ -21,19 +17,13 @@
           </div>
           <div v-else>
             <p-avatar :avatar="playSpace.avatar" size="lg" />
-            <h3 class="text-2xl font-bold">
-              {{ playSpace.channelName }}
-            </h3>
+            <h3 class="text-2xl font-bold">{{ playSpace.channelName }}</h3>
             <h4>{{ playSpace.title }}</h4>
-            <h3 class="text-2xl mt-4 font-bold">
-              Users
-            </h3>
+            <h3 class="text-2xl mt-4 font-bold">Users</h3>
             <ul class="list-style-none">
               <li v-for="user in users" :key="user.username">
-                <h4 class="text-lg font-bold inline-block">
-                  {{ user.username }}
-                </h4>
-                <span> - {{ user.rank }} </span>
+                <h4 class="text-lg font-bold inline-block">{{ user.username }}</h4>
+                <span>- {{ user.rank }}</span>
               </li>
             </ul>
           </div>
@@ -52,11 +42,7 @@
         class="flex-grow mt-2"
       />
     </div>
-    <AddVideoStream
-      v-if="totalStreams && canStream"
-      drop-up
-      class="absolute bottom-0 left-0 m-2"
-    />
+    <AddVideoStream v-if="totalStreams && canStream" drop-up class="absolute bottom-0 left-0 m-2" />
   </div>
 </template>
 
@@ -108,6 +94,17 @@ export default {
     return { playSpace: data }
   },
 
+  mounted() {
+    this.$socket.SFU.emit("room-join", { roomId: this.$route.params.playspace })
+    this.$store.dispatch("playSpace/setCurrentPlaySpace", this.playSpace)
+  },
+
+  beforeDestroy() {
+    this.$socket.SFU.emit("room-leave")
+    this.$store.dispatch("playSpace/removeCurrentPlaySpace")
+    this.reset()
+  },
+
   computed: {
     ...mapGetters({
       totalStreams: "stream/totalStreams"
@@ -128,15 +125,6 @@ export default {
       }
       return arr
     }
-  },
-
-  mounted() {
-    this.$socket.SFU.emit("room-join", { roomId: this.$route.params.playspace })
-  },
-
-  beforeDestroy() {
-    this.$socket.SFU.emit("room-leave")
-    this.reset()
   },
 
   sockets: {
@@ -197,7 +185,8 @@ export default {
   methods: {
     ...mapActions({
       addStream: "stream/addStream",
-      reset: "stream/reset"
+      reset: "stream/reset",
+      setCurrentPlaySpace: "playSpace/setCurrentPlaySpace"
     }),
 
     connectTransport(transport) {

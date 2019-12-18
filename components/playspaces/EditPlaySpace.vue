@@ -45,14 +45,8 @@ export default {
     }
   }),
 
-  async created() {
-    const { data, success, error } = await API.getPlaySpace(
-      this.$route.params.playspace
-    )
-
-    if (!success) {
-      return alert(error)
-    }
+  created() {
+    const data = this.$store.state.playSpace.current
 
     this.channelName = data.channelName
     this.title = data.title
@@ -83,6 +77,7 @@ export default {
         }
 
         this.$emit("edit", data)
+        this.$store.dispatch("playSpace/updateCurrentPlaySpace", data)
       }
     },
 

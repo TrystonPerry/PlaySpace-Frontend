@@ -18,11 +18,8 @@
       <NavDivider v-if="$store.state.user.username" class="hidden md:flex">
         <h2>Your PlaySpaces</h2>
       </NavDivider>
-      <li
-        v-if="$store.state.user.username"
-        class="flex-grow overflow-y-auto scrollbar"
-      >
-        <ul class="list-style-none px-1">
+      <li v-if="$store.state.user.username" class="flex-grow overflow-y-auto scrollbar">
+        <ul v-if="!isLoading" class="list-style-none px-1">
           <PlaySpaceNavLink
             v-for="playSpace in playSpaces"
             :key="playSpace.username"
@@ -30,6 +27,7 @@
             class="mb-2"
           />
         </ul>
+        <p-loading v-else />
       </li>
     </ul>
   </div>
@@ -50,21 +48,25 @@ export default {
   },
 
   data: () => ({
-    playSpaces: []
+    playSpaces: [],
+    isLoading: true
   }),
 
   watch: {
     "$store.state.user.username": {
       async handler(value) {
-        if (!value) return
+        if (value) {
+          this.isLoading = true
 
-        const { data, success } = await API.getUsersPlaySpaces()
+          const { data, success } = await API.getUsersPlaySpaces()
 
-        if (!success) {
-          return
+          if (!success) {
+            return
+          }
+
+          this.playSpaces = data
         }
-
-        this.playSpaces = data
+        this.isLoading = false
       },
       immediate: true
     }
