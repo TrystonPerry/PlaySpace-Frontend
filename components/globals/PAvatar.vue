@@ -3,7 +3,7 @@
     <img
       :src="computedAvatar"
       v-bind="$attrs"
-      class="rounded-full inline-block"
+      class="rounded-full inline-block bg-gray-100"
       :class="`w-${computedSize} h-${computedSize}`"
     />
   </div>

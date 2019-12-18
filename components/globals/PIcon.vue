@@ -1,9 +1,7 @@
 <template>
   <span :title="screenReaderText">
     <i :class="`${icon} text-${size}`" aria-hidden></i>
-    <span v-if="screenReaderText" class="visually-hidden">{{
-      screenReaderText
-    }}</span>
+    <span v-if="screenReaderText" class="visually-hidden">{{ screenReaderText }}</span>
   </span>
 </template>
 
