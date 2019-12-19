@@ -28,7 +28,7 @@
       <div class="flex flex-col flex-grow">
         <Chat v-if="isTextChat" class="flex-grow mb-1" />
         <ChatBox v-if="isTextChat" />
-        <ul v-if="!isTextChat" class="list-style-none">
+        <!-- <ul v-if="!isTextChat" class="list-style-none">
           <li
             class="bg-black-500 shadow hover:bg-black-400 hover:shadow-reg rounded-lg mb-2"
           >
@@ -49,7 +49,7 @@
           >
             <VoiceChatter :playSpace="{ username: 'renoops' }" />
           </li>
-        </ul>
+        </ul> -->
       </div>
     </div>
   </div>

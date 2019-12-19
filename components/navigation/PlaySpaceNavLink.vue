@@ -9,7 +9,7 @@
     >
       <p-avatar :avatar="playSpace.avatar" size="md" class="flex-shrink-0" />
       <div class="hidden md:block ml-1">
-        <h3 class="font-medium">{{ playSpace.channelName }}</h3>
+        <h3 class="font-bold">{{ playSpace.channelName }}</h3>
         <div v-if="stream.isLive">
           <p class="font-thin text-sm">{{ playSpace.title | truncate(24) }}</p>
           <!-- <div>

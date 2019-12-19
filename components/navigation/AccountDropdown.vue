@@ -1,5 +1,5 @@
 <template>
-  <p-dropdown btn-classes="px-3 font-medium h-12">
+  <p-dropdown btn-classes="px-3 font-bold h-12">
     <p-avatar :src="$store.state.user.avatar" size="sm" />
     <span class="hidden sm:inline-block ml-1">
       {{ $store.state.user.fullUsername }}

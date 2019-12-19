@@ -2,7 +2,7 @@
   <div class="mx-auto">
     <client-only>
       <div v-if="myPlaySpaces.length && $store.state.user.username">
-        <h1 class="text-3xl text-primary text-center font-medium mt-6 mb-2">
+        <h1 class="text-3xl text-primary text-center font-bold mt-6 mb-2">
           My PlaySpaces
         </h1>
         <ul class="flex flex-wrap justify-center">
@@ -19,7 +19,7 @@
         </ul>
       </div>
     </client-only>
-    <h1 class="text-3xl text-primary text-center font-medium mt-6 mb-2">
+    <h1 class="text-3xl text-primary text-center font-bold mt-6 mb-2">
       Live PlaySpaces
     </h1>
     <ul v-if="playSpaces.length" class="flex flex-wrap justify-center">
@@ -50,7 +50,7 @@
       </div> -->
     </div>
     <div class="text-center">
-      <h1 class="text-2xl text-primary text-center font-medium mt-6 mb-2">
+      <h1 class="text-2xl text-primary text-center font-bold mt-6 mb-2">
         Create a PlaySpace
       </h1>
       <h2 class="text-lg mb-3 mx-auto" style="max-width:450px;">

@@ -43,7 +43,7 @@
     <p-modal v-model="isYoutube" class="text-left">
       <div class="flex items-center">
         <p-icon icon="fab fa-youtube text-4xl" style="color:#FE0200;" />
-        <h2 class="text-2xl ml-2 font-medium">
+        <h2 class="text-2xl ml-2 font-bold">
           Add a YouTube Video
         </h2>
       </div>
@@ -54,7 +54,7 @@
       >
         Browse YouTube in new Tab
       </a>
-      <h3 class="text-lg font-medium mb-2">
+      <h3 class="text-lg font-bold mb-2">
         Enter the video URL below
       </h3>
       <form @submit.prevent="addYouTubeStream" class="flex">
@@ -71,7 +71,7 @@
     <p-modal v-model="isTwitch">
       <div class="flex items-center">
         <p-icon icon="fab fa-twitch text-4xl" style="color:#9047FF" />
-        <h2 class="text-2xl ml-2 font-medium">
+        <h2 class="text-2xl ml-2 font-bold">
           Add a Twitch Stream
         </h2>
       </div>
@@ -82,7 +82,7 @@
       >
         Browse Twitch in new Tab
       </a>
-      <h3 class="text-lg font-medium mb-2">
+      <h3 class="text-lg font-bold mb-2">
         Enter the Twitch URL or username below
       </h3>
       <form @submit.prevent="addTwitchStream" class="flex">

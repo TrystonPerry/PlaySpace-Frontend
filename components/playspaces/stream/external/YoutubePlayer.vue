@@ -10,7 +10,7 @@
       <div>
         <div class="mb-2">
           <p-icon icon="fab fa-youtube text-4xl" style="color:#FE0200;" />
-          <h2 class="text-2xl font-medium">The Queue is Empty</h2>
+          <h2 class="text-2xl font-bold">The Queue is Empty</h2>
           <p>Add videos to the queue to continue watching!</p>
         </div>
         <p-btn @click="isAddVideo = !isAddVideo" variant="none" class="bg-green-700">
@@ -28,9 +28,9 @@
     <p-modal v-model="isAddVideo" class="text-left text-gray-200">
       <div class="flex items-center">
         <p-icon icon="fab fa-youtube text-4xl" style="color:#FE0200;" />
-        <h2 class="text-2xl ml-2 font-medium">Add a YouTube Video</h2>
+        <h2 class="text-2xl ml-2 font-bold">Add a YouTube Video</h2>
       </div>
-      <h3 class="text-lg font-medium mb-2">Enter the video URL below</h3>
+      <h3 class="text-lg font-bold mb-2">Enter the video URL below</h3>
       <form @submit.prevent="addYouTubeStream" class="flex">
         <p-input
           v-model="youtubeUrl"

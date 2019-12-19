@@ -1,6 +1,6 @@
 <template>
   <form @submit.prevent>
-    <h1 class="text-3xl text-primary font-medium mb-2">Sign Up</h1>
+    <h1 class="text-3xl text-primary font-bold mb-2">Sign Up</h1>
     <p-input
       v-model="email"
       @blur="checkEmail"

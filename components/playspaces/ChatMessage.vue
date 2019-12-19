@@ -18,7 +18,7 @@
         class="flex-shrink-0"
       />
       <div class="w-full ml-1 max-h-64 overflow-hidden rounded-md">
-        <h3 class="text-sm font-medium">{{ message.username }}</h3>
+        <h3 class="text-sm font-bold">{{ message.username }}</h3>
         <p
           v-if="type === 'text'"
           class="text-xs break-words"

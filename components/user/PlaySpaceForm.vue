@@ -1,9 +1,9 @@
 <template>
   <form @submit.prevent>
-    <h1 class="text-3xl text-primary font-medium">Create a PlaySpace</h1>
+    <h1 class="text-3xl text-primary font-bold">Create a PlaySpace</h1>
     <h2 class="text-xl mb-3">You can change any of these later.</h2>
     <label>
-      <div class="text-lg font-medium text-primary">Name</div>
+      <div class="text-lg font-bold text-primary">Name</div>
       <div class="mb-1">
         This is the name users will see when they see your PlaySpace in the app.
       </div>
@@ -20,7 +20,14 @@
     </small>
     <div class="mb-3"></div>
     <label>
-      <div class="text-lg font-medium text-primary">Public</div>
+      <div class="text-lg font-bold text-primary">Public</div>
+      <!-- <div style="max-width:3rem">
+        <p-tooltip text="Public Spaces are intended for people who want to share streams with
+          anyone on the internet. Private Spaces are for rooms limitted to people
+          you invite.">
+            <p-icon icon="fas fa-question" />
+        </p-tooltip>
+      </div> -->
       <p-input
         v-model="isPublic"
         :checked="isPublic"
@@ -28,15 +35,10 @@
         label="Do you want your PlaySpace to be discoverable to anyone?"
         class="mb-2"
       />
-      <div aria-hidden>
-        Public Spaces are intended for people who want to share streams with
-        anyone on the internet. Private Spaces are for rooms limitted to people
-        you invite.
-      </div>
     </label>
     <div class="mb-3"></div>
-    <label>
-      <div class="text-lg font-medium text-primary">Identifier</div>
+    <label v-if="isPublic">
+      <div class="text-lg font-bold text-primary">Identifier</div>
       <div class="mb-1">
         The is the name that will be used in the url bar to find your PlaySpace.
       </div>
@@ -52,10 +54,10 @@
         Note: When making a Private PlaySpace, you will be assigned a random
         identifier. You can change it later if you change it to Public.
       </span>
+      <small v-if="errors.id" class="text-red-500">
+        {{ errors.id }}
+      </small>
     </label>
-    <small v-if="errors.id" class="text-red-500">
-      {{ errors.id }}
-    </small>
     <small v-if="errors.general" class="text-red-500 mt-2">
       {{ errors.general }}
     </small>
@@ -81,6 +83,10 @@ const regex = {
 }
 
 export default {
+  head: {
+    title: "Create - PlaySpace",
+  },
+
   data: () => ({
     channelName: "",
     id: "",

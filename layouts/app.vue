@@ -14,7 +14,7 @@
           class="shadow-reg"
         />
 
-        <notifications position="bottom center" class="fixed" />
+        <notifications position="bottom left" class="fixed" style="z-index:1100" />
       </div>
     </div>
 

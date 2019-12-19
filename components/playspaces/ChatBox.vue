@@ -11,7 +11,7 @@
       <p-btn variant="none" size="xs" class="text-gray-200 mr-1">
         <p-icon icon="far fa-smile" size="sm" />
       </p-btn>
-      <p-btn variant="none" size="xs" class="text-gray-200 text-xs font-medium h-4 mr-1 rounded">GIF</p-btn>
+      <p-btn variant="none" size="xs" class="text-gray-200 text-xs font-bold h-4 mr-1 rounded">GIF</p-btn>
       <p-btn
         @click="sendMessage"
         variant="primary"

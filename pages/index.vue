@@ -2,7 +2,7 @@
   <div class="landing container px-2 mx-auto my-6 py-6 text-gray-400">
     <div>
       <div class="w-full md:w-6/12 mx-auto text-center">
-        <h1 class="text-5xl font-medium text-primary">PlaySpace</h1>
+        <h1 class="text-5xl font-bold text-primary">PlaySpace</h1>
         <h2 class="text-gray-400 mt-1 mb-4">
           Watch videos, play games, or browse the internet with your friends.
           All from your web browser, no software needed.
@@ -100,21 +100,21 @@
 
     <!-- What is a PlaySpace? -->
     <!-- <div class="container text-center md:text-right my-6 ml-auto">
-      <h1 class="text-2xl font-medium text-primary">What is a PlaySpace?</h1>
+      <h1 class="text-2xl font-bold text-primary">What is a PlaySpace?</h1>
       <h2 class="text-xl md:w-6/12 ml-auto mb-3">
         A PlaySpace is a virtual room you can create to easily share gameplay,
         videos or browse the internet with friends.
       </h2>
       <div class="flex flex-wrap ml-auto -px-2 md:w-9/12">
         <div class="w-full md:w-6/12 p-2">
-          <h2 class="text-xl font-medium text-primary">Public PlaySpaces</h2>
+          <h2 class="text-xl font-bold text-primary">Public PlaySpaces</h2>
           <h3 class="text-center md:text-right text-lg">
             Public PlaySpaces are rooms for streaming yourself to anyone on the
             intertnet. It's much like streaming on Twitch or Youtube.
           </h3>
         </div>
         <div class="w-full md:w-6/12 p-2">
-          <h2 class="text-xl font-medium text-primary">Private PlaySpaces</h2>
+          <h2 class="text-xl font-bold text-primary">Private PlaySpaces</h2>
           <h3 class="text-center md:text-right text-lg">
             Private PlaySpaces are private rooms only accessible to those with
             an invite link. They are intended to be used when you want to watch
@@ -126,7 +126,7 @@
 
     <!-- Use Cases -->
     <div class="container my-6">
-      <h1 class="text-3xl font-medium text-primary">Use Cases</h1>
+      <h1 class="text-3xl font-bold text-primary">Use Cases</h1>
       <p>What is PlaySpace great for?</p>
       <div class="flex flex-wrap -mx-2">
         <div class="w-full sm:w-6/12 md:w-3/12 p-2">
@@ -165,7 +165,7 @@
 
     <!-- Quote Statement -->
     <!-- <div class="fav-content">
-      <h1 class="container-sm text-5xl font-medium mb-4">
+      <h1 class="container-sm text-5xl font-bold mb-4">
         Your favorite content was meant to be watched together.
       </h1>
     </div> -->

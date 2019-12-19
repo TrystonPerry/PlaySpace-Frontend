@@ -37,6 +37,7 @@
         <li class="px-1 py-2">
           <p-tooltip text="Create a PlaySpace">
             <p-link to="/create" variant="primary" size="sm">
+              <p-icon icon="fas fa-plus" />
               Create
             </p-link>
           </p-tooltip>

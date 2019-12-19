@@ -2,7 +2,7 @@
   <button
     v-bind="$attrs"
     v-on="$listeners"
-    class="p-btn inline-block rounded font-medium"
+    class="p-btn inline-block rounded font-bold"
     :class="`btn-${variant} ${computedSize}`"
   >
     <slot></slot>

@@ -1,5 +1,5 @@
-const BASE_URL = "https://pstv-api-super-beta.herokuapp.com"
-// const BASE_URL = "http://localhost:3500"
+// const BASE_URL = "https://pstv-api-super-beta.herokuapp.com"
+const BASE_URL = "http://localhost:3500"
 
 import Vue from "vue"
 
@@ -7,7 +7,8 @@ const handleError = error => {
   console.error(error) // TODO better error handling
   Vue.notify({
     type: "error",
-    message: error
+    title: "Error in request",
+    text: error
   })
 }
 
@@ -96,28 +97,32 @@ export default {
   // Channels
   //
 
-  async getPlaySpaces() {
-    return await axis.get("/channels")
+  getPlaySpaces() {
+    return axis.get("/channels")
   },
 
-  async getLivePlaySpaces() {
-    return await axis.get("/channels/live")
+  getLivePlaySpaces() {
+    return axis.get("/channels/live")
   },
 
-  async getPlaySpace(id) {
-    return await axis.get(`/channels/c/${id}`)
+  getPlaySpace(id) {
+    return axis.get(`/channels/c/${id}`)
   },
 
-  async createChannel(body) {
-    return await axis.post(`/channels/create`, { body })
+  createChannel(body) {
+    return axis.post(`/channels/create`, { body })
   },
 
-  async checkChannelId(id) {
-    return await axis.get(`/channels/create/id/${id}`)
+  checkChannelId(id) {
+    return axis.get(`/channels/create/id/${id}`)
   },
 
-  async updateChannel(id, body) {
-    return await axis.put(`/channels/c/${id}`, { body })
+  updateChannel(id, body) {
+    return axis.put(`/channels/c/${id}`, { body })
+  },
+
+  updateUser(id, body) {
+    return axis.put(`/channels/c/${id}/users`, { body })
   },
 
   //

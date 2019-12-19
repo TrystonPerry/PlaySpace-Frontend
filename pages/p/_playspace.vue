@@ -31,6 +31,7 @@
       </client-only>
 
       <VideoContainer
+        v-if="device"
         :device="device"
         :sendTransport="sendTransport"
         :recvTransport="recvTransport"
@@ -107,27 +108,39 @@ export default {
 
   computed: {
     ...mapGetters({
-      totalStreams: "stream/totalStreams"
+      totalStreams: "stream/totalStreams",
+      users: "playSpace/users"
     }),
 
     canStream() {
       if (!this.playSpace.users) return false
       const { username } = this.$store.state.user
       return username && !!this.playSpace.users[username]
-    },
-
-    users() {
-      const keys = Object.keys(this.playSpace.users)
-      const values = Object.values(this.playSpace.users)
-      let arr = []
-      for (let i = 0; i < keys.length; i++) {
-        arr.push({ username: keys[i], rank: values[i] })
-      }
-      return arr
     }
   },
 
   sockets: {
+    API: {
+      "room-users-update"(user) {
+        if (user.username === this.$store.state.user.username && user.rank !== "none") {
+          this.$notify({
+            type: "success",
+            title: "You have been granted access to this PlaySpace",
+            text: `You can now stream on ${this.playSpace.channelName}`
+          })
+        }
+        else if (user.username === this.$store.state.user.username && user.rank === "none") {
+          // TODO handle better
+          location.reload()
+          this.$notify({
+            type: "error",
+            title: "You have been revoked access to this PlaySpace",
+            text: `You can no longer stream on ${this.playSpace.channelName}`
+          })
+        }
+        this.$store.dispatch("playSpace/updateUserRankInCurrentPlaySpace", user)
+      },
+    },
     SFU: {
       "room-joined": async function(roomData) {
         const { routerRtpCapabilities } = roomData

@@ -5,7 +5,7 @@
     <NavDivider class="w-full mt-2">
       <h2>Voice Chat</h2>
     </NavDivider>
-    <ul class="list-style-none">
+    <!-- <ul class="list-style-none">
       <li
         class="bg-black-500 shadow hover:bg-black-400 hover:shadow-reg rounded-lg mb-2"
       >
@@ -26,7 +26,7 @@
       >
         <VoiceChatter :playSpace="{ username: 'renoops' }" />
       </li>
-    </ul>
+    </ul> -->
     <NavDivider class="w-full">
       <h2>Text Chat</h2>
     </NavDivider>

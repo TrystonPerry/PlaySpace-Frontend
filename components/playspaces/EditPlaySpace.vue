@@ -1,6 +1,6 @@
 <template>
   <form @submit.prevent>
-    <h1 class="text-2xl font-medium mb-2">Edit PlaySpace Info</h1>
+    <h1 class="text-2xl font-bold mb-2">Edit PlaySpace Info</h1>
     <div class="mb-2">
       <p-input v-model="channelName" @blur="checkChannelName" label="Name" type="text" />
       <small v-if="errors.channelName" class="text-red-500">{{ errors.channelName }}</small>
@@ -17,7 +17,7 @@
       <p-input v-model="avatar" @blur="checkAvatar" label="Logo URL (https)" type="text" />
       <small v-if="errors.avatar" class="text-red-500">{{ errors.avatar }}</small>
     </div>
-    <p-input v-model="isPublic" label="Public" type="checkbox" class="mb-4" />
+    <!-- <p-input v-model="isPublic" label="Public" type="checkbox" class="mb-4" /> -->
     <p-btn @click="onSave" variant="primary">Save</p-btn>
   </form>
 </template>
