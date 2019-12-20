@@ -14,6 +14,15 @@ export default {
         arr.push({ username: keys[i], rank: values[i] })
       }
       return arr
+    },
+
+    isAuthorized(state, getters, rootState) {
+      const playSpace = state.current
+      if (!playSpace) return false
+      if (!rootState.user.username) return false
+      if (playSpace.users[rootState.user.username] === "owner") {
+        return true
+      }
     }
   },
 

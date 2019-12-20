@@ -17,6 +17,7 @@
           <p-icon icon="fas fa-plus" />Add Video
         </p-btn>
         <p-btn
+          v-if="isAuthorized"
           @click="$socket.SFU.emit('room-stream-external-close', stream.id)"
           variant="none"
           class="bg-red-400"
@@ -48,7 +49,7 @@
             class="flex items-center mb-1 rounded p-1"
           >
             <h3 class="flex-grow">{{ videoId }}</h3>
-            <p-tooltip text="Remove" position="left">
+            <p-tooltip v-if="isAuthorized" text="Remove" position="left">
               <p-btn
                 @click="
                   $socket.SFU.emit(`room-stream-youtube-skip-video`, {
@@ -77,13 +78,14 @@
           <p-icon icon="fas fa-plus" />
         </p-btn>
       </p-tooltip>
-      <p-tooltip v-if="stream.queue.length > 1" text="Next Video" position="left">
+      <p-tooltip v-if="stream.queue.length > 1 && isAuthorized" text="Next Video" position="left">
         <p-btn @click="skipCurrentVideo" variant="none" size="sm" class="bg-blue-400 mb-1">
           <p-icon icon="fas fa-forward" />
         </p-btn>
       </p-tooltip>
-      <p-tooltip text="Remove Player" position="left">
+      <p-tooltip v-if="isAuthorized" text="Remove Player" position="left">
         <p-btn
+          v-if="isAuthorized"
           @click="$socket.SFU.emit('room-stream-external-close', stream.id)"
           variant="none"
           size="sm"
@@ -97,7 +99,7 @@
 </template>
 
 <script>
-import { mapActions } from "vuex"
+import { mapGetters, mapActions } from "vuex"
 
 const regex = {
   youtubeUrl: /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#\&\?]*).*/
@@ -217,14 +219,9 @@ export default {
   },
 
   computed: {
-    isAuthorized() {
-      const playSpace = this.$store.state.playSpace.current
-      if (!playSpace) return false
-      if (!this.$store.state.user.username) return false
-      if (playSpace.users[this.$store.state.user.username] === "owner") {
-        return true
-      }
-    }
+    ...mapGetters({
+      isAuthorized: "playSpace/isAuthorized"
+    })
   },
 
   methods: {

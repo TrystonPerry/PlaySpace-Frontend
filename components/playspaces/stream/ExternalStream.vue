@@ -4,7 +4,7 @@
     <div v-else @mouseenter="controls = true" @mouseleave="controls = false" class="relative h-full w-full">
       <iframe :src="src" frameborder="0" class="w-full h-full"></iframe>
       <div v-if="controls" class="absolute right-0 mr-1" style="top:50%;transform:translateY(-50%)">
-      <p-tooltip text="Remove Player" position="left">
+      <p-tooltip v-if="isAuthorized" text="Remove Player" position="left">
         <p-btn 
           @click="$socket.SFU.emit('room-stream-external-close', stream.id)" 
           variant="none" 
@@ -20,7 +20,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 
 import YoutubePlayer from "./external/YoutubePlayer"
 
@@ -41,6 +41,10 @@ export default {
   }),
 
   computed: {
+    ...mapGetters({
+      isAuthorized: "playSpace/isAuthorized"
+    }),
+
     src() {
       switch(this.stream.type) {
         case 'twitch':
