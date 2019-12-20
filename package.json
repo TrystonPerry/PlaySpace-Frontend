@@ -4,6 +4,9 @@
   "description": "My sweet Nuxt.js project",
   "author": "Tryston Perry",
   "private": true,
+  "engines": {
+    "node": "v10.16.0"
+  },
   "scripts": {
     "dev": "cross-env NODE_ENV=development nodemon server/index.js --watch server",
     "build": "nuxt build",
