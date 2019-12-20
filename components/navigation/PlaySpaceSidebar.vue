@@ -2,9 +2,9 @@
   <div
     class="playspace-sidebar relative flex flex-col bg-dark-3 text-gray-300 w-64 h-full min-w-64 px-1"
   >
-    <NavDivider class="w-full mt-2">
+    <!-- <NavDivider class="w-full mt-2">
       <h2>Voice Chat</h2>
-    </NavDivider>
+    </NavDivider> -->
     <!-- <ul class="list-style-none">
       <li
         class="bg-black-500 shadow hover:bg-black-400 hover:shadow-reg rounded-lg mb-2"
@@ -27,7 +27,7 @@
         <VoiceChatter :playSpace="{ username: 'renoops' }" />
       </li>
     </ul> -->
-    <NavDivider class="w-full">
+    <NavDivider class="w-full mt-2">
       <h2>Text Chat</h2>
     </NavDivider>
     <Chat class="flex-grow mb-1" />
