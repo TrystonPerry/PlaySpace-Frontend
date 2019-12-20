@@ -3,3 +3,67 @@
 @tailwind components;
 
 @tailwind utilities;
+
+.p-link,
+.p-btn {
+  transition-duration: 100ms;
+  @apply text-gray-300;
+
+  &:hover {
+    transform: translateY(-1px);
+  }
+}
+
+.btn-primary {
+  @apply bg-primary;
+}
+
+.btn-primary-outline {
+  @apply text-primary;
+  @apply bg-gray-300;
+
+  &:hover {
+    @apply bg-primary;
+    @apply text-gray-300;
+  }
+}
+
+.btn-white {
+  @apply .bg-gray-300;
+  @apply .text-primary;
+}
+
+.btn-white-outline {
+  @apply .text-white;
+  @apply .bg-primary;
+
+  &:hover {
+    @apply .bg-gray-300;
+    @apply .text-primary;
+  }
+}
+
+.btn-primary-hover {
+  @apply .text-primary;
+  background: transparent;
+
+  &:hover {
+    @apply .bg-primary;
+    @apply .text-gray-300;
+  }
+}
+
+.btn-primary-dashed {
+  @apply .border-dashed;
+  @apply .border-primary;
+  @apply .text-primary;
+  @apply .py-2;
+  @apply .px-4;
+  @apply .font-bold;
+  @apply .border-2;
+
+  &:hover {
+    @apply .text-gray-300;
+    @apply .bg-primary;
+  }
+}

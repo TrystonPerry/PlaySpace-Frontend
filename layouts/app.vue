@@ -18,8 +18,7 @@
       </div>
     </div>
 
-    <portal-target name="modal-container">
-    </portal-target>
+    <portal-target name="modal-container"></portal-target>
   </div>
 </template>
 

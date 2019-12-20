@@ -84,6 +84,7 @@ module.exports = {
    ** Nuxt.js modules
    */
   modules: ["nuxt-purgecss"],
+  serverMiddleware: ["redirect-ssl"],
   /*
    ** Build configuration
    */
