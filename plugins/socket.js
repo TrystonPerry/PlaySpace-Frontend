@@ -6,7 +6,7 @@ if (process.client) {
   Vue.use(
     new VueSocketIO({
       debug: false,
-      connection: "https://pstv-api-super-beta.herokuapp.com",
+      connection: "https://api.playspace.tv",
       options: {
         useConnectionNamespace: true,
         namespaceName: "API"
@@ -17,7 +17,7 @@ if (process.client) {
   Vue.use(
     new VueSocketIO({
       debug: false,
-      connection: "https://sfu.beta.playspace.tv",
+      connection: "https://sfu.playspace.tv",
       options: {
         useConnectionNamespace: true,
         namespaceName: "SFU"

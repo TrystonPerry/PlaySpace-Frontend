@@ -1,4 +1,5 @@
-const BASE_URL = "https://pstv-api-super-beta.herokuapp.com"
+// const BASE_URL = "https://pstv-api-super-beta.herokuapp.com"
+const BASE_URL = "https://api.playspace.tv"
 // const BASE_URL = "http://localhost:3500"
 
 import Vue from "vue"
