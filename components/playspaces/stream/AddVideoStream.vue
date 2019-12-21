@@ -40,7 +40,7 @@
         </li>
       </ul>
     </p-dropdown>
-    <p-modal v-model="isYoutube" class="text-left">
+    <p-modal v-model="isYoutube" @close="youtubeUrl = ''" class="text-left">
       <div class="flex items-center">
         <p-icon icon="fab fa-youtube text-4xl" style="color:#FE0200;" />
         <h2 class="text-2xl ml-2 font-bold">
@@ -68,7 +68,7 @@
         </p-btn>
       </form>
     </p-modal>
-    <p-modal v-model="isTwitch">
+    <p-modal v-model="isTwitch" @close="twitchUsername = ''">
       <div class="flex items-center">
         <p-icon icon="fab fa-twitch text-4xl" style="color:#9047FF" />
         <h2 class="text-2xl ml-2 font-bold">

@@ -1,9 +1,19 @@
 <template>
-  <div class="bg-black-500 rounded-md overflow-y-auto scrollbar relative" id="chat">
-    <ul class="list-style-none flex flex-col">
-      <li class="opacity-50 text-xs px-2 py-1">Welcome to the chat, say hi and start a conversation!</li>
-      <ChatMessage v-for="(message, i) in messages" :key="i" :message="message" />
-      <ul v-if="disconnected" class="list-style-none text-center">
+  <div
+    class="bg-black-500 rounded-md overflow-y-auto scrollbar relative"
+    id="chat"
+  >
+    <ul class="list-style-none flex flex-col py-2">
+      <li class="opacity-50 text-xs px-2">
+        Welcome to the chat, say hi and start a conversation!
+      </li>
+      <ChatMessage
+        v-for="(message, i) in messages"
+        :key="i"
+        :message="message"
+        class="mb-1"
+      />
+      <ul v-if="disconnected" class="list-style-none text-center py-1">
         <p class="p-1 text-sm text-red-500">
           You have lost connection to chat.
         </p>
@@ -86,7 +96,8 @@ export default {
         this.$notify({
           type: "error",
           title: "Connection lost",
-          text: "Lost connection to PlaySpace chat. Check your internet connection."
+          text:
+            "Lost connection to PlaySpace chat. Check your internet connection."
         })
       }
     }
@@ -111,11 +122,12 @@ export default {
 
     attemptConnect() {
       // TODO store online status in vuex store
-      if (!navigator.onLine){
+      if (!navigator.onLine) {
         this.$notify({
           type: "error",
           title: "Connection refused",
-          text: "Check your internet connection, you apear to have gone offline."
+          text:
+            "Check your internet connection, you apear to have gone offline."
         })
         return
       }
@@ -124,11 +136,12 @@ export default {
         this.$notify({
           type: "error",
           title: "Connection refused",
-          text: "Can't connect to PlaySpace servers, this might be an error on our part."
+          text:
+            "Can't connect to PlaySpace servers, this might be an error on our part."
         })
         return
       }
-      
+
       this.messages = []
       this.$socket.API.emit("chat-join", { id: this.$route.params.playspace })
       this.disconnected = false

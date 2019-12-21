@@ -4,7 +4,7 @@
       :src="computedAvatar"
       v-bind="$attrs"
       class="rounded-full inline-block bg-gray-100"
-      :class="`w-${computedSize} h-${computedSize}`"
+      :class="`w-${computedSize} h-${computedSize} object-cover ${imgClasses}`"
     />
   </div>
 </template>
@@ -19,6 +19,10 @@ export default {
       validator: function(value) {
         return ["xs", "sm", "md", "lg"].indexOf(value) > -1
       }
+    },
+    imgClasses: {
+      type: String,
+      default: ""
     }
   },
 

@@ -3,11 +3,11 @@
     <div v-if="value" class="modal flex items-center justify-center">
       <div class="modal__box-container">
         <div class="modal__box bg-dark-5 shadow-reg scrollbar overflow-auto text-gray-300">
-          <button @click="$emit('input', false)" class="btn btn-close">X</button>
+          <button @click="onClose" class="btn btn-close">X</button>
           <slot></slot>
         </div>
       </div>
-      <div @click="$emit('input', false)" class="modal__bg"></div>
+      <div @click="onClose" class="modal__bg"></div>
     </div>
   </portal>
 </template>
@@ -57,6 +57,12 @@ export default {
       if (e.keyCode === 27) {
         this.$emit("input", false)
       }
+    },
+    
+    onClose() {
+      this.$emit('input', false)
+      this.$emit('input', false)
+      this.$emit("close")
     }
   }
 }

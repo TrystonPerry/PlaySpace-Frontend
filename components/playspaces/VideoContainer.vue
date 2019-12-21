@@ -1,20 +1,23 @@
 <template>
   <div class="bg-black">
-    <div ref="videos" class="relative flex flex-wrap items-center justify-center">
-      <MultiConsumer 
-        v-if="$store.state.stream.streams.video.length && recvTransport" 
-        @connect="setProperSize" 
-        :device="device" 
-        :recvTransport="recvTransport" 
-        class="video" 
+    <div
+      ref="videos"
+      class="relative flex flex-wrap items-center justify-center"
+    >
+      <MultiConsumer
+        v-if="$store.state.stream.streams.video.length && recvTransport"
+        @connect="setProperSize"
+        :device="device"
+        :recvTransport="recvTransport"
+        class="video"
       />
-      <Producer 
-        v-if="$store.state.stream.tracks.video" 
+      <Producer
+        v-if="$store.state.stream.tracks.video && !isMobile"
         :sendTransport="sendTransport"
         class="video relative w-full h-full"
       />
       <ExternalStream
-        v-for="stream in $store.state.stream.streams.external"
+        v-for="stream in externalStreams"
         :key="stream.id"
         :stream="stream"
         class="video"
@@ -68,6 +71,20 @@ export default {
   beforeDestroy() {
     window.removeEventListener("resize", this.setProperSize)
     this.unsubscribeFromActions()
+  },
+
+  computed: {
+    externalStreams() {
+      const external = this.$store.state.stream.streams.external
+      if (!external.length) return
+      if (this.$store.state.nav.isMobile) {
+        if (this.$store.state.stream.streams.video.length > 0) {
+          return []
+        }
+        return [external[0]]
+      }
+      return external
+    }
   },
 
   methods: {

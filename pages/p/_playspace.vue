@@ -1,49 +1,91 @@
 <template>
-  <div :key="$route.params.playspace" class="relative playspace h-full" style="max-height:100%">
-    <div class="visually-hidden">
-      <h1>{{ playSpace.channelName }}</h1>
-      <h2>{{ playSpace.title }}</h2>
-    </div>
+  <div
+    :key="$route.params.playspace"
+    class="relative playspace h-full"
+    style="max-height:100%"
+  >
     <div class="flex flex-col h-full">
-      <client-only>
-        <div v-if="!totalStreams" class="text-center text-gray-300 py-5">
-          <div v-if="canStream && !$store.state.nav.isMobile">
-            <h3 class="text-2xl font-bold">It's lonely here :(</h3>
-            <h4>
-              Click below to share your desktop, a YouTube video, or Twitch
-              Stream
-            </h4>
-            <AddVideoStream class="max-w-48 w-full mx-auto mt-5" />
+      <div
+        class="text-center text-gray-300 overflow-y-auto"
+        :style="$store.state.nav.isMobile ? 'max-height:40vh' : ''"
+      >
+        <VideoContainer
+          v-if="device"
+          :device="device"
+          :sendTransport="sendTransport"
+          :recvTransport="recvTransport"
+          class="video-container"
+        />
+
+        <div
+          class="channel__header relative px-5 py-5 sm:py-20 border-b-2 mb-6 border-gray-300"
+        >
+          <div class="md:flex items-center container mx-auto">
+            <div class="md:w-6/12 md:text-left">
+              <p-avatar
+                :avatar="playSpace.avatar"
+                size="lg"
+                img-classes="shadow-reg"
+              />
+              <h1 class="text-2xl font-bold">{{ playSpace.channelName }}</h1>
+              <h2 class="text-lg">{{ playSpace.title }}</h2>
+            </div>
+            <div class="md:w-6/12 md:text-right">
+              <h2
+                class="text-xl mt-4 font-bold inline-block border-b border-gray-300 px-6 md:pr-0 mb-2"
+              >
+                Users
+              </h2>
+              <ul class="list-style-none">
+                <li v-for="user in users" :key="user.username">
+                  <span>{{ user.rank }} - </span>
+                  <h3 class="font-bold inline-block">
+                    {{ user.username }}
+                  </h3>
+                </li>
+              </ul>
+            </div>
           </div>
-          <div v-else>
-            <p-avatar :avatar="playSpace.avatar" size="lg" />
-            <h3 class="text-2xl font-bold">{{ playSpace.channelName }}</h3>
-            <h4>{{ playSpace.title }}</h4>
-            <h3 class="text-2xl mt-4 font-bold">Users</h3>
-            <ul class="list-style-none">
-              <li v-for="user in users" :key="user.username">
-                <h4 class="text-lg font-bold inline-block">{{ user.username }}</h4>
-                <span>- {{ user.rank }}</span>
-              </li>
-            </ul>
+          <div
+            class="absolute flex"
+            style="left:50%;bottom:-1.5rem;transform:translateX(-50%);"
+          >
+            <p-btn variant="primary" size="lg" class="mr-1">
+              <p-icon icon="fas fa-plus" />
+              Start a Stream
+            </p-btn>
+            <p-btn variant="none" size="lg" class="bg-dark-2">
+              <p-icon icon="fas fa-cog" />
+              Settings
+            </p-btn>
           </div>
         </div>
-      </client-only>
 
-      <VideoContainer
-        v-if="device"
-        :device="device"
-        :sendTransport="sendTransport"
-        :recvTransport="recvTransport"
-        class="video-container"
-      />
+        <client-only>
+          <div
+            v-if="!totalStreams && canStream && !$store.state.nav.isMobile"
+            class="pt-4"
+          >
+            <h2 class="text-lg font-bold">
+              Click below to share your desktop, a YouTube video, or Twitch
+              Stream
+            </h2>
+            <!-- <AddVideoStream class="max-w-48 w-full mx-auto mt-5" /> -->
+          </div>
+        </client-only>
+      </div>
+
       <PlaySpaceMobileSidebar
         v-if="$store.state.nav.isMobile"
         :key="$route.params.playspace"
-        class="flex-grow mt-2"
+        class="flex-grow"
       />
     </div>
-    <AddVideoStream v-if="totalStreams && canStream" drop-up class="absolute bottom-0 left-0 m-2" />
+    <AddVideoStream
+      v-if="totalStreams && canStream"
+      drop-up
+      class="absolute bottom-0 left-0 m-2"
+    />
   </div>
 </template>
 
@@ -122,14 +164,19 @@ export default {
   sockets: {
     API: {
       "room-users-update"(user) {
-        if (user.username === this.$store.state.user.username && user.rank !== "none") {
+        if (
+          user.username === this.$store.state.user.username &&
+          user.rank !== "none"
+        ) {
           this.$notify({
             type: "success",
             title: "You have been granted access to this PlaySpace",
             text: `You can now stream on ${this.playSpace.channelName}`
           })
-        }
-        else if (user.username === this.$store.state.user.username && user.rank === "none") {
+        } else if (
+          user.username === this.$store.state.user.username &&
+          user.rank === "none"
+        ) {
           // TODO handle better
           location.reload()
           this.$notify({
@@ -139,7 +186,7 @@ export default {
           })
         }
         this.$store.dispatch("playSpace/updateUserRankInCurrentPlaySpace", user)
-      },
+      }
     },
     SFU: {
       "room-joined": async function(roomData) {
@@ -228,3 +275,20 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.channel {
+  &__header {
+    background: rgba(0, 0, 0, 1)
+      url("https://cdn.wccftech.com/wp-content/uploads/2015/01/0pNunks.jpg");
+    background-size: cover;
+    background-position: center;
+
+    h1,
+    h2,
+    li {
+      text-shadow: 0 0 10px black;
+    }
+  }
+}
+</style>
