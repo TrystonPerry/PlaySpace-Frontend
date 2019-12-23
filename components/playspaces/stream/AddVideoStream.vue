@@ -140,8 +140,12 @@ export default {
 
       const res = await WebRTC.getDisplayMedia(constraints)
 
-      if (!res.success) {
-        // TODO error alert
+      if (!res.success && res.error !== "Permission denied") {
+        this.$notify({
+          type: "error",
+          title: "Error getting your desktop",
+          text: res.error
+        })
         return
       }
 

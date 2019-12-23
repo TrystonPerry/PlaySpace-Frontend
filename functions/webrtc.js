@@ -16,8 +16,8 @@ export default {
         return { success: false }
       }
     } catch (err) {
-      console.error(err.message) // TODO better error handeling
-      return { success: false }
+      console.error(err) // TODO better error handeling
+      return { success: false, error: err.message }
     }
   },
 
@@ -39,8 +39,8 @@ export default {
         return { success: false }
       }
     } catch (err) {
-      console.error(err.message) // TODO better error handeling
-      return { success: false }
+      console.error(err) // TODO better error handeling
+      return { success: false, error: err.message }
     }
   }
 }

@@ -28,9 +28,17 @@
                 :avatar="playSpace.avatar"
                 size="lg"
                 img-classes="shadow-reg"
+                class="mb-2"
               />
               <h1 class="text-2xl font-bold">{{ playSpace.channelName }}</h1>
               <h2 class="text-lg">{{ playSpace.title }}</h2>
+              <p-btn
+                variant="primary"
+                class="mt-3"
+              >
+                <p-icon icon="fas fa-link" />
+                Copy Link
+              </p-btn>
             </div>
             <div class="md:w-6/12 md:text-right">
               <h2
@@ -61,7 +69,12 @@
               Settings
             </p-btn>
           </div> -->
-          <img :src="playSpace.avatar" class="w-full h-full absolute top-0 left-0 object-cover bg-gray-100 opacity-25" style="z-index:-1; filter: blur(4px);" />
+          <p-avatar 
+            :avatar="playSpace.avatar" 
+            class="w-full h-full absolute top-0 left-0 object-cover bg-gray-100 opacity-25"
+            img-classes="w-full h-full"
+            no-rounded
+            style="z-index:-1; filter: blur(4px)" />
         </div>
 
         <client-only>
@@ -149,6 +162,9 @@ export default {
     this.$socket.SFU.emit("room-leave")
     this.$store.dispatch("playSpace/removeCurrentPlaySpace")
     this.reset()
+    window.device = null
+    window.sendTransport = null
+    window.recvTransport = null
   },
 
   computed: {
@@ -197,6 +213,7 @@ export default {
 
         this.device = new Device()
         await this.device.load({ routerRtpCapabilities })
+        window.device = this.device
 
         if (!this.device.canProduce("video")) {
           return alert("You cant produce video")
@@ -216,6 +233,7 @@ export default {
           transportOptions
         )
         this.connectTransport(this.sendTransport)
+        window.sendTransport = this.sendTransport
       },
 
       "room-recvtransport-created": async function(transportOptions) {
@@ -223,10 +241,15 @@ export default {
           transportOptions
         )
         this.connectTransport(this.recvTransport)
+        window.recvTransport = this.recvTransport
       },
 
       "room-stream-video": async function(stream) {
         this.addStream({ type: "video", stream })
+      },
+
+      "room-stream-mic": async function(stream) {
+        this.addStream({ type: "mic", stream })
       },
 
       "room-stream-external"(stream) {
@@ -252,7 +275,7 @@ export default {
       setCurrentPlaySpace: "playSpace/setCurrentPlaySpace"
     }),
 
-    connectTransport(transport) {
+    async connectTransport(transport) {
       transport.on("connect", ({ dtlsParameters }, callback, errback) => {
         this.$socket.SFU.emit("room-transport-connect", {
           type: transport.direction,
