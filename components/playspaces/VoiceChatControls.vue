@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="$store.state.user.username && isStreamer">
     <div v-if="!$store.state.stream.tracks.mic">
       <p-btn @click="getMic" variant="none" size="sm" class="text-sm w-full">
         <p-icon icon="fas fa-phone" class="text-xs" />
@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import { mapActions } from "vuex"
+import { mapGetters, mapActions } from "vuex"
 
 import WebRTC from "@/functions/webrtc"
 
@@ -27,6 +27,12 @@ export default {
 
   beforeDestroy() {
     this.closeMic()
+  },
+
+  computed: {
+    ...mapGetters({
+      "isStreamer": "playSpace/isStreamer"
+    })
   },
 
   methods: {
