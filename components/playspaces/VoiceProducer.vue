@@ -30,13 +30,14 @@ export default {
   },
 
   beforeDestroy() {
-    this.$socket.SFU.emit("room-producer-close", window.micProducer.id)
-    this.$store.dispatch("stream/setLocalTrack", { type: "mic", track: null })
+    window.micProducer = null
   },
 
   methods: {
     async produce() {
       window.sendTransport.on("produce", (params, callback, errback) => {
+        console.log('voice')
+
         this.$socket.SFU.emit("room-transport-produce", {
           producerOptions: {
             transportId: window.sendTransport.id,
@@ -56,12 +57,12 @@ export default {
         }
       })
 
+      window.micProducer = this.producer
+
       this.$socket.SFU.emit("room-stream-mic", {
         producerId: this.producer.id,
         username: this.$store.state.user.fullUsername
       })
-
-      window.micProducer = this.producer
 
       this.sockets.SFU.subscribe(`producer-stream-closed-${this.producer.id}`, () => {
         // On producer closed (error)

@@ -5,9 +5,15 @@
     <client-only>
       <div>
         <NavDivider class="w-full">
-          <h2>Voice Chat</h2>
+          <h2>
+            Voice Chat
+            <span v-if="chatterCount" class="opacity-75 text-sm font-bold">
+              ({{ chatterCount }} /
+              {{ $store.state.playSpace.current.maxAudioStreams }})
+            </span>
+          </h2>
         </NavDivider>
-        <ul class="list-style-none">
+        <ul class="list-style-none overflow-y-auto" style="max-height:10rem">
           <li
             v-for="mic in $store.state.stream.streams.mic" :key="mic.producerId"
             class="bg-black-500 shadow hover:bg-black-400 hover:shadow-reg rounded-lg mb-2"
@@ -54,6 +60,12 @@ export default {
     VoiceChatControls,
     Chat,
     ChatBox
+  },
+
+  computed: {
+    chatterCount() {
+      return this.$store.state.stream.streams.mic.length + !!this.$store.state.stream.tracks.mic
+    }
   }
 }
 </script>

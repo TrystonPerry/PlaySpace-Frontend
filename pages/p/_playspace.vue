@@ -32,13 +32,10 @@
               />
               <h1 class="text-2xl font-bold">{{ playSpace.channelName }}</h1>
               <h2 class="text-lg">{{ playSpace.title }}</h2>
-              <p-btn
-                variant="primary"
-                class="mt-3"
-              >
+              <p-copy :text="`https://playspace.tv/p/${playSpace.id}`" variant="primary" class="mt-3">
                 <p-icon icon="fas fa-link" />
                 Copy Link
-              </p-btn>
+              </p-copy>
             </div>
             <div class="md:w-6/12 md:text-right">
               <h2

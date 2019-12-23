@@ -47,6 +47,8 @@ export default {
 
     async produce() {
       this.sendTransport.on("produce", (params, callback, errback) => {
+        console.log('video')
+
         this.$socket.SFU.emit("room-transport-produce", {
           producerOptions: {
             transportId: this.sendTransport.id,

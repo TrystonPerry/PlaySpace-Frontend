@@ -1,12 +1,12 @@
 <template>
   <div v-if="$store.state.user.username && isStreamer">
-    <div v-if="!$store.state.stream.tracks.mic">
+    <div v-if="!$store.state.stream.tracks.mic && chatterCount < $store.state.playSpace.current.maxAudioStreams">
       <p-btn @click="getMic" variant="none" size="sm" class="text-sm w-full">
         <p-icon icon="fas fa-phone" class="text-xs" />
         Join Chat
       </p-btn>
     </div>
-    <div v-else>
+    <div v-else-if="$store.state.stream.tracks.mic">
       <p-btn @click="closeMic" variant="none" size="sm" class="text-sm w-full">
         <p-icon icon="fas fa-muted" class="text-xs" />
         Leave Chat
@@ -32,7 +32,11 @@ export default {
   computed: {
     ...mapGetters({
       "isStreamer": "playSpace/isStreamer"
-    })
+    }),
+
+    chatterCount() {
+      return this.$store.state.stream.streams.mic.length + !!this.$store.state.stream.tracks.mic
+    }
   },
 
   methods: {
@@ -64,7 +68,6 @@ export default {
 
     closeMic() {
       if (!this.track) return
-
       this.track.stop()
       this.$socket.SFU.emit("room-producer-close", window.micProducer.id)
       this.setLocalTrack({ type: "mic", track: null })
