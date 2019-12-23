@@ -1,5 +1,5 @@
 <template>
-  <div class="nav-divider inline-flex items-center text-xl text-center mb-2">
+  <div class="nav-divider inline-flex items-center text-xl text-center my-1">
     <div class="flex-shrink-0 text-base">
       <slot></slot>
     </div>

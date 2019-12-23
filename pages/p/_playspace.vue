@@ -18,7 +18,9 @@
         />
 
         <div
+          v-if="!totalStreams"
           class="channel__header relative px-5 py-5 sm:py-20 border-b-2 mb-6 border-gray-300"
+          style="z-index:2"
         >
           <div class="md:flex items-center container mx-auto">
             <div class="md:w-6/12 md:text-left">
@@ -46,7 +48,7 @@
               </ul>
             </div>
           </div>
-          <div
+          <!-- <div
             class="absolute flex"
             style="left:50%;bottom:-1.5rem;transform:translateX(-50%);"
           >
@@ -58,7 +60,8 @@
               <p-icon icon="fas fa-cog" />
               Settings
             </p-btn>
-          </div>
+          </div> -->
+          <img :src="playSpace.avatar" class="w-full h-full absolute top-0 left-0 object-cover bg-gray-100 opacity-25" style="z-index:-1; filter: blur(4px);" />
         </div>
 
         <client-only>
@@ -70,7 +73,7 @@
               Click below to share your desktop, a YouTube video, or Twitch
               Stream
             </h2>
-            <!-- <AddVideoStream class="max-w-48 w-full mx-auto mt-5" /> -->
+            <AddVideoStream class="max-w-48 w-full mx-auto mt-5" />
           </div>
         </client-only>
       </div>
@@ -279,11 +282,6 @@ export default {
 <style lang="scss" scoped>
 .channel {
   &__header {
-    background: rgba(0, 0, 0, 1)
-      url("https://cdn.wccftech.com/wp-content/uploads/2015/01/0pNunks.jpg");
-    background-size: cover;
-    background-position: center;
-
     h1,
     h2,
     li {

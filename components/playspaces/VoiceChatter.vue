@@ -6,7 +6,7 @@
       class="flex-shrink-0 mr-1"
     />
     <h3 class="flex-grow">
-      {{ playSpace.username }}
+      {{ mic.username }}
     </h3>
     <button>
       <p-icon
@@ -22,7 +22,7 @@
 <script>
 export default {
   props: {
-    playSpace: {
+    mic: {
       type: Object,
       required: true
     }
