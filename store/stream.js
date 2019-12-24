@@ -9,7 +9,8 @@ export default {
       video: [],
       external: [],
       mic: []
-    }
+    },
+    isSoundBlocked: false
   }),
 
   getters: {
@@ -41,6 +42,10 @@ export default {
       const i = state.streams[type].indexOf(stream)
       state.streams[type].splice(i, 1)
     },
+    SET_IS_SOUND_BLOCKED(state, value) {
+      if (state.isSoundBlocked === value) return
+      state.isSoundBlocked = value
+    },
     RESET(state) {
       state.tracks = {
         video: null,
@@ -69,6 +74,9 @@ export default {
     },
     removeStream({ commit }, info) {
       commit("REMOVE_STREAM", info)
+    },
+    setIsSoundBlocked({ commit }, value) {
+      commit("SET_IS_SOUND_BLOCKED", value)
     },
     reset({ commit }) {
       commit("RESET")

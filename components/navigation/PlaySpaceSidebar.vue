@@ -7,7 +7,7 @@
         <NavDivider class="w-full">
           <h2>
             Voice Chat
-            <span v-if="chatterCount" class="opacity-75 text-sm font-bold">
+            <span class="opacity-75 text-sm font-bold">
               ({{ chatterCount }} /
               {{ $store.state.playSpace.current.maxAudioStreams }})
             </span>

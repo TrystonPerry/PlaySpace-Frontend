@@ -35,14 +35,14 @@
         </li>
       </ul>
       <ul v-if="!$store.state.user.username" class="list-none flex items-center">
-        <li class="px-1 py-2">
+        <!-- <li class="px-1 py-2">
           <p-tooltip text="Create a PlaySpace">
             <p-link to="/create" variant="primary" size="sm">
               <p-icon icon="fas fa-plus" />
               Create
             </p-link>
           </p-tooltip>
-        </li>
+        </li> -->
         <li class="hidden sm:block px-1 py-2">
           <p-link to="/login" variant="primary-hover" size="sm">Log In</p-link>
         </li>

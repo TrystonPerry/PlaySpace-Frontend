@@ -99,6 +99,36 @@
       drop-up
       class="absolute bottom-0 left-0 m-2"
     />
+    <client-only>
+      <portal to="modal-container">
+        <div 
+          v-if="$store.state.stream.isSoundBlocked" 
+          class="absolute w-full p-2 max-w-96 w-full" 
+          style="bottom: 4rem;left:50%;transform:translateX(-50%);z-index:100"
+        >
+          <div 
+            class="bg-black-600 text-black-800 shadow-reg py-3 px-5 rounded-lg border-4 border-black-800"
+          >
+            <h1 class="text-xl font-bold text-center">
+              Sound Muted by Default
+            </h1>
+            <p>
+              Your browser has blocked sound from autoplaying, click to hear everyone.
+            </p>
+            <div class="text-center">
+              <p-btn
+                @click="$store.dispatch('stream/setIsSoundBlocked', false)"
+                variant="none"
+                class="bg-black-800 mt-4"
+              >
+                <p-icon icon="fas fa-volume-mute" />
+                Click to Unmute
+              </p-btn>
+            </div>
+          </div>
+        </div>
+      </portal>
+    </client-only>
   </div>
 </template>
 
@@ -286,6 +316,18 @@ export default {
   watch: {
     "$store.state.playSpace.current"(playSpace) {
       this.playSpace = playSpace
+    },
+
+    "$store.state.stream.isSoundBlocked"(value) {
+      if (value === true) {
+        this.onClick = () => {
+          this.$store.dispatch("stream/setIsSoundBlocked", false)
+        }
+        document.body.addEventListener("click", this.onClick)
+      } else if(this.onClick) {
+        document.body.removeEventListener("click", this.onClick)
+        delete this.onClick
+      }
     }
   },
 

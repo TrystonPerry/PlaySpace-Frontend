@@ -52,6 +52,14 @@ export default {
     this.consume(this.mic)
   },
 
+  watch: {
+    "$store.state.stream.isSoundBlocked"(value) {
+      if (value === false) {
+        this.toggleMute()
+      }
+    }
+  },
+
   methods: {
     ...mapActions({
       "removeStream": "stream/removeStream"
@@ -64,15 +72,21 @@ export default {
 
       const audioPlayer = document.getElementById(this.mic.producerId)
 
-      audioPlayer.srcObject = new MediaStream([this.consumer.track])
-      audioPlayer.play()
-
-      this.muted = false
-
       // Subscribe to on stream ended
       this.sockets.SFU.subscribe(`producer-stream-closed-${producerId}`, () => {
         this.removeStream({ type: "mic", stream })
       })
+
+      // Todo refactor
+      audioPlayer.srcObject = new MediaStream([this.consumer.track])
+      try {
+        await audioPlayer.play()
+      } catch(err) {
+        this.$store.dispatch("stream/setIsSoundBlocked", true)
+        return
+      }
+
+      this.muted = false
     },
 
     async consumeMic(producerId) {
@@ -105,11 +119,14 @@ export default {
 
     toggleMute() {
       const state = this.muted ? 'resume' : "pause"
-      this.muted = !this.muted
       this.$socket.SFU.emit("room-consumer-pause", {
         consumerId: this.consumer.id,
         state
       })
+      const audioEl = document.getElementById(this.mic.producerId)
+      if (this.muted) audioEl.play()
+      else audioEl.pause()
+      this.muted = !this.muted
     }
   }
 }
