@@ -76,6 +76,7 @@ export default {
     // If user login state changes, authenticate user
     "$store.state.user.token": {
       handler(token) {
+        console.log(token)
         if (token) {
           this.$socket.API.emit("chat-auth", {
             id: this.$route.params.playspace,
