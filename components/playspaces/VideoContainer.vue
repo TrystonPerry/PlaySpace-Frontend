@@ -12,7 +12,7 @@
         class="video"
       />
       <Producer
-        v-if="$store.state.stream.tracks.video && !isMobile"
+        v-if="$store.state.stream.tracks.video && !this.$store.state.nav.isMobile"
         :sendTransport="sendTransport"
         class="video relative w-full h-full"
       />

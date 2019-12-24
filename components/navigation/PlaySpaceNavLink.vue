@@ -1,6 +1,7 @@
 <template>
   <li
     class="bg-black-500 shadow hover:bg-black-400 hover:shadow-reg rounded-lg"
+    :class="$route.params.playspace === playSpace.id ? 'bg-black-700 hover:bg-black-600' : ''"
   >
     <nuxt-link
       :to="`/p/${playSpace.id}`"

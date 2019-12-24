@@ -9,7 +9,7 @@
           <nuxt />
         </div>
         <PlaySpaceSidebar
-          v-if="!$store.state.nav.isMobile"
+          v-show="!$store.state.nav.isMobile"
           :key="$route.params.playspace"
           class="shadow-reg"
         />

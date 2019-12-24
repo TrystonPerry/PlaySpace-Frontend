@@ -13,7 +13,7 @@
           chat together.
         </h2>
         <h3 class="text-lg mb-3">
-          You need to be create an account or log in first.
+          You need to create an account or log in first.
         </h3>
         <div v-if="showSignup">
           <p>Already have an account with us?</p>

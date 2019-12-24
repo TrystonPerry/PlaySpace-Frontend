@@ -11,6 +11,7 @@ import PDropdown from "@/components/globals/PDropdown"
 import PModal from "@/components/globals/PModal"
 import PTooltip from "@/components/globals/PTooltip"
 import PLoading from "@/components/globals/PLoading"
+import PCopy from "@/components/globals/PCopy"
 
 Vue.component("popper", Popper)
 Vue.component("p-avatar", PAvatar)
@@ -23,3 +24,4 @@ Vue.component("p-dropdown", PDropdown)
 Vue.component("p-modal", PModal)
 Vue.component("p-tooltip", PTooltip)
 Vue.component("p-loading", PLoading)
+Vue.component("p-copy", PCopy)

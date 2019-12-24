@@ -7,9 +7,9 @@
       class="absolute w-full h-full flex items-center justify-center"
     >
       <video 
-        :id="`video-${stream.producerId}`" 
-        autoplay 
-        muted 
+        :id="`video-${stream.producerId}`"  
+        :muted="muted"
+        autoplay
         playsinline
         controls
         class="w-full h-full"
@@ -44,7 +44,8 @@ export default {
 
   data: () => ({
     activeProducerId: "",
-    consumers: {}
+    consumers: {},
+    muted: false
   }),
 
   computed: {
@@ -71,6 +72,16 @@ export default {
           this.$socket.SFU.emit("room-consumer-pause", { consumerId: lastConsumer.id, state: "pause" })
         }
       }, 200)
+    },
+
+    "$store.state.stream.isSoundBlocked"(value) {
+      if (value === false) {
+        this.muted = false
+        this.$store.state.stream.streams.video.forEach(stream => {
+          const video = document.getElementById(`video-${stream.producerId}`)
+          video.play()
+        })
+      }
     }
   },
 
@@ -94,8 +105,9 @@ export default {
       }
 
       const mediaStream = new MediaStream([videoTrack, audioTrack].filter(t => t))
-      document.getElementById(`video-${producerId}`).srcObject = mediaStream
-
+      const video = document.getElementById(`video-${producerId}`)
+      video.srcObject = mediaStream
+      
       this.$store.dispatch("nav/updateVideoContainer")
 
       this.sockets.SFU.subscribe(`producer-stream-closed-${producerId}`, () => {
@@ -110,6 +122,17 @@ export default {
 
         this.removeStream({ type: "video", stream })
       })
+
+      try {
+        await video.play()
+      } catch(err) {
+        this.muted = true
+        video.play().catch()
+        this.$store.dispatch("stream/setIsSoundBlocked", true)
+        return
+      }
+
+      this.muted = false
     },
 
     async consumeVideo(producerId) {

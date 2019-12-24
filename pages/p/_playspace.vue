@@ -18,7 +18,9 @@
         />
 
         <div
-          class="channel__header relative px-5 py-5 sm:py-20 border-b-2 mb-6 border-gray-300"
+          v-if="!totalStreams"
+          class="channel__header relative px-5 py-5 sm:py-20"
+          style="z-index:2"
         >
           <div class="md:flex items-center container mx-auto">
             <div class="md:w-6/12 md:text-left">
@@ -26,9 +28,14 @@
                 :avatar="playSpace.avatar"
                 size="lg"
                 img-classes="shadow-reg"
+                class="mb-2"
               />
               <h1 class="text-2xl font-bold">{{ playSpace.channelName }}</h1>
               <h2 class="text-lg">{{ playSpace.title }}</h2>
+              <p-copy :text="`https://playspace.tv/p/${playSpace.id}`" variant="primary" class="mt-3">
+                <p-icon icon="fas fa-link" />
+                Copy Link
+              </p-copy>
             </div>
             <div class="md:w-6/12 md:text-right">
               <h2
@@ -46,7 +53,7 @@
               </ul>
             </div>
           </div>
-          <div
+          <!-- <div
             class="absolute flex"
             style="left:50%;bottom:-1.5rem;transform:translateX(-50%);"
           >
@@ -58,19 +65,25 @@
               <p-icon icon="fas fa-cog" />
               Settings
             </p-btn>
-          </div>
+          </div> -->
+          <p-avatar 
+            :avatar="playSpace.avatar" 
+            class="w-full h-full absolute top-0 left-0 object-cover bg-gray-100 opacity-25"
+            img-classes="w-full h-full"
+            no-rounded
+            style="z-index:-1; filter: blur(4px)" />
         </div>
 
         <client-only>
           <div
             v-if="!totalStreams && canStream && !$store.state.nav.isMobile"
-            class="pt-4"
+            class="pt-4 mt-6"
           >
             <h2 class="text-lg font-bold">
               Click below to share your desktop, a YouTube video, or Twitch
               Stream
             </h2>
-            <!-- <AddVideoStream class="max-w-48 w-full mx-auto mt-5" /> -->
+            <AddVideoStream class="max-w-48 w-full mx-auto mt-5" />
           </div>
         </client-only>
       </div>
@@ -86,6 +99,36 @@
       drop-up
       class="absolute bottom-0 left-0 m-2"
     />
+    <client-only>
+      <portal to="modal-container">
+        <div 
+          v-if="$store.state.stream.isSoundBlocked" 
+          class="absolute w-full p-2 max-w-96 w-full" 
+          style="bottom: 4rem;left:50%;transform:translateX(-50%);z-index:100"
+        >
+          <div 
+            class="bg-black-600 text-black-800 shadow-reg py-3 px-5 rounded-lg border-4 border-black-800"
+          >
+            <h1 class="text-xl font-bold text-center">
+              Sound Muted by Default
+            </h1>
+            <p>
+              Your browser has blocked sound from autoplaying, click to hear everyone.
+            </p>
+            <div class="text-center">
+              <p-btn
+                @click="$store.dispatch('stream/setIsSoundBlocked', false)"
+                variant="none"
+                class="bg-black-800 mt-4"
+              >
+                <p-icon icon="fas fa-volume-mute" />
+                Click to Unmute
+              </p-btn>
+            </div>
+          </div>
+        </div>
+      </portal>
+    </client-only>
   </div>
 </template>
 
@@ -138,6 +181,8 @@ export default {
   },
 
   mounted() {
+    // TODO move transports and device to store.
+    // TODO only request a new transport once per session
     this.$socket.SFU.emit("room-join", { roomId: this.$route.params.playspace })
     this.$store.dispatch("playSpace/setCurrentPlaySpace", this.playSpace)
   },
@@ -146,6 +191,9 @@ export default {
     this.$socket.SFU.emit("room-leave")
     this.$store.dispatch("playSpace/removeCurrentPlaySpace")
     this.reset()
+    window.device = null
+    window.sendTransport = null
+    window.recvTransport = null
   },
 
   computed: {
@@ -194,6 +242,7 @@ export default {
 
         this.device = new Device()
         await this.device.load({ routerRtpCapabilities })
+        window.device = this.device
 
         if (!this.device.canProduce("video")) {
           return alert("You cant produce video")
@@ -213,6 +262,23 @@ export default {
           transportOptions
         )
         this.connectTransport(this.sendTransport)
+
+        this.sendTransport.on("produce", (params, callback, errback) => {
+          const requestID = Math.random().toString(36).substr(2, 9)
+
+          this.$socket.SFU.emit("room-transport-produce", {
+            producerOptions: {
+              transportId: this.sendTransport.id,
+              kind: params.kind,
+              rtpParameters: params.rtpParameters
+            },
+            trackId: requestID
+          })
+
+          this.sockets.SFU.subscribe(`room-transport-produced-${requestID}`, callback)
+        })
+
+        window.sendTransport = this.sendTransport
       },
 
       "room-recvtransport-created": async function(transportOptions) {
@@ -220,10 +286,15 @@ export default {
           transportOptions
         )
         this.connectTransport(this.recvTransport)
+        window.recvTransport = this.recvTransport
       },
 
       "room-stream-video": async function(stream) {
         this.addStream({ type: "video", stream })
+      },
+
+      "room-stream-mic": async function(stream) {
+        this.addStream({ type: "mic", stream })
       },
 
       "room-stream-external"(stream) {
@@ -242,6 +313,24 @@ export default {
     }
   },
 
+  watch: {
+    "$store.state.playSpace.current"(playSpace) {
+      this.playSpace = playSpace
+    },
+
+    "$store.state.stream.isSoundBlocked"(value) {
+      if (value === true) {
+        this.onClick = () => {
+          this.$store.dispatch("stream/setIsSoundBlocked", false)
+        }
+        document.body.addEventListener("click", this.onClick)
+      } else if(this.onClick) {
+        document.body.removeEventListener("click", this.onClick)
+        delete this.onClick
+      }
+    }
+  },
+
   methods: {
     ...mapActions({
       addStream: "stream/addStream",
@@ -249,7 +338,7 @@ export default {
       setCurrentPlaySpace: "playSpace/setCurrentPlaySpace"
     }),
 
-    connectTransport(transport) {
+    async connectTransport(transport) {
       transport.on("connect", ({ dtlsParameters }, callback, errback) => {
         this.$socket.SFU.emit("room-transport-connect", {
           type: transport.direction,
@@ -279,11 +368,6 @@ export default {
 <style lang="scss" scoped>
 .channel {
   &__header {
-    background: rgba(0, 0, 0, 1)
-      url("https://cdn.wccftech.com/wp-content/uploads/2015/01/0pNunks.jpg");
-    background-size: cover;
-    background-position: center;
-
     h1,
     h2,
     li {
