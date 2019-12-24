@@ -1,30 +1,16 @@
 <template>
-  <div
-    class="bg-black-500 rounded-md overflow-y-auto scrollbar relative"
-    id="chat"
-  >
+  <div class="bg-black-500 rounded-md overflow-y-auto scrollbar relative" id="chat">
     <ul class="list-style-none flex flex-col py-2">
-      <li class="opacity-50 text-xs px-2">
-        Welcome to the chat, say hi and start a conversation!
-      </li>
-      <ChatMessage
-        v-for="(message, i) in messages"
-        :key="i"
-        :message="message"
-        class="mb-1"
-      />
+      <li class="opacity-50 text-xs px-2">Welcome to the chat, say hi and start a conversation!</li>
+      <ChatMessage v-for="(message, i) in messages" :key="i" :message="message" class="mb-1" />
       <ul v-if="disconnected" class="list-style-none text-center py-1">
-        <p class="p-1 text-sm text-red-500">
-          You have lost connection to chat.
-        </p>
+        <p class="p-1 text-sm text-red-500">You have lost connection to chat.</p>
         <p-btn
           @click="attemptConnect"
           variant="none"
           class="bg-red-500 text-sm px-2"
           size="xs"
-        >
-          Reconnect
-        </p-btn>
+        >Reconnect</p-btn>
         <p-loading class="py-2" />
       </ul>
     </ul>
@@ -75,14 +61,20 @@ export default {
         }
       },
 
-      // TODO add way to ban a user
       "chat-ban"(username) {
-        this.messages.forEach((message, i) => {
-          if (message.username === username) {
-            this.messages[i].isBanned = true
-            this.messages[i].avatar = ""
-          }
+        this.messages = this.messages.filter(msg => {
+          return msg.username.toLowerCase() !== username
         })
+
+        // TODO fix this code so it works
+
+        // console.log(this.messages, username)
+        // this.messages.forEach((message, i) => {
+        //   if (message.username.toLowerCase() === username) {
+        //     this.messages[i].isBanned = true
+        //     this.messages[i].avatar = ""
+        //   }
+        // })
       },
 
       reconnect() {

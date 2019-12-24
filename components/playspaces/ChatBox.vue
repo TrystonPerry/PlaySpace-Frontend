@@ -26,16 +26,12 @@
           @click="isLogin = false"
           class="w-6/12 p-2 select-none"
           :class="!isLogin ? 'border-b-2 border-primary text-primary font-bold' : ''"
-        >
-          Sign Up
-        </button>
+        >Sign Up</button>
         <button
           @click="isLogin = true"
           class="w-6/12 select-none"
           :class="isLogin ? 'border-b-2 border-primary text-primary font-bold' : ''"
-        >
-          Log In
-        </button>
+        >Log In</button>
       </div>
       <LoginForm v-if="isLogin" @login="showLogin = false" />
       <SignupForm v-else @signup="showLogin = false" />
@@ -76,7 +72,6 @@ export default {
     // If user login state changes, authenticate user
     "$store.state.user.token": {
       handler(token) {
-        console.log(token)
         if (token) {
           this.$socket.API.emit("chat-auth", {
             id: this.$route.params.playspace,

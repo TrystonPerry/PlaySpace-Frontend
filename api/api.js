@@ -1,6 +1,6 @@
 // const BASE_URL = "https://pstv-api-super-beta.herokuapp.com"
-// const BASE_URL = "https://api.playspace.tv"
-const BASE_URL = "http://localhost:3500"
+const BASE_URL = "https://api.playspace.tv"
+// const BASE_URL = "http://localhost:3500"
 
 import Vue from "vue"
 
@@ -124,6 +124,14 @@ export default {
 
   updateUser(id, body) {
     return axis.put(`/channels/c/${id}/users`, { body })
+  },
+
+  //
+  // Chat
+  //
+
+  banUser(id, body) {
+    return axis.post(`/chat/${id}/ban`, { body })
   },
 
   //
