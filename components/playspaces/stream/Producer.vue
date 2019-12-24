@@ -3,9 +3,9 @@
     <div class="flex items-center justify-center w-full h-full">
       <video ref="video" id="local" class="w-full h-full" autoplay muted playsinline></video>
     </div>
-    <button @click="stopProduce" class="absolute p-btn bg-red-400 text-white py-1 px-2">
+    <p-btn @click="stopProduce" variant="none" class="absolute p-btn bg-red-400 text-white py-1 px-2">
       End Desktop Stream
-    </button>
+    </p-btn>
   </div>
 </template>
 
@@ -46,19 +46,6 @@ export default {
     }),
 
     async produce() {
-      this.sendTransport.on("produce", (params, callback, errback) => {
-        this.$socket.SFU.emit("room-transport-produce", {
-          producerOptions: {
-            transportId: this.sendTransport.id,
-            kind: params.kind,
-            rtpParameters: params.rtpParameters
-          },
-          trackId: this.$store.state.stream.tracks[params.kind].id
-        })
-
-        this.sockets.SFU.subscribe(`room-transport-produced-${this.$store.state.stream.tracks[params.kind].id}`, callback)
-      })
-
       const videoTrack = this.$store.state.stream.tracks.video
       const audioTrack = this.$store.state.stream.tracks.audio
       await this.produceVideo(videoTrack)

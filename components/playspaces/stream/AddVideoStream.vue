@@ -1,7 +1,7 @@
 <template>
   <div v-if="!$store.state.nav.isMobile" class="add-video-stream">
     <p-dropdown btn-classes="p-btn btn-primary-dashed w-48">
-      <p-icon icon="fas fa-plus" />Add Video
+      <p-icon icon="fas fa-plus" />Add a Stream
       <ul
         slot="content"
         class="absolute list-style-none bg-dark-5 shadow-reg w-48"
@@ -141,7 +141,13 @@ export default {
       const res = await WebRTC.getDisplayMedia(constraints)
 
       if (!res.success) {
-        // TODO error alert
+        if (res.error !== "Permission denied") {
+          this.$notify({
+            type: "error",
+            title: "Error getting your desktop",
+            text: res.error
+          })
+        }
         return
       }
 

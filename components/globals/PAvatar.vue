@@ -3,8 +3,8 @@
     <img
       :src="computedAvatar"
       v-bind="$attrs"
-      class="rounded-full inline-block bg-gray-100"
-      :class="`w-${computedSize} h-${computedSize} object-cover ${imgClasses}`"
+      class="inline-block bg-gray-100"
+      :class="computedClasses"
     />
   </div>
 </template>
@@ -19,6 +19,10 @@ export default {
       validator: function(value) {
         return ["xs", "sm", "md", "lg"].indexOf(value) > -1
       }
+    },
+    noRounded: {
+      type: Boolean,
+      default: false
     },
     imgClasses: {
       type: String,
@@ -42,6 +46,10 @@ export default {
 
     computedAvatar() {
       return this.avatar || "https://i.imgur.com/cvrQlUP.png"
+    },
+
+    computedClasses() {
+      return `w-${this.computedSize} h-${this.computedSize} object-cover ${this.imgClasses} ${this.noRounded ? '' : 'rounded-full'}`
     }
   }
 }
