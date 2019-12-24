@@ -8,7 +8,7 @@
     </div>
     <div v-else-if="$store.state.stream.tracks.mic">
       <p-btn @click="closeMic" variant="none" size="sm" class="text-sm w-full">
-        <p-icon icon="fas fa-muted" class="text-xs" />
+        <p-icon icon="fas fa-phone-slash" class="text-xs" />
         Leave Chat
       </p-btn>
     </div>
@@ -68,8 +68,10 @@ export default {
 
     closeMic() {
       if (!this.track) return
-      this.track.stop()
+
       this.$socket.SFU.emit("room-producer-close", window.micProducer.id)
+      this.track.stop()
+      this.track = null
       this.setLocalTrack({ type: "mic", track: null })
     }
   }

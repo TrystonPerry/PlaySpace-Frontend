@@ -5,18 +5,23 @@
       size="sm"
       class="flex-shrink-0 mr-1"
     />
-    <h3 class="flex-grow">
+    <h3 class="flex-grow font-bold">
       {{ mic.username }}
     </h3>
-    <button>
+    <p-btn
+      @click="toggleMute"
+      variant="none"
+      size="xs"
+    >
       <p-icon
         icon="fas fa-volume-mute"
         size="md"
-        screen-reader-text="Mute"
+        screen-reader-text="Toggle Mute"
         class="mr-5"
+        :class="{ 'text-red-600': muted }"
       />
-    </button>
-    <audio :id="mic.producerId" />
+    </p-btn>
+    <audio :muted="muted" :id="mic.producerId" />
   </div>
 </template>
 
@@ -32,7 +37,8 @@ export default {
   },
 
   data: () => ({
-    consumer: null
+    consumer: null,
+    muted: true
   }),
 
   async mounted() {
@@ -60,6 +66,8 @@ export default {
 
       audioPlayer.srcObject = new MediaStream([this.consumer.track])
       audioPlayer.play()
+
+      this.muted = false
 
       // Subscribe to on stream ended
       this.sockets.SFU.subscribe(`producer-stream-closed-${producerId}`, () => {
@@ -92,6 +100,15 @@ export default {
             resolve()
           }
         )
+      })
+    },
+
+    toggleMute() {
+      const state = this.muted ? 'resume' : "pause"
+      this.muted = !this.muted
+      this.$socket.SFU.emit("room-consumer-pause", {
+        consumerId: this.consumer.id,
+        state
       })
     }
   }

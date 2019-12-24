@@ -46,21 +46,6 @@ export default {
     }),
 
     async produce() {
-      this.sendTransport.on("produce", (params, callback, errback) => {
-        console.log('video')
-
-        this.$socket.SFU.emit("room-transport-produce", {
-          producerOptions: {
-            transportId: this.sendTransport.id,
-            kind: params.kind,
-            rtpParameters: params.rtpParameters
-          },
-          trackId: this.$store.state.stream.tracks[params.kind].id
-        })
-
-        this.sockets.SFU.subscribe(`room-transport-produced-${this.$store.state.stream.tracks[params.kind].id}`, callback)
-      })
-
       const videoTrack = this.$store.state.stream.tracks.video
       const audioTrack = this.$store.state.stream.tracks.audio
       await this.produceVideo(videoTrack)

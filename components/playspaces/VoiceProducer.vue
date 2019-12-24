@@ -5,24 +5,30 @@
       size="sm"
       class="flex-shrink-0 mr-1"
     />
-    <h3 class="flex-grow">
+    <h3 class="flex-grow font-bold">
       {{ $store.state.user.fullUsername }}
     </h3>
-    <button>
+    <p-btn
+      @click="toggleMute"
+      variant="none"
+      size="xs"
+    >
       <p-icon
-        icon="fas fa-volume-mute"
+        icon="fas fa-microphone-slash"
         size="md"
-        screen-reader-text="Mute"
+        screen-reader-text="Toggle Mute"
         class="mr-5"
+        :class="{ 'text-red-600': muted }"
       />
-    </button>
+    </p-btn>
   </div>
 </template>
 
 <script>
 export default {
   data: () => ({
-    producer: null
+    producer: null,
+    muted: false
   }),
 
   mounted() {
@@ -35,21 +41,6 @@ export default {
 
   methods: {
     async produce() {
-      window.sendTransport.on("produce", (params, callback, errback) => {
-        console.log('voice')
-
-        this.$socket.SFU.emit("room-transport-produce", {
-          producerOptions: {
-            transportId: window.sendTransport.id,
-            kind: params.kind,
-            rtpParameters: params.rtpParameters
-          },
-          trackId: this.$store.state.stream.tracks.mic.id
-        })
-
-        this.sockets.SFU.subscribe(`room-transport-produced-${this.$store.state.stream.tracks.mic.id}`, callback)
-      })
-
       this.producer = await window.sendTransport.produce({
         track: this.$store.state.stream.tracks.mic,
         codecOptions: {
@@ -66,6 +57,15 @@ export default {
 
       this.sockets.SFU.subscribe(`producer-stream-closed-${this.producer.id}`, () => {
         // On producer closed (error)
+      })
+    },
+
+    toggleMute() {
+      const state = this.muted ? 'resume' : "pause"
+      this.muted = !this.muted
+      this.$socket.SFU.emit("room-producer-pause", {
+        producerId: this.producer.id,
+        state
       })
     }
   }

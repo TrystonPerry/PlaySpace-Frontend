@@ -19,7 +19,7 @@
 
         <div
           v-if="!totalStreams"
-          class="channel__header relative px-5 py-5 sm:py-20 border-b-2 mb-6 border-gray-300"
+          class="channel__header relative px-5 py-5 sm:py-20"
           style="z-index:2"
         >
           <div class="md:flex items-center container mx-auto">
@@ -77,7 +77,7 @@
         <client-only>
           <div
             v-if="!totalStreams && canStream && !$store.state.nav.isMobile"
-            class="pt-4"
+            class="pt-4 mt-6"
           >
             <h2 class="text-lg font-bold">
               Click below to share your desktop, a YouTube video, or Twitch
@@ -151,6 +151,8 @@ export default {
   },
 
   mounted() {
+    // TODO move transports and device to store.
+    // TODO only request a new transport once per session
     this.$socket.SFU.emit("room-join", { roomId: this.$route.params.playspace })
     this.$store.dispatch("playSpace/setCurrentPlaySpace", this.playSpace)
   },
@@ -230,6 +232,22 @@ export default {
           transportOptions
         )
         this.connectTransport(this.sendTransport)
+
+        this.sendTransport.on("produce", (params, callback, errback) => {
+          const requestID = Math.random().toString(36).substr(2, 9)
+
+          this.$socket.SFU.emit("room-transport-produce", {
+            producerOptions: {
+              transportId: this.sendTransport.id,
+              kind: params.kind,
+              rtpParameters: params.rtpParameters
+            },
+            trackId: requestID
+          })
+
+          this.sockets.SFU.subscribe(`room-transport-produced-${requestID}`, callback)
+        })
+
         window.sendTransport = this.sendTransport
       },
 
@@ -262,6 +280,12 @@ export default {
           roomId: this.$route.params.playspace
         })
       }
+    }
+  },
+
+  watch: {
+    "$store.state.playSpace.current"(playSpace) {
+      this.playSpace = playSpace
     }
   },
 
