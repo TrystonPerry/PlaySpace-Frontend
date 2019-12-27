@@ -32,10 +32,13 @@ export default {
         state.streams.external[i].queue.push(videoId)
       }
     },
-    REMOVE_VIDEO_FROM_YOUTUBE_QUEUE(state, { stream, index }) {
+    SET_YOUTUBE_VIDEO_STATE(state, { state: newState, stream }) {
+      stream.state = newState
+    },
+    REMOVE_VIDEO_FROM_YOUTUBE_QUEUE(state, stream) {
       const i = state.streams.external.indexOf(stream)
       if (i !== -1) {
-        state.streams.external[i].queue.splice(index, 1)
+        state.streams.external[i].queue.splice(i, 1)
       }
     },
     REMOVE_STREAM(state, { type, stream }) {
@@ -69,8 +72,11 @@ export default {
     addVideoToYouTubeQueue({ commit }, info) {
       commit("ADD_VIDEO_TO_YOUTUBE_QUEUE", info)
     },
-    removeVideoFromYouTubeQueue({ commit }, info) {
-      commit("REMOVE_VIDEO_FROM_YOUTUBE_QUEUE", info)
+    setYouTubeVideoState({ commit }, info) {
+      commit("SET_YOUTUBE_VIDEO_STATE", info)
+    },
+    removeVideoFromYouTubeQueue({ commit }, stream) {
+      commit("REMOVE_VIDEO_FROM_YOUTUBE_QUEUE", stream)
     },
     removeStream({ commit }, info) {
       commit("REMOVE_STREAM", info)
