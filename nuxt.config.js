@@ -1,8 +1,9 @@
 const path = require("path")
+require("dotenv").config()
 
 module.exports = {
   server: {
-    port: 8000, // default: 3000
+    port: process.env.PORT, // default 8000
     host: "localhost"
   },
   mode: "universal",
@@ -79,7 +80,14 @@ module.exports = {
   /*
    ** Nuxt.js dev-modules
    */
-  buildModules: [],
+  buildModules: ["@nuxtjs/dotenv"],
+  /*
+    ** Nuxt.js environment variables
+  */
+  dotenv: {
+    apiUrl: process.env.API_URL,
+    sfuUrl: process.env.SFU_URL
+  },
   /*
    ** Nuxt.js modules
    */
