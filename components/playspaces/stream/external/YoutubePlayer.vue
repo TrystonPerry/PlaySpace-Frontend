@@ -140,9 +140,10 @@ export default {
     setTimeout(() => {
       this.player.playVideo()
 
-      if (this.stream.time) {
-        this.player.seekTo(this.stream.time, true)
-      }
+      console.log(this.stream.time)
+
+      this.player.seekTo(this.stream.time, true)
+
       if (this.stream.state !== 1) {
         this.pauseVideoAnon()
       }
@@ -150,7 +151,7 @@ export default {
       this.ignoreEvents = false
       
       // Wait for local events of loading video to be done before setting false
-      setTimeout(() => this.isInitialLoad = false, 100)
+      setTimeout(() => this.isInitialLoad = false, 1000)
     }, 2000)
 
     // this.sockets.SFU.subscribe(
@@ -213,7 +214,7 @@ export default {
     this.sockets.SFU.subscribe(
       `room-stream-youtube-${this.stream.id}-skip-video`,
       index => {
-        this.removeVideoFromYouTubeQueue(this.stream)
+        this.removeVideoFromYouTubeQueue({ stream: this.stream, index })
         // If skipped video is current playing video, load next video
         if (index === 0) {
           this.loadVideoAnon(this.stream.queue[0])
@@ -313,12 +314,18 @@ export default {
     onPlayerEnded() {},
 
     onPlayerPlay() {
-      this.$socket.SFU.emit(`room-stream-youtube-play`, this.stream.id)
+      this.$socket.SFU.emit(`room-stream-youtube-play`, {
+        id: this.stream.id,
+        time: this.player.getCurrentTime()
+      })
       this.setYouTubeVideoState({ state: 1, stream: this.stream })
     },
 
     onPlayerPause() {
-      this.$socket.SFU.emit(`room-stream-youtube-pause`, this.stream.id)
+      this.$socket.SFU.emit(`room-stream-youtube-pause`, {
+        id: this.stream.id,
+        time: this.player.getCurrentTime()
+      })
       this.setYouTubeVideoState({ state: 2, stream: this.stream })
     },
 
