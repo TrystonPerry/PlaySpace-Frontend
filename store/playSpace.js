@@ -24,6 +24,7 @@ export default {
       if (playSpace.users[rootState.user.username] === "owner") {
         return true
       }
+      return false
     },
 
     isStreamer(state, getters, rootState) {

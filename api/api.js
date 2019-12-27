@@ -125,6 +125,14 @@ export default {
   },
 
   //
+  // Chat
+  //
+
+  banUser(id, body) {
+    return axis.post(`/chat/${id}/ban`, { body })
+  },
+
+  //
   // User
   //
 
