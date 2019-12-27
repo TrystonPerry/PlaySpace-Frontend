@@ -121,6 +121,7 @@ export default {
     player: null,
     ignoreEvents: true,
     isBuffering: true,
+    isInitialLoad: true,
 
     controls: false,
     isAddVideo: false,
@@ -139,12 +140,17 @@ export default {
     setTimeout(() => {
       this.player.playVideo()
 
-      this.player.seekTo(this.stream.time, true)
+      if (this.stream.time) {
+        this.player.seekTo(this.stream.time, true)
+      }
       if (this.stream.state !== 1) {
         this.pauseVideoAnon()
       }
 
       this.ignoreEvents = false
+      
+      // Wait for local events of loading video to be done before setting false
+      setTimeout(() => this.isInitialLoad = false, 100)
     }, 2000)
 
     // this.sockets.SFU.subscribe(
@@ -244,6 +250,9 @@ export default {
         }
       }
 
+      // If user is attempting to syncronize
+      if (this.isInitialLoad) return
+
       // If user is not authorized to change state,
       // Compare state to local state instance, if its not matching (play / pause),
       // Revert to current state
@@ -251,14 +260,19 @@ export default {
         if (event.data !== this.stream.state) {
           if (this.stream.state === 1) {
             this.playVideoAnon()
+            this.$notify({
+              type: "error",
+              title: "YouTube Player Error",
+              text: "You don't have permission to pause this video."
+            })
           } else if (this.stream.state === 2) {
             this.pauseVideoAnon()
+            this.$notify({
+              type: "error",
+              title: "YouTube Player Error",
+              text: "You don't have permission to play this video."
+            })
           }
-          this.$notify({
-            type: "error",
-            title: "Video Player Error",
-            text: "You don't have permission to play or pause this video."
-          })
         }
         return
       }
@@ -316,10 +330,12 @@ export default {
 
     loadVideoAnon(videoId) {
       this.ignoreEvents = true
+      this.isInitialLoad = true
       this.player.loadVideoById(videoId)
       setTimeout(() => {
         this.playVideoAnon()
         this.ignoreEvents = false
+        setTimeout(() => this.isInitialLoad = false, 1000)
       }, 2000)
     },
 
