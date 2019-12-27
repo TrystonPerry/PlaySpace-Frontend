@@ -167,45 +167,48 @@ export default {
         stream: this.stream,
         time: this.stream.time + 1
       })
+  
+      // If is authorized to skim video
+      if (this.isStreamer) {
+        // If there is a video
+        if (this.stream.queue.length > 0) {
+          if (!playerTime) return
 
-      this.hasErroredInLastSecond = false
+          // If end of video has been reached
+          if (playerTime >= this.player.getDuration()) {
+            this.skipCurrentVideo()
+            return
+          }
 
-      // If player time is behind or ahead by 500ms, seek to goal time
-      if (playerTime < this.stream.time - 0.5 || playerTime > this.stream.time + 0.5) {
-        this.seekToAnon(this.stream.time)
+          // If player time is behind or ahead by 500ms, tell server its new time
+          if (playerTime < this.stream.time - 1 || playerTime > this.stream.time + 1) {
+            this.$socket.SFU.emit(`room-steam-youtube-player-time`, {
+              id: this.stream.id,
+              time: playerTime
+            })
+          }
+        }
+      } 
+      
+      // Viewer, check if they are synced with time
+      else {
+        this.hasErroredInLastSecond = false
+
+        // If player time is behind or ahead by 500ms, seek to goal time
+        if (playerTime < this.stream.time - 0.5 || playerTime > this.stream.time + 0.5) {
+          this.seekToAnon(this.stream.time)
+        }
       }
     }, 1000)
 
-    // this.sockets.SFU.subscribe(
-    //   `room-stream-youtube-${this.stream.id}-player-time`,
-    //   () => {
-    //     if (this.stream.queue.length === 0) return
-    //     const value = this.player.getCurrentTime()
-    //     if (!value) return
-    //     if (value >= this.player.getDuration()) {
-    //       this.skipCurrentVideo()
-    //     }
-    //     this.$socket.SFU.emit(`room-steam-youtube-player-time`, {
-    //       id: this.stream.id,
-    //       value
-    //     })
-    //   }
-    // )
-
-    // this.sockets.SFU.subscribe(
-    //   `room-stream-youtube-${this.stream.id}-player-time-update`,
-    //   time => {
-    //     if (this.isBuffering) return
-
-    //     const myTime = this.player.getCurrentTime()
-
-    //     if (myTime < time - 0.5 || myTime > time + 0.5) {
-    //       this.ignoreEvents = true
-    //       this.player.seekTo(time)
-    //       this.ignoreEvents = false
-    //     }
-    //   }
-    // )
+    this.sockets.SFU.subscribe(
+      `room-stream-youtube-${this.stream.id}-player-time-update`,
+      time => {
+        this.setYouTubeVideoTime({ stream: this.stream, time })
+        if (this.isBuffering) return        
+        this.seekToAnon(time)
+      }
+    )
 
     this.sockets.SFU.subscribe(
       `room-stream-youtube-${this.stream.id}-unstarted`,
