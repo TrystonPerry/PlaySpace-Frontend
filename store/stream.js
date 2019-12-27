@@ -33,6 +33,9 @@ export default {
     SET_YOUTUBE_VIDEO_STATE(state, { state: newState, stream }) {
       stream.state = newState
     },
+    SET_YOUTUBE_VIDEO_TIME(state, { stream, time }) {
+      stream.time = time
+    },
     REMOVE_VIDEO_FROM_YOUTUBE_QUEUE(state, { stream, index }) {
       stream.queue.splice(index, 1)
     },
@@ -69,6 +72,9 @@ export default {
     },
     setYouTubeVideoState({ commit }, info) {
       commit("SET_YOUTUBE_VIDEO_STATE", info)
+    },
+    setYouTubeVideoTime({ commit }, info) {
+      commit("SET_YOUTUBE_VIDEO_TIME", info)
     },
     removeVideoFromYouTubeQueue({ commit }, info) {
       commit("REMOVE_VIDEO_FROM_YOUTUBE_QUEUE", info)
