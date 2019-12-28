@@ -3,7 +3,7 @@
 .p-link,
 .p-btn {
   transition-duration: 100ms;
-  @apply text-gray-300;
+  color: #E2E8F0;
 
   &:hover {
     transform: translateY(-1px);
@@ -11,41 +11,41 @@
 }
 
 .btn-primary {
-  @apply bg-primary;
+  background: #009dee;
 }
 
 .btn-primary-outline {
-  @apply text-primary;
-  @apply bg-gray-300;
+  color: #009dee;
+  background: #E2E8F0;
 
   &:hover {
-    @apply bg-primary;
-    @apply text-gray-300;
+    background: #009dee;
+    color: #E2E8F0;
   }
 }
 
 .btn-white {
-  @apply .bg-gray-300;
-  @apply .text-primary;
+  background: #E2E8F0;
+  color: #009dee;
 }
 
 .btn-white-outline {
-  @apply .text-white;
-  @apply .bg-primary;
+  color: #E2E8F0;
+  background: #009dee;
 
   &:hover {
-    @apply .bg-gray-300;
-    @apply .text-primary;
+    background: #E2E8F0;
+    color: #009dee;
   }
 }
 
 .btn-primary-hover {
-  @apply .text-primary;
+  color: #009dee;
   background: transparent;
 
   &:hover {
-    @apply .bg-primary;
-    @apply .text-gray-300;
+    background: #009dee;
+    color: #E2E8F0;
   }
 }
 
@@ -60,8 +60,8 @@
   @apply .bg-dark-1;
 
   &:hover {
-    @apply .text-gray-300;
-    @apply .bg-primary;
+    color: #E2E8F0;
+    background: #009dee;
   }
 }
 
