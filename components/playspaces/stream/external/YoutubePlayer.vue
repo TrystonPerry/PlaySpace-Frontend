@@ -125,6 +125,7 @@ export default {
     isLoadingVideo: true,
     interval: null,
     hasErroredInLastSecond: false,
+    hasTimeUpdatedInLastSecond: false,
 
     controls: false,
     isAddVideo: false,
@@ -140,19 +141,33 @@ export default {
       }
     })
 
+    const then = this.getLocalStamp()
+
     setTimeout(() => {
       this.player.playVideo()
 
-      this.seekToAnon(this.stream.time)
-
-      if (this.stream.state !== 1) {
-        this.pauseVideoAnon()
+      let { time } = this.stream
+      if (this.stream.state === 1) {
+        time += this.getLocalStamp() - then
       }
-      
-      this.ignoreEvents = false
+
+      this.setYouTubeVideoTime({
+        stream: this.stream,
+        time
+      })
+      this.seekToAnon(time)
+
+      if (this.stream.state === 2) {
+        this.player.pauseVideo()
+      } else {
+        this.setYouTubeVideoState({ stream: this.stream, state: 1 })
+      }
 
       // Wait for local events of loading video to be done before setting false
-      setTimeout(() => this.isLoadingVideo = false, 2000)
+      setTimeout(() => {
+        this.isLoadingVideo = false
+        this.ignoreEvents = false
+      }, 2000)
     }, 2000)
 
     // Add interval to check if time and state are synced
@@ -169,22 +184,23 @@ export default {
       })
   
       // If is authorized to skim video
-      if (this.isStreamer) {
+      if (this.isStreamer || this.ignoreEvents) {
         // If there is a video
         if (this.stream.queue.length > 0) {
-          if (!playerTime) return
+          if (!playerTime || this.hasTimeUpdatedInLastSecond) return
 
           // If end of video has been reached
           if (playerTime >= this.player.getDuration()) {
-            this.skipCurrentVideo()
+            // this.skipCurrentVideo()
             return
           }
 
-          // If player time is behind or ahead by 500ms, tell server its new time
+          // If player time is behind or ahead by 1s, tell server its new time
           if (playerTime < this.stream.time - 1 || playerTime > this.stream.time + 1) {
             this.$socket.SFU.emit(`room-steam-youtube-player-time`, {
               id: this.stream.id,
-              time: playerTime
+              time: playerTime,
+              stamp: this.getLocalStamp()
             })
           }
         }
@@ -203,9 +219,11 @@ export default {
 
     this.sockets.SFU.subscribe(
       `room-stream-youtube-${this.stream.id}-player-time-update`,
-      time => {
+      ({ time, stamp }) => {
+        time += this.getLocalStamp() - stamp
         this.setYouTubeVideoTime({ stream: this.stream, time })
-        if (this.isBuffering) return        
+        if (this.hasTimeUpdatedInLastSecond) return
+        this.setHasTimeUpdatedToTrueFor1Second()       
         this.seekToAnon(time)
       }
     )
@@ -282,7 +300,7 @@ export default {
       }
 
       // If user is attempting to syncronize
-      if (this.ignoreEvents || this.isBuffering) return
+      if (this.ignoreEvents || this.isBuffering || this.hasTimeUpdatedInLastSecond) return
 
       // If user is not authorized to change state,
       // Compare state to local state instance, if its not matching (play / pause),
@@ -313,6 +331,8 @@ export default {
         }
         return
       }
+
+      console.log(event.data)
       
       switch (event.data) {
         // Unstarted
@@ -399,6 +419,7 @@ export default {
     seekToAnon(time) {
       this.ignoreEvents = true
       this.seekTo(time)
+      this.setHasTimeUpdatedToTrueFor1Second()
       this.ignoreEvents = false
     },
 
@@ -430,6 +451,15 @@ export default {
         this.ignoreEvents = false,
         this.isLoadingVideo = false
       }, 2000)
+    },
+
+    setHasTimeUpdatedToTrueFor1Second() {
+      this.hasTimeUpdatedInLastSecond = true
+      setTimeout(() => this.hasTimeUpdatedInLastSecond = false, 1000)
+    },
+
+    getLocalStamp() {
+      return (Date.now() / 1000) - new Date().getTimezoneOffset() * 60
     }
   }
 }
