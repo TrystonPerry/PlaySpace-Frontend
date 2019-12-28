@@ -1,10 +1,12 @@
 const path = require("path")
-require("dotenv").config()
+// if (process.env.NODE_ENV !== 'production') {
+  require("dotenv").config()
+// }
 
 module.exports = {
   server: {
     port: process.env.PORT, // default 8000
-    host: "localhost"
+    host: process.env.HOST || "localhost"
   },
   mode: "universal",
   /*
