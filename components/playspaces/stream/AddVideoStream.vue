@@ -166,8 +166,13 @@ export default {
 
       const username = match && match[2]
 
-      // TODO notif
-      if (!username) return
+      if (!username) {
+        this.$notify({
+          type: "error",
+          title: "Invalid username or link"
+        })
+        return
+      }
 
       this.$socket.SFU.emit("room-stream-external", {
         type: "twitch",
@@ -182,8 +187,13 @@ export default {
 
       const url = match && match[7].length === 11 ? match[7] : false
 
-      // TODO notify that it's an invalid URL
-      if (!url) return
+      if (!url) {
+        this.$notify({
+          type: "error",
+          title: "Invalid URL"
+        })
+        return
+      }
 
       this.$socket.SFU.emit("room-stream-external", {
         type: "youtube",

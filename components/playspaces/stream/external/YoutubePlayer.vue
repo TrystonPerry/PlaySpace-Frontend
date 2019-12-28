@@ -136,14 +136,12 @@ export default {
       }
     })
 
-    const then = this.getLocalStamp()
-
     setTimeout(() => {
       this.player.playVideo()
 
       let { time } = this.stream
       if (this.stream.state === 1) {
-        time += this.getLocalStamp() - then
+        time++
       }
 
       this.setYouTubeVideoTime({
@@ -162,8 +160,8 @@ export default {
       setTimeout(() => {
         this.isLoadingVideo = false
         this.ignoreEvents = false
-      }, 2000)
-    }, 2000)
+      }, 5000)
+    }, 1000)
 
     // Add interval to check if time and state are synced
     this.interval = setInterval(() => {
@@ -179,7 +177,7 @@ export default {
       })
   
       // If is authorized to skim video
-      if (this.isStreamer || this.ignoreEvents) {
+      if (this.isStreamer && !this.ignoreEvents && !this.isLoadingVideo) {
         // If there is a video
         if (this.stream.queue.length > 0) {
           if (!playerTime || this.hasTimeUpdatedInLastSecond) return
@@ -330,7 +328,6 @@ export default {
       }
       
       switch (event.data) {
-        // Unstarted
         case -1:
           break
         // Ended

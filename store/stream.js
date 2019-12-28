@@ -27,7 +27,6 @@ export default {
       state.streams[type].push(stream)
     },
     ADD_VIDEO_TO_YOUTUBE_QUEUE(state, { stream, videoId }) {
-      console.log({...stream})
       stream.queue.push(videoId)
     },
     SET_YOUTUBE_VIDEO_STATE(state, { state: newState, stream }) {
