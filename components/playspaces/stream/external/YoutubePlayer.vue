@@ -17,7 +17,7 @@
           <p-icon icon="fas fa-plus" />Add Video
         </p-btn>
         <p-btn
-          v-if="isAuthorized"
+          v-if="isStreamer"
           @click="$socket.SFU.emit('room-stream-external-close', stream.id)"
           variant="none"
           class="bg-red-400"
@@ -49,7 +49,7 @@
             class="flex items-center mb-1 rounded p-1"
           >
             <h3 class="flex-grow">{{ videoId }}</h3>
-            <p-tooltip v-if="isAuthorized" text="Remove" position="left">
+            <p-tooltip v-if="isStreamer" text="Remove" position="left">
               <p-btn
                 @click="
                   $socket.SFU.emit(`room-stream-youtube-skip-video`, {
@@ -78,14 +78,14 @@
           <p-icon icon="fas fa-plus" />
         </p-btn>
       </p-tooltip>
-      <p-tooltip v-if="stream.queue.length > 1 && isAuthorized" text="Next Video" position="left">
+      <p-tooltip v-if="stream.queue.length > 1 && isStreamer" text="Next Video" position="left">
         <p-btn @click="skipCurrentVideo" variant="none" size="sm" class="bg-blue-400 mb-1">
           <p-icon icon="fas fa-forward" />
         </p-btn>
       </p-tooltip>
-      <p-tooltip v-if="isAuthorized" text="Remove Player" position="left">
+      <p-tooltip v-if="isStreamer" text="Remove Player" position="left">
         <p-btn
-          v-if="isAuthorized"
+          v-if="isStreamer"
           @click="$socket.SFU.emit('room-stream-external-close', stream.id)"
           variant="none"
           size="sm"
@@ -122,6 +122,10 @@ export default {
     ignoreEvents: true,
     isBuffering: true,
 
+    isLoadingVideo: true,
+    interval: null,
+    hasErroredInLastSecond: false,
+
     controls: false,
     isAddVideo: false,
     youtubeUrl: ""
@@ -139,60 +143,89 @@ export default {
     setTimeout(() => {
       this.player.playVideo()
 
-      this.player.seekTo(this.stream.time, true)
+      this.seekToAnon(this.stream.time)
+
       if (this.stream.state !== 1) {
         this.pauseVideoAnon()
       }
-
+      
       this.ignoreEvents = false
+
+      // Wait for local events of loading video to be done before setting false
+      setTimeout(() => this.isLoadingVideo = false, 2000)
     }, 2000)
 
-    this.sockets.SFU.subscribe(
-      `room-stream-youtube-${this.stream.id}-player-time`,
-      () => {
-        if (this.stream.queue.length === 0) return
-        const value = this.player.getCurrentTime()
-        if (!value) return
-        if (value >= this.player.getDuration()) {
-          this.skipCurrentVideo()
+    // Add interval to check if time and state are synced
+    this.interval = setInterval(() => {
+      // If player is paused, return
+      if (this.stream.state === 2) return
+
+      const playerTime = this.player.getCurrentTime()
+
+      // Add 1 second to goal time
+      this.setYouTubeVideoTime({
+        stream: this.stream,
+        time: this.stream.time + 1
+      })
+  
+      // If is authorized to skim video
+      if (this.isStreamer) {
+        // If there is a video
+        if (this.stream.queue.length > 0) {
+          if (!playerTime) return
+
+          // If end of video has been reached
+          if (playerTime >= this.player.getDuration()) {
+            this.skipCurrentVideo()
+            return
+          }
+
+          // If player time is behind or ahead by 500ms, tell server its new time
+          if (playerTime < this.stream.time - 1 || playerTime > this.stream.time + 1) {
+            this.$socket.SFU.emit(`room-steam-youtube-player-time`, {
+              id: this.stream.id,
+              time: playerTime
+            })
+          }
         }
-        this.$socket.SFU.emit(`room-steam-youtube-player-time`, {
-          id: this.stream.id,
-          value
-        })
+      } 
+      
+      // Viewer, check if they are synced with time
+      else {
+        this.hasErroredInLastSecond = false
+
+        // If player time is behind or ahead by 500ms, seek to goal time
+        if (playerTime < this.stream.time - 0.5 || playerTime > this.stream.time + 0.5) {
+          this.seekToAnon(this.stream.time)
+        }
       }
-    )
+    }, 1000)
 
     this.sockets.SFU.subscribe(
       `room-stream-youtube-${this.stream.id}-player-time-update`,
       time => {
-        if (this.isBuffering) return
-
-        const myTime = this.player.getCurrentTime()
-
-        if (myTime < time - 0.5 || myTime > time + 0.5) {
-          this.ignoreEvents = true
-          this.player.seekTo(time)
-          this.ignoreEvents = false
-        }
+        this.setYouTubeVideoTime({ stream: this.stream, time })
+        if (this.isBuffering) return        
+        this.seekToAnon(time)
       }
     )
 
     this.sockets.SFU.subscribe(
       `room-stream-youtube-${this.stream.id}-unstarted`,
-      () => {
-        this.playVideoAnon()
-      }
-    )
-
-    this.sockets.SFU.subscribe(
-      `room-stream-youtube-${this.stream.id}-played`,
       this.playVideoAnon
     )
 
     this.sockets.SFU.subscribe(
-      `room-stream-youtube-${this.stream.id}-paused`,
-      this.pauseVideoAnon
+      `room-stream-youtube-${this.stream.id}-played`, () => {
+        this.playVideoAnon()
+      }
+      
+    )
+
+    this.sockets.SFU.subscribe(
+      `room-stream-youtube-${this.stream.id}-paused`, () => {
+        this.pauseVideoAnon()
+      }
     )
 
     this.sockets.SFU.subscribe(
@@ -218,15 +251,21 @@ export default {
     )
   },
 
+  beforeDestroy() {
+    clearInterval(this.interval)
+  },
+
   computed: {
     ...mapGetters({
-      isAuthorized: "playSpace/isAuthorized"
+      isStreamer: "playSpace/isStreamer"
     })
   },
 
   methods: {
     ...mapActions({
       addVideoToYouTubeQueue: "stream/addVideoToYouTubeQueue",
+      setYouTubeVideoState: "stream/setYouTubeVideoState",
+      setYouTubeVideoTime: "stream/setYouTubeVideoTime",
       removeVideoFromYouTubeQueue: "stream/removeVideoFromYouTubeQueue"
     }),
 
@@ -238,11 +277,43 @@ export default {
       }
 
       if (this.isBuffering && event.data === 2) {
-        this.player.playVideo()
+        this.playVideoAnon()
+        return
       }
 
-      if (this.ignoreEvents || !this.isAuthorized) return
+      // If user is attempting to syncronize
+      if (this.ignoreEvents || this.isBuffering) return
 
+      // If user is not authorized to change state,
+      // Compare state to local state instance, if its not matching (play / pause),
+      // Revert to current state
+      if (!this.isStreamer) {
+        if (event.data !== this.stream.state) {
+          if (this.stream.state === 1) {
+            this.playVideoAnon()
+            if (!this.hasErroredInLastSecond && !this.isLoadingVideo) {
+              this.hasErroredInLastSecond = true
+              this.$notify({
+                type: "error",
+                title: "YouTube Player Error",
+                text: "You don't have permission to control this video."
+              })
+            }
+          } else if (this.stream.state === 2) {
+            this.pauseVideoAnon()
+            if (!this.hasErroredInLastSecond && !this.isLoadingVideo) {
+              this.hasErroredInLastSecond = true
+              this.$notify({
+                type: "error",
+                title: "YouTube Player Error",
+                text: "You don't have permission to control this video."
+              })
+            }
+          }
+        }
+        return
+      }
+      
       switch (event.data) {
         // Unstarted
         case -1:
@@ -277,11 +348,19 @@ export default {
     onPlayerEnded() {},
 
     onPlayerPlay() {
-      this.$socket.SFU.emit(`room-stream-youtube-play`, this.stream.id)
+      this.$socket.SFU.emit(`room-stream-youtube-play`, {
+        id: this.stream.id,
+        time: this.player.getCurrentTime()
+      })
+      this.playVideoAnon()
     },
 
     onPlayerPause() {
-      this.$socket.SFU.emit(`room-stream-youtube-pause`, this.stream.id)
+      this.$socket.SFU.emit(`room-stream-youtube-pause`, {
+        id: this.stream.id,
+        time: this.player.getCurrentTime()
+      })
+      this.pauseVideoAnon()
     },
 
     onPlayerBuffering() {
@@ -295,19 +374,31 @@ export default {
       this.player.loadVideoById(videoId)
       setTimeout(() => {
         this.playVideoAnon()
-        this.ignoreEvents = false
+        setTimeout(() => this.ignoreEvents = false, 1000)
       }, 2000)
     },
 
     playVideoAnon() {
       this.ignoreEvents = true
+      this.setYouTubeVideoState({ state: 1, stream: this.stream })
       this.player.playVideo()
       this.ignoreEvents = false
     },
 
     pauseVideoAnon() {
       this.ignoreEvents = true
+      this.setYouTubeVideoState({ state: 2, stream: this.stream })
       this.player.pauseVideo()
+      this.ignoreEvents = false
+    },
+
+    seekTo(time) {
+      this.player.seekTo(time)
+    },
+
+    seekToAnon(time) {
+      this.ignoreEvents = true
+      this.seekTo(time)
       this.ignoreEvents = false
     },
 
@@ -328,10 +419,17 @@ export default {
     },
 
     skipCurrentVideo() {
+      this.ignoreEvents = true
+      this.isLoadingVideo = true
       this.$socket.SFU.emit(`room-stream-youtube-skip-video`, {
         id: this.stream.id,
         index: 0
       })
+      this.setYouTubeVideoTime({ stream: this.stream, time: 0 })
+      setTimeout(() => {
+        this.ignoreEvents = false,
+        this.isLoadingVideo = false
+      }, 2000)
     }
   }
 }
