@@ -51,12 +51,7 @@
             <h3 class="flex-grow">{{ videoId }}</h3>
             <p-tooltip v-if="isStreamer" text="Remove" position="left">
               <p-btn
-                @click="
-                  $socket.SFU.emit(`room-stream-youtube-skip-video`, {
-                    id: stream.id,
-                    index: i
-                  })
-                "
+                @click="skipCurrentVideo"
                 variant="none"
                 size="xs"
                 class="bg-red-400"
@@ -191,7 +186,7 @@ export default {
 
           // If end of video has been reached
           if (playerTime >= this.player.getDuration()) {
-            // this.skipCurrentVideo()
+            this.skipCurrentVideo()
             return
           }
 
@@ -263,7 +258,9 @@ export default {
         this.removeVideoFromYouTubeQueue({ stream: this.stream, index })
         // If skipped video is current playing video, load next video
         if (index === 0) {
+          this.isLoadingVideo = true
           this.loadVideoAnon(this.stream.queue[0])
+          setTimeout(() => this.isLoadingVideo = false, 1000)
         }
       }
     )
@@ -331,8 +328,6 @@ export default {
         }
         return
       }
-
-      console.log(event.data)
       
       switch (event.data) {
         // Unstarted
@@ -440,6 +435,7 @@ export default {
     },
 
     skipCurrentVideo() {
+      if (this.isLoadingVideo) return
       this.ignoreEvents = true
       this.isLoadingVideo = true
       this.$socket.SFU.emit(`room-stream-youtube-skip-video`, {
