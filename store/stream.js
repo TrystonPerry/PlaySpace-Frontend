@@ -1,5 +1,10 @@
 export default {
   state: () => ({
+    producerIds: {
+      video: null,
+      audio: null,
+      mic: null
+    },
     tracks: {
       video: null,
       audio: null,
@@ -22,6 +27,9 @@ export default {
   mutations: {
     SET_LOCAL_TRACK(state, { type, track }) {
       state.tracks[type] = track
+    },
+    SET_PRODUCER_ID(state, { type, producerId }) {
+      state.producerIds[type] = producerId
     },
     ADD_STREAM(state, { type, stream }) {
       state.streams[type].push(stream)
@@ -63,6 +71,9 @@ export default {
   actions: {
     setLocalTrack({ commit }, options) {
       commit("SET_LOCAL_TRACK", options)
+    },
+    setProducerId({ commit }, info) {
+      commit("SET_PRODUCER_ID", info)
     },
     addStream({ commit }, info) {
       commit("ADD_STREAM", info)

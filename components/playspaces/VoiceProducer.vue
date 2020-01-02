@@ -52,7 +52,12 @@ export default {
 
       this.$socket.SFU.emit("room-stream-mic", {
         producerId: this.producer.id,
-        username: this.$store.state.user.fullUsername
+        // fullUsername: this.$store.state.user.fullUsername
+      })
+
+      this.$store.dispatch("stream/setProducerId", {
+        type: "mic", 
+        producerId: this.producer.id
       })
 
       this.sockets.SFU.subscribe(`producer-stream-closed-${this.producer.id}`, () => {

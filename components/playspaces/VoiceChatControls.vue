@@ -39,6 +39,14 @@ export default {
     }
   },
 
+  watch: {
+    "$store.state.stream.producerIds.mic"(producerId) {
+      if (producerId) {
+        this.sockets.SFU.subscribe(`producer-stream-closed-${producerId}`, this.closeMic)
+      }
+    }
+  },
+
   methods: {
     ...mapActions({
       "setLocalTrack": "stream/setLocalTrack",

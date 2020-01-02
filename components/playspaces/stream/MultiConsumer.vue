@@ -117,8 +117,12 @@ export default {
           delete this.consumers[stream.audio.producerId]
         }
 
-        const random = Math.floor(Math.random() * this.streams.length)
-        this.activeProducerId = this.streams[random].producerId
+        if (this.streams.length) {
+          const random = Math.floor(Math.random() * this.streams.length)
+          this.activeProducerId = this.streams[random].producerId
+        } else {
+          this.activeProducerId = ""
+        }
 
         this.removeStream({ type: "video", stream })
       })

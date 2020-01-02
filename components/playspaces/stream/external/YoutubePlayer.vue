@@ -169,7 +169,7 @@ export default {
       })
   
       // If is authorized to skim video
-      if (this.isStreamer) {
+      if (this.isStreamer && !this.ignoreEvents) {
         // If there is a video
         if (this.stream.queue.length > 0) {
           if (!playerTime) return
@@ -205,7 +205,8 @@ export default {
       `room-stream-youtube-${this.stream.id}-player-time-update`,
       time => {
         this.setYouTubeVideoTime({ stream: this.stream, time })
-        if (this.isBuffering) return        
+        this.ignoreEvents = true
+        setTimeout(() => this.ignoreEvents = false, 1000)
         this.seekToAnon(time)
       }
     )

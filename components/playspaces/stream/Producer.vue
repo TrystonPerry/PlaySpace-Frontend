@@ -45,9 +45,13 @@ export default {
       "setLocalTrack": "stream/setLocalTrack"
     }),
 
-    async produce() {
+    // Produce this video stream
+    async produce() {      
       const videoTrack = this.$store.state.stream.tracks.video
       const audioTrack = this.$store.state.stream.tracks.audio
+
+      this.stream = new MediaStream([videoTrack, audioTrack].filter(t => t))
+
       await this.produceVideo(videoTrack)
       await this.produceAudio(audioTrack)
 
@@ -58,7 +62,6 @@ export default {
         }
       })
 
-      this.stream = new MediaStream([videoTrack, audioTrack].filter(t => t))
       document.getElementById("local").srcObject = this.stream
 
       this.$store.state.stream.tracks.video.onended = this.stopProduce
@@ -70,13 +73,11 @@ export default {
       this.videoProducer = await this.sendTransport.produce({
         track,
         codecOptions: {
-          videoGoogleMaxBitrate: 3500
+          videoGoogleMaxBitrate: 4000
         }
       })
 
-      this.sockets.SFU.subscribe(`producer-stream-closed-${this.videoProducer.id}`, () => {
-        // TODO error handeling that your stream was closed
-      })
+      this.sockets.SFU.subscribe(`producer-stream-closed-${this.videoProducer.id}`, this.stopProduce)
     },
 
     async produceAudio(track) {
@@ -96,16 +97,18 @@ export default {
 
     // Stop producing all tracks
     stopProduce() {
-      // Prevent this function from being called multiple times
-      if (!this.videoProducer) return
-
       // Close local video tracks
-      this.$refs.video.srcObject = null
-      this.stream.getTracks().forEach(track => track.stop())
+      if (this.stream) {
+        let local = document.getElementById("local")
+        if (local) local.srcObject = null
+        this.stream.getTracks().forEach(track => track.stop())
+      }
 
       // Delete server and local instance of video producer
-      this.$socket.SFU.emit("room-producer-close", this.videoProducer.id)
-      this.videoProducer = null
+      if (this.videoProducer) {
+        this.$socket.SFU.emit("room-producer-close", this.videoProducer.id)
+        this.videoProducer = null
+      }
 
       // Delete server and local instance of audio producer
       if (this.audioProducer) {

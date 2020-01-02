@@ -237,6 +237,15 @@ export default {
       }
     },
     SFU: {
+      onerror({ type, text }) {
+        console.error(`${type} error: ${text}`)
+        this.$notify({
+          type: "error",
+          title: `${type} error`,
+          text
+        })
+      },
+
       "room-joined": async function(roomData) {
         const { routerRtpCapabilities } = roomData
 
@@ -264,7 +273,7 @@ export default {
         this.connectTransport(this.sendTransport)
 
         this.sendTransport.on("produce", (params, callback, errback) => {
-          const requestID = Math.random().toString(36).substr(2, 9)
+          const requestId = Math.random().toString(36).substr(2, 9)
 
           this.$socket.SFU.emit("room-transport-produce", {
             producerOptions: {
@@ -272,10 +281,10 @@ export default {
               kind: params.kind,
               rtpParameters: params.rtpParameters
             },
-            trackId: requestID
+            requestId
           })
 
-          this.sockets.SFU.subscribe(`room-transport-produced-${requestID}`, callback)
+          this.sockets.SFU.subscribe(`room-transport-produced-${requestId}`, callback)
         })
 
         window.sendTransport = this.sendTransport
