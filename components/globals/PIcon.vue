@@ -15,7 +15,7 @@ export default {
     screenReaderText: String,
     size: {
       type: String,
-      default: "base"
+      default: ""
     }
   }
 }

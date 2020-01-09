@@ -70,30 +70,82 @@
     </p-modal>
     <div
       v-if="controls"
-      class="controls absolute right-0 mr-1"
-      style="top:50%;transform:translateY(-50%)"
+      class="controls absolute flex"
+      style="left:50%;top:50%;transform:translate(-50%,-50%)"
     >
-      <p-tooltip text="Add Video" position="left">
-        <p-btn @click="isAddVideo = !isAddVideo" variant="none" size="sm" class="bg-green-700 mb-1">
-          <p-icon icon="fas fa-plus" />
+      <p-btn 
+        @click="isAddVideo = !isAddVideo" 
+        variant="none" 
+        size="sm" 
+        class="bg-green-700 mr-1 text-xs lg:text-base"
+      >
+        <p-icon icon="fas fa-plus" />
+        Add Video
+      </p-btn>
+      <p-btn 
+        v-if="stream.queue.length && isStreamer" 
+        @click="skipCurrentVideo" 
+        variant="none" 
+        size="sm" 
+        class="bg-blue-400 mr-1 text-xs lg:text-base"
+      >
+        <p-icon icon="fas fa-forward" />
+        Skip Video
+      </p-btn>
+      <p-btn
+        v-if="isStreamer"
+        @click="$socket.SFU.emit('room-stream-external-close', stream.id)"
+        variant="none"
+        size="sm"
+        class="bg-red-400 text-xs lg:text-base"
+      >
+        <p-icon icon="fas fa-minus" />
+        Remove Player
+      </p-btn>
+    </div>
+    <div
+      v-if="controls"
+      class="w-full bg-dark-4 absolute bottom-0 left-0"
+    >
+      <div v-if="isStreamer" class="relative w-full h-full">
+        <input 
+          type="range" 
+          class="absolute left-0 w-full h-4"
+          style="top:-0.5rem" 
+        />
+      </div>
+        <div class="flex items-center ">
+          <p-btn>
+          <p-icon icon="fas fa-pause" screen-reader-text="Pause" />
         </p-btn>
-      </p-tooltip>
-      <p-tooltip v-if="stream.queue.length > 1 && isStreamer" text="Next Video" position="left">
-        <p-btn @click="skipCurrentVideo" variant="none" size="sm" class="bg-blue-400 mb-1">
-          <p-icon icon="fas fa-forward" />
-        </p-btn>
-      </p-tooltip>
-      <p-tooltip v-if="isStreamer" text="Remove Player" position="left">
-        <p-btn
-          v-if="isStreamer"
-          @click="$socket.SFU.emit('room-stream-external-close', stream.id)"
-          variant="none"
-          size="sm"
-          class="bg-red-400"
+        <div 
+          @mouseenter="showVolume = true"
+          @mouseleave="showVolume = false"
+          class="flex items-center"
         >
-          <p-icon icon="fas fa-minus" />
+          <p-btn>
+            <p-icon icon="fas fa-volume-up" screen-reader-text="Volume" />
+          </p-btn>
+          <input 
+            v-if="showVolume"
+            type="range" 
+            class="w-24"
+            value="0"
+            min="0"
+            max="100"
+          >
+        </div>
+        <span class="ml-2 text-xs opacity-75">
+          0:00 / 12:23
+        </span>
+        <div class="flex-grow"></div>
+        <p-btn>
+          <p-icon icon="fas fa-cog" screen-reader-text="Video Quality" />
         </p-btn>
-      </p-tooltip>
+        <p-btn>
+          <p-icon icon="fas fa-expand" screen-reader-text="Fullscreen" />
+        </p-btn>
+      </div>
     </div>
   </div>
 </template>
@@ -126,7 +178,8 @@ export default {
     interval: null,
     hasErroredInLastSecond: false,
 
-    controls: false,
+    controls: true,
+    showVolume: true,
     isAddVideo: false,
     youtubeUrl: ""
   }),
@@ -134,6 +187,9 @@ export default {
   mounted() {
     this.player = new YT.Player(this.stream.id, {
       videoId: this.stream.queue[0],
+      playerVars: {
+        controls: 0
+      },
       events: {
         onReady: this.onPlayerReady,
         onStateChange: this.onPlayerStateChange
@@ -437,15 +493,81 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.controls {
-  button.p-btn {
-    height: 32px;
-    width: 32px;
-  }
-}
 .queue {
   li:nth-child(even) {
     @apply bg-dark-4;
   }
+}
+input[type=range] {
+  -webkit-appearance: none; /* Hides the slider so that custom slider can be made */
+  width: 100%; /* Specific width is required for Firefox. */
+  background: transparent; /* Otherwise white in Chrome */
+}
+
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+}
+
+input[type=range]:focus {
+  outline: none; /* Removes the blue border. You should probably do some kind of focus styling for accessibility reasons though. */
+}
+
+input[type=range]::-ms-track {
+  width: 100%;
+  cursor: pointer;
+
+  /* Hides the slider so custom styles can be added */
+  background: transparent; 
+  border-color: transparent;
+  color: transparent;
+}
+/* Special styling for WebKit/Blink */
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  height: 1rem;
+  width: 1rem;
+  border-radius: 50%;
+  background: #009dee;
+  cursor: pointer;
+  margin-top: -0.37rem; /* You need to specify a margin in Chrome, but in Firefox and IE it is automatic */
+}
+
+/* All the same stuff for Firefox */
+input[type=range]::-moz-range-thumb {
+  height: 1rem;
+  width: 1rem;
+  border-radius: 50%;
+  background: #009dee;
+  cursor: pointer;
+}
+input[type=range]::-webkit-slider-runnable-track {
+  width: 100%;
+  height: 0.3rem;
+  cursor: pointer;
+  background: #f3f3f3;
+  border-radius: 1.3px;
+}
+
+input[type=range]::-moz-range-track {
+  width: 100%;
+  height: 0.3rem;
+  cursor: pointer;
+  background: #f3f3f3;
+  border-radius: 1.3px;
+}
+
+input[type=range]::-ms-track {
+  width: 100%;
+  height: 0.3rem;
+  cursor: pointer;
+  background: #f3f3f3;
+  color: transparent;
+}
+input[type=range]::-ms-fill-lower {
+  background: #009dee;
+  border: 0.2px solid #010101;
+}
+input[type=range]::-ms-fill-upper {
+  background: #f3f3f3;
 }
 </style>
