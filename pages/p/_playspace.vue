@@ -260,8 +260,9 @@ export default {
           return alert("You cant produce audio")
         }
 
-        this.$socket.SFU.emit("room-transport-create", "send")
         this.$socket.SFU.emit("room-transport-create", "recv")
+        // TODO only call this directly before a produce request
+        this.$socket.SFU.emit("room-transport-create", "send")
 
         this.addStreams(roomData.streams)
       },
