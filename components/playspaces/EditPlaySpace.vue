@@ -2,8 +2,15 @@
   <form @submit.prevent>
     <h1 class="text-2xl font-bold mb-2">Edit PlaySpace Info</h1>
     <div class="mb-2">
-      <p-input v-model="channelName" @blur="checkChannelName" label="Name" type="text" />
-      <small v-if="errors.channelName" class="text-red-500">{{ errors.channelName }}</small>
+      <p-input
+        v-model="channelName"
+        @blur="checkChannelName"
+        label="Name"
+        type="text"
+      />
+      <small v-if="errors.channelName" class="text-red-500">{{
+        errors.channelName
+      }}</small>
     </div>
     <div class="mb-2">
       <p-input v-model="title" @blur="checkTitle" label="Title" type="text" />
@@ -13,12 +20,25 @@
     <small v-if="errors.channelName" class="text-red-500">
         {{ errors.channelName }}
     </small>-->
-    <div class="mb-3">
-      <p-input v-model="avatar" @blur="checkAvatar" label="Logo URL (https)" type="text" />
-      <small v-if="errors.avatar" class="text-red-500">{{ errors.avatar }}</small>
+    <div class="mb-5">
+      <p-input
+        v-model="avatar"
+        @blur="checkAvatar"
+        label="Logo URL (https)"
+        type="text"
+      />
+      <small v-if="errors.avatar" class="text-red-500">{{
+        errors.avatar
+      }}</small>
     </div>
     <!-- <p-input v-model="isPublic" label="Public" type="checkbox" class="mb-4" /> -->
-    <p-btn @click="onSave" variant="primary">Save</p-btn>
+    <div class="flex">
+      <p-btn @click="onSave" variant="primary">Save</p-btn>
+      <div class="flex-grow"></div>
+      <p-btn @click="onDelete" variant="none" class="bg-red-600">
+        Delete
+      </p-btn>
+    </div>
   </form>
 </template>
 
@@ -72,9 +92,7 @@ export default {
           }
         )
 
-        if (!success) {
-          return alert(error)
-        }
+        if (!success) return
 
         this.$emit("edit", data)
         this.$store.dispatch("playSpace/updateCurrentPlaySpace", data)
@@ -109,6 +127,16 @@ export default {
         this.errors.avatar = ""
       }
       return !this.errors.avatar
+    },
+
+    async onDelete() {
+      const answer = confirm(
+        "Are you sure you would like to delete this PlaySpace? This is permenant and can NOT be undone."
+      )
+
+      if (!answer) return
+
+      await API.deleteChannel(this.$route.params.playspace)
     }
   }
 }
