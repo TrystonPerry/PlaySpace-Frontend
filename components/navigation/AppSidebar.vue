@@ -18,7 +18,10 @@
       <NavDivider v-if="$store.state.user.username" class="hidden md:flex">
         <h2>Your PlaySpaces</h2>
       </NavDivider>
-      <li v-if="$store.state.user.username" class="flex-grow overflow-y-auto scrollbar">
+      <li
+        v-if="$store.state.user.username"
+        class="flex-grow overflow-y-auto scrollbar"
+      >
         <ul v-if="!isLoading" class="list-style-none px-1">
           <PlaySpaceNavLink
             v-for="playSpace in playSpaces"
@@ -65,6 +68,13 @@ export default {
           }
 
           this.playSpaces = data
+
+          // Subscribe to deleted event (TODO: functionize)
+          this.playSpaces.forEach((playSpace, i) => {
+            this.sockets.API.subscribe(`room-deleted-${playSpace.id}`, () => {
+              this.playSpaces.splice(i, 1)
+            })
+          })
         }
         this.isLoading = false
       },
