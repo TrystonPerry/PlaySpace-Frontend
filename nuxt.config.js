@@ -21,27 +21,24 @@ module.exports = {
         hid: "description",
         name: "description",
         content:
-          "Watch your favorite content together with your friends all from the click of a few buttons. No software, no hastle, no BS."
+          "Stream games, watch videos and chat with friends. All from your web browser, no software needed."
       },
       {
         hid: "og:image",
         property: "og:image",
-        content: "https://i.imgur.com/t2wBi3E.png"
+        content:
+          "https://upload.wikimedia.org/wikipedia/commons/6/67/Hoffl%C3%B6th%28T%C3%B6Vo-Cl%C3%B6rath%29-2%28400x400%29.jpg"
       },
       {
         hid: "twitter:image",
         property: "twitter:image",
-        content: "https://i.imgur.com/t2wBi3E.png"
+        content:
+          "https://upload.wikimedia.org/wikipedia/commons/6/67/Hoffl%C3%B6th%28T%C3%B6Vo-Cl%C3%B6rath%29-2%28400x400%29.jpg"
       },
       {
         hid: "og:type",
         property: "og:type",
         content: "website"
-      },
-      {
-        hid: "twitter-card",
-        property: "twitter:card",
-        content: "summary_large_image"
       }
     ],
     link: [

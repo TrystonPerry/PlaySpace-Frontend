@@ -4,8 +4,8 @@
       <div class="w-full md:w-6/12 mx-auto text-center">
         <h1 class="text-5xl font-bold text-primary">PlaySpace</h1>
         <h2 class="text-gray-400 mt-1 mb-4">
-          Watch videos, play games, or browse the internet with your friends.
-          All from your web browser, no software needed.
+          Stream games, watch videos and chat with friends. All from your web
+          browser, no software needed.
         </h2>
         <div class="mb-2">
           <p-link to="/live" variant="primary" class="mr-2 mb-2 text-center">
