@@ -81,7 +81,8 @@ module.exports = {
     "~/plugins/socket.js",
     "~/plugins/globals.js",
     "~/plugins/filters.js",
-    { src: "~/plugins/plugins-no-ssr.js", ssr: false }
+    { src: "~/plugins/plugins-no-ssr.js", ssr: false },
+    { src: "~/plugins/ga.js", mode: "client" }
   ],
   /*
    ** Nuxt.js dev-modules
