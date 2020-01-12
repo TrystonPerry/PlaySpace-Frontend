@@ -1,5 +1,5 @@
 const path = require("path")
-if (process.env.NODE_ENV !== 'production') {
+if (process.env.NODE_ENV !== "production") {
   require("dotenv").config()
 }
 
@@ -68,7 +68,7 @@ module.exports = {
   /*
    ** Global CSS
    */
-  css: ["~/assets/tailwind.css", "~/assets/main.scss"],
+  css: ["~/assets/tailwind.css", "~/assets/main.css"],
   /*
    ** Plugins to load before mounting the App
    */
@@ -84,8 +84,8 @@ module.exports = {
    */
   buildModules: ["@nuxtjs/dotenv"],
   /*
-    ** Nuxt.js environment variables
-  */
+   ** Nuxt.js environment variables
+   */
   dotenv: {
     apiUrl: process.env.API_URL,
     sfuUrl: process.env.SFU_URL

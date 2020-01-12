@@ -27,9 +27,9 @@
         label="Logo URL (https)"
         type="text"
       />
-      <small v-if="errors.avatar" class="text-red-500">{{
-        errors.avatar
-      }}</small>
+      <small v-if="errors.avatar" class="text-red-500">
+        {{ errors.avatar }}
+      </small>
     </div>
     <!-- <p-input v-model="isPublic" label="Public" type="checkbox" class="mb-4" /> -->
     <div class="flex">
