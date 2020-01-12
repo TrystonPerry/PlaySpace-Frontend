@@ -56,3 +56,70 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+.p-link,
+.p-btn {
+  transition-duration: 100ms;
+  color: #e2e8f0;
+
+  &:hover {
+    transform: translateY(-1px);
+  }
+}
+
+.btn-primary {
+  background: #009dee;
+}
+
+.btn-primary-outline {
+  color: #009dee;
+  background: #e2e8f0;
+
+  &:hover {
+    background: #009dee;
+    color: #e2e8f0;
+  }
+}
+
+.btn-white {
+  background: #e2e8f0;
+  color: #009dee;
+}
+
+.btn-white-outline {
+  color: #e2e8f0;
+  background: #009dee;
+
+  &:hover {
+    background: #e2e8f0;
+    color: #009dee;
+  }
+}
+
+.btn-primary-hover {
+  color: #009dee;
+  background: transparent;
+
+  &:hover {
+    background: #009dee;
+    color: #e2e8f0;
+  }
+}
+
+.btn-primary-dashed {
+  @apply .border-dashed;
+  @apply .border-primary;
+  @apply .text-primary;
+  @apply .py-2;
+  @apply .px-4;
+  @apply .font-bold;
+  @apply .border-2;
+  @apply .bg-dark-1;
+
+  &:hover {
+    color: #e2e8f0;
+    background: #009dee;
+  }
+}
+</style>

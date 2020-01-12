@@ -33,9 +33,13 @@
     </div>
     <!-- <p-input v-model="isPublic" label="Public" type="checkbox" class="mb-4" /> -->
     <div class="flex">
-      <p-btn @click="onSave" variant="primary">Save</p-btn>
+      <p-btn @click="onSave" variant="primary">
+        <p-icon icon="fas fa-save" />
+        Save
+      </p-btn>
       <div class="flex-grow"></div>
       <p-btn @click="onDelete" variant="none" class="bg-red-600">
+        <p-icon icon="fas fa-trash" />
         Delete
       </p-btn>
     </div>
