@@ -119,32 +119,45 @@
         />
       </div>
         <div class="flex items-center ">
-          <p-btn variant="none">
-          <p-icon icon="fas fa-pause" screen-reader-text="Pause" />
-        </p-btn>
-        <div 
-          @mouseenter="showVolume = true"
-          @mouseleave="showVolume = false"
-          class="flex items-center"
-        >
-          <p-btn variant="none">
-            <p-icon icon="fas fa-volume-up" screen-reader-text="Volume" />
-          </p-btn>
-          <input 
-            v-if="showVolume"
-            type="range" 
-            class="w-24"
-            min="0"
-            v-model="playerData.volume"
-            max="100"
+          <div v-if="isStreamer">
+            <p-btn
+              v-if="!playerData.isPaused"
+              @click="onPause"
+              variant="none"
+            >
+              <p-icon icon="fas fa-pause" screen-reader-text="Pause" />
+            </p-btn>
+            <p-btn
+              v-else
+              @click="onPlay"
+              variant="none"
+            >
+              <p-icon icon="fas fa-play" screen-reader-text="Play" />
+            </p-btn>
+          </div>
+          <div 
+            @mouseenter="showVolume = true"
+            @mouseleave="showVolume = false"
+            class="flex items-center"
           >
-        </div>
-        <span class="ml-2 text-xs opacity-75">
-          {{ playerTime }} / {{ playerDuration }}
-        </span>
-        <div class="flex-grow"></div>
-        <p-btn variant="none">
-          <p-icon icon="fas fa-cog" screen-reader-text="Video Quality" />
+            <p-btn variant="none">
+              <p-icon icon="fas fa-volume-up" screen-reader-text="Volume" />
+            </p-btn>
+            <input 
+              v-if="showVolume"
+              type="range" 
+              class="w-24"
+              min="0"
+              v-model="playerData.volume"
+              max="100"
+            >
+          </div>
+          <span class="ml-2 text-xs opacity-75">
+            {{ playerTime }} / {{ playerDuration }}
+          </span>
+          <div class="flex-grow"></div>
+          <p-btn variant="none">
+            <p-icon icon="fas fa-cog" screen-reader-text="Video Quality" />
         </p-btn>
         <p-btn variant="none">
           <p-icon icon="fas fa-expand" screen-reader-text="Fullscreen" />
@@ -202,24 +215,24 @@ export default {
         controls: 0
       },
       events: {
-        onReady: this.onPlayerReady,
         onStateChange: this.onPlayerStateChange
       }
     })
 
     setTimeout(() => {
-      this.player.playVideo()
-
-      this.seekToAnon(this.stream.time)
-
-      if (this.stream.state !== 1) {
-        this.pauseVideoAnon()
+      this.playVideoAnon()
+      this.playerData.isPaused = false
+      if (this.stream.state === 1) {
+        this.setYouTubeVideoTime({
+          stream: this.stream,
+          time: this.stream.time + 2
+        })
       }
-      
-      this.ignoreEvents = false
-
-      // Wait for local events of loading video to be done before setting false
-      setTimeout(() => this.isLoadingVideo = false, 2000)
+      this.seekToAnon(this.stream.time)
+      if (this.stream.state === 2) {
+        this.pauseVideoAnon()
+        this.playerData.isPaused = true
+      }
     }, 2000)
 
     // Add interval to check if time and state are synced
@@ -234,32 +247,6 @@ export default {
 
       this.playerData.time = playerTime
       this.playerData.duration = this.player.getDuration()
-
-      return
-
-      // If is authorized to skim video
-      if (this.isStreamer && !this.ignoreEvents) {
-        // If there is a video
-        if (this.stream.queue.length > 0) {
-          if (!playerTime) return
-
-          // If end of video has been reached
-          if (playerTime >= this.player.getDuration()) {
-            this.skipCurrentVideo()
-            return
-          }
-        }
-      } 
-      
-      // Viewer, check if they are synced with time
-      else {
-        this.hasErroredInLastSecond = false
-
-        // If player time is behind or ahead by 500ms, seek to goal time
-        if (playerTime < this.stream.time - 0.5 || playerTime > this.stream.time + 0.5) {
-          // this.seekToAnon(this.stream.time)
-        }
-      }
     }, 1000)
 
     this.sockets.SFU.subscribe(
@@ -273,12 +260,16 @@ export default {
     this.sockets.SFU.subscribe(
       `room-stream-youtube-${this.stream.id}-played`, () => {
         this.playVideoAnon()
+        this.setYouTubeVideoState({ state: 1, stream: this.stream })
+        this.playerData.isPaused = false
       }
     )
 
     this.sockets.SFU.subscribe(
       `room-stream-youtube-${this.stream.id}-paused`, () => {
         this.pauseVideoAnon()
+        this.setYouTubeVideoState({ state: 2, stream: this.stream })
+        this.playerData.isPaused = true
       }
     )
 
@@ -335,107 +326,33 @@ export default {
       removeVideoFromYouTubeQueue: "stream/removeVideoFromYouTubeQueue"
     }),
 
-    onPlayerReady(event) {},
-
     onPlayerStateChange(event) {
-      return
-
-      if (event.data !== 3 && event.data !== 2) {
-        this.isBuffering = false
-      }
-
-      if (this.isBuffering && event.data === 2) {
+      if (event.data === 1 && this.stream.state === 2) {
+        this.pauseVideoAnon()
+      } else if (event.data === 2 && this.stream.state === 1) {
         this.playVideoAnon()
-        return
-      }
-
-      // If user is attempting to syncronize
-      if (this.ignoreEvents || this.isBuffering) return
-
-      // If user is not authorized to change state,
-      // Compare state to local state instance, if its not matching (play / pause),
-      // Revert to current state
-      if (!this.isStreamer) {
-        if (event.data !== this.stream.state) {
-          if (this.stream.state === 1) {
-            this.playVideoAnon()
-            if (!this.hasErroredInLastSecond && !this.isLoadingVideo) {
-              this.hasErroredInLastSecond = true
-              this.$notify({
-                type: "error",
-                title: "YouTube Player Error",
-                text: "You don't have permission to control this video."
-              })
-            }
-          } else if (this.stream.state === 2) {
-            this.pauseVideoAnon()
-            if (!this.hasErroredInLastSecond && !this.isLoadingVideo) {
-              this.hasErroredInLastSecond = true
-              this.$notify({
-                type: "error",
-                title: "YouTube Player Error",
-                text: "You don't have permission to control this video."
-              })
-            }
-          }
-        }
-        return
-      }
-      
-      switch (event.data) {
-        // Unstarted
-        case -1:
-          break
-        // Ended
-        case 0:
-          this.onPlayerEnded()
-          break
-        // Playing
-        case 1:
-          this.onPlayerPlay()
-          break
-        // Paused
-        case 2:
-          this.onPlayerPause()
-          break
-        // Buffering
-        case 3:
-          this.onPlayerBuffering()
-          break
-        // Cued
-        case 5:
-          this.onPlayerCued()
-          break
       }
     },
 
-    onPlayerUnstarted() {
-      this.$socket.SFU.emit("room-stream-youtube-unstarted", this.stream.id)
-    },
-
-    onPlayerEnded() {},
-
-    onPlayerPlay() {
+    onPlay() {
       this.$socket.SFU.emit(`room-stream-youtube-play`, {
         id: this.stream.id,
         time: this.player.getCurrentTime()
       })
+      this.setYouTubeVideoState({ state: 1, stream: this.stream })
+      this.playerData.isPaused = false
       this.playVideoAnon()
     },
 
-    onPlayerPause() {
+    onPause() {
       this.$socket.SFU.emit(`room-stream-youtube-pause`, {
         id: this.stream.id,
         time: this.player.getCurrentTime()
       })
+      this.setYouTubeVideoState({ state: 2, stream: this.stream })
+      this.playerData.isPaused = true
       this.pauseVideoAnon()
     },
-
-    onPlayerBuffering() {
-      this.isBuffering = true
-    },
-
-    onPlayerCued() {},
 
     loadVideoAnon(videoId) {
       this.ignoreEvents = true
@@ -448,19 +365,18 @@ export default {
 
     playVideoAnon() {
       this.ignoreEvents = true
-      this.setYouTubeVideoState({ state: 1, stream: this.stream })
       this.player.playVideo()
       this.ignoreEvents = false
     },
 
     pauseVideoAnon() {
       this.ignoreEvents = true
-      this.setYouTubeVideoState({ state: 2, stream: this.stream })
       this.player.pauseVideo()
       this.ignoreEvents = false
     },
 
     onTimeChange(event) {
+      // TODO: throttle this function
       const time = Number(event.target.value)
       this.$socket.SFU.emit(`room-steam-youtube-player-time`, {
         id: this.stream.id,
