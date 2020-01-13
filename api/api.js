@@ -80,6 +80,29 @@ const axis = {
         return data
       })
       .catch(handleError)
+  },
+
+  delete(url, options = {}) {
+    return fetch(`${BASE_URL}${url}`, {
+      ...options,
+      headers: {
+        ...options.headers,
+        "Content-Type": "application/json",
+        Authorization: localStorage && localStorage.getItem("playspace-token")
+      },
+      body: JSON.stringify(options.body),
+      method: "DELETE"
+    })
+      .then(async res => {
+        const { status } = res
+        const data = await res.json()
+
+        if (status !== 200 || !data.success) {
+          handleError(data.error)
+        }
+        return data
+      })
+      .catch(handleError)
   }
 }
 
@@ -122,6 +145,10 @@ export default {
 
   updateUser(id, body) {
     return axis.put(`/channels/c/${id}/users`, { body })
+  },
+
+  deleteChannel(id) {
+    return axis.delete(`/channels/c/${id}`)
   },
 
   //

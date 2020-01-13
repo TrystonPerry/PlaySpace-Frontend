@@ -32,7 +32,11 @@
               />
               <h1 class="text-2xl font-bold">{{ playSpace.channelName }}</h1>
               <h2 class="text-lg">{{ playSpace.title }}</h2>
-              <p-copy :text="`https://playspace.tv/p/${playSpace.id}`" variant="primary" class="mt-3">
+              <p-copy
+                :text="`https://playspace.tv/p/${playSpace.id}`"
+                variant="primary"
+                class="mt-3"
+              >
                 <p-icon icon="fas fa-link" />
                 Copy Link
               </p-copy>
@@ -66,12 +70,13 @@
               Settings
             </p-btn>
           </div> -->
-          <p-avatar 
-            :avatar="playSpace.avatar" 
+          <p-avatar
+            :avatar="playSpace.avatar"
             class="w-full h-full absolute top-0 left-0 object-cover bg-gray-100 opacity-25"
             img-classes="w-full h-full"
             no-rounded
-            style="z-index:-1; filter: blur(4px)" />
+            style="z-index:-1; filter: blur(4px)"
+          />
         </div>
 
         <client-only>
@@ -101,19 +106,20 @@
     />
     <client-only>
       <portal to="modal-container">
-        <div 
-          v-if="$store.state.stream.isSoundBlocked" 
-          class="absolute w-full p-2 max-w-96 w-full" 
+        <div
+          v-if="$store.state.stream.isSoundBlocked"
+          class="absolute w-full p-2 max-w-96 w-full"
           style="bottom: 4rem;left:50%;transform:translateX(-50%);z-index:100"
         >
-          <div 
+          <div
             class="bg-black-600 text-black-800 shadow-reg py-3 px-5 rounded-lg border-4 border-black-800"
           >
             <h1 class="text-xl font-bold text-center">
               Sound Muted by Default
             </h1>
             <p>
-              Your browser has blocked sound from autoplaying, click to hear everyone.
+              Your browser has blocked sound from autoplaying, click to hear
+              everyone.
             </p>
             <div class="text-center">
               <p-btn
@@ -185,6 +191,10 @@ export default {
     // TODO only request a new transport once per session
     this.$socket.SFU.emit("room-join", { roomId: this.$route.params.playspace })
     this.$store.dispatch("playSpace/setCurrentPlaySpace", this.playSpace)
+    // Subscribe to PlaySpace deleted event
+    this.sockets.API.subscribe(`room-deleted-${this.playSpace.id}`, () => {
+      this.$router.push({ path: "/live" })
+    })
   },
 
   beforeDestroy() {
@@ -274,7 +284,9 @@ export default {
         this.connectTransport(this.sendTransport)
 
         this.sendTransport.on("produce", (params, callback, errback) => {
-          const requestId = Math.random().toString(36).substr(2, 9)
+          const requestID = Math.random()
+            .toString(36)
+            .substr(2, 9)
 
           this.$socket.SFU.emit("room-transport-produce", {
             producerOptions: {
@@ -285,7 +297,10 @@ export default {
             requestId
           })
 
-          this.sockets.SFU.subscribe(`room-transport-produced-${requestId}`, callback)
+          this.sockets.SFU.subscribe(
+            `room-transport-produced-${requestID}`,
+            callback
+          )
         })
 
         window.sendTransport = this.sendTransport
@@ -334,7 +349,7 @@ export default {
           this.$store.dispatch("stream/setIsSoundBlocked", false)
         }
         document.body.addEventListener("click", this.onClick)
-      } else if(this.onClick) {
+      } else if (this.onClick) {
         document.body.removeEventListener("click", this.onClick)
         delete this.onClick
       }

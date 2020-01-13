@@ -1,5 +1,5 @@
 const path = require("path")
-if (process.env.NODE_ENV !== 'production') {
+if (process.env.NODE_ENV !== "production") {
   require("dotenv").config()
 }
 
@@ -47,6 +47,10 @@ module.exports = {
     link: [
       { rel: "icon", type: "image/x-icon", href: "/favicon.ico" },
       {
+        rel: "stylesheet",
+        href: "/main.css"
+      },
+      {
         type: "stylesheet",
         href: "https://fonts.googleapis.com/css?family=Source+Sans+Pro"
       }
@@ -68,7 +72,7 @@ module.exports = {
   /*
    ** Global CSS
    */
-  css: ["~/assets/tailwind.css", "~/assets/main.scss"],
+  css: ["~/assets/tailwind.css"],
   /*
    ** Plugins to load before mounting the App
    */
@@ -77,15 +81,16 @@ module.exports = {
     "~/plugins/socket.js",
     "~/plugins/globals.js",
     "~/plugins/filters.js",
-    { src: "~/plugins/plugins-no-ssr.js", ssr: false }
+    { src: "~/plugins/plugins-no-ssr.js", ssr: false },
+    { src: "~/plugins/ga.js", mode: "client" }
   ],
   /*
    ** Nuxt.js dev-modules
    */
   buildModules: ["@nuxtjs/dotenv"],
   /*
-    ** Nuxt.js environment variables
-  */
+   ** Nuxt.js environment variables
+   */
   dotenv: {
     apiUrl: process.env.API_URL,
     sfuUrl: process.env.SFU_URL

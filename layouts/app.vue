@@ -3,8 +3,15 @@
     <div>
       <AppNavbar />
       <div class="h-12"></div>
-      <div class="flex" style="overflow:hidden" :style="`height: ${screenHeight}`">
-        <AppSidebar v-show="$store.state.nav.side.left.isShown" class="h-100 shadow-reg" />
+      <div
+        class="flex"
+        style="overflow:hidden"
+        :style="`height: ${screenHeight}`"
+      >
+        <AppSidebar
+          v-show="$store.state.nav.side.left.isShown"
+          class="h-100 shadow-reg"
+        />
         <div class="flex-grow overflow-y-auto h-100 bg-dark-1">
           <nuxt />
         </div>
@@ -14,7 +21,11 @@
           class="shadow-reg"
         />
 
-        <notifications position="bottom left" class="fixed" style="z-index:1100" />
+        <notifications
+          position="bottom left"
+          class="fixed"
+          style="z-index:1100"
+        />
       </div>
     </div>
 
@@ -66,7 +77,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 body {
   overflow: hidden;
   background: #202020;
