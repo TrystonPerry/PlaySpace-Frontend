@@ -7,7 +7,8 @@
     <div class="flex flex-col h-full">
       <div
         class="text-center text-gray-300 overflow-y-auto"
-        :style="$store.state.nav.isMobile ? 'max-height:40vh' : ''"
+        :class="{ 'flex-shrink-0': $store.state.nav.isMobile && totalStreams }"
+        :style="$store.state.nav.isMobile && !totalStreams ? 'max-height:40vh' : ''"
       >
         <VideoContainer
           v-if="device"

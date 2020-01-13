@@ -5,7 +5,10 @@
     :id="`${stream.id}-container`" 
     class="h-full w-full relative"
   >
-    <div v-show="stream.queue.length > 0" class="h-full w-full">
+    <div 
+      v-show="stream.queue.length > 0" 
+      class="h-full w-full"
+    >
       <div :id="stream.id" :src="src" frameborder="0" class="w-full h-full" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"></div>
     </div>
     <div
@@ -170,6 +173,9 @@
           <!-- <p-btn variant="none">
             <p-icon icon="fas fa-cog" screen-reader-text="Video Quality" />
         </p-btn> -->
+        <!-- <p-btn @click="controls = !controls" variant="none">
+          <p-icon icon="fas fa-minus-square" screen-reader-text="Hide Controls" />
+        </p-btn> -->
         <p-btn @click="toggleFullscreen" variant="none">
           <p-icon icon="fas fa-expand" screen-reader-text="Fullscreen" />
         </p-btn>
@@ -210,8 +216,8 @@ export default {
     },
 
     interval: null,
-    controls: true,
-    showVolume: true,
+    controls: false,
+    showVolume: false,
     isAddVideo: false,
     youtubeUrl: ""
   }),
