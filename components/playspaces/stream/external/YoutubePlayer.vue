@@ -1,7 +1,7 @@
 <template>
   <div @mouseenter="controls = true" @mouseleave="controls = false" class="h-full w-full relative">
     <div v-show="stream.queue.length > 0" class="h-full w-full">
-      <div :id="stream.id" :src="src" frameborder="0" class="w-full h-full"></div>
+      <div :id="stream.id" :src="src" frameborder="0" class="w-full h-full" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"></div>
     </div>
     <div
       v-show="stream.queue.length === 0"
@@ -140,15 +140,21 @@
             @mouseleave="showVolume = false"
             class="flex items-center"
           >
-            <p-btn variant="none">
-              <p-icon icon="fas fa-volume-up" screen-reader-text="Volume" />
+            <p-btn
+              @click="playerData.isMuted = !playerData.isMuted" 
+              variant="none"
+              class="w-12"
+            >
+              <p-icon v-if="playerData.isMuted" icon="fas fa-volume-mute" />
+              <p-icon v-else-if="playerData.volume > 50" icon="fas fa-volume-up" />
+              <p-icon v-else icon="fas fa-volume-down" />
             </p-btn>
             <input 
               v-if="showVolume"
+              v-model="playerData.volume"
               type="range" 
               class="w-24"
               min="0"
-              v-model="playerData.volume"
               max="100"
             >
           </div>
@@ -156,10 +162,10 @@
             {{ playerTime }} / {{ playerDuration }}
           </span>
           <div class="flex-grow"></div>
-          <p-btn variant="none">
+          <!-- <p-btn variant="none">
             <p-icon icon="fas fa-cog" screen-reader-text="Video Quality" />
-        </p-btn>
-        <p-btn variant="none">
+        </p-btn> -->
+        <p-btn @click="toggleFullscreen" variant="none">
           <p-icon icon="fas fa-expand" screen-reader-text="Fullscreen" />
         </p-btn>
       </div>
@@ -188,20 +194,17 @@ export default {
 
   data: () => ({
     player: null,
-    ignoreEvents: true,
-    isBuffering: true,
     
     playerData: {
       time: 0,
       duration: 0,
       volume: 0,
+      isMuted: true,
       isPaused: true,
+      isFullscreen: true
     },
 
-    isLoadingVideo: true,
     interval: null,
-    hasErroredInLastSecond: false,
-
     controls: true,
     showVolume: true,
     isAddVideo: false,
@@ -212,7 +215,19 @@ export default {
     this.player = new YT.Player(this.stream.id, {
       videoId: this.stream.queue[0],
       playerVars: {
-        controls: 0
+        autoplay: 0,
+        controls: 0,
+        disablenewui: 1,
+        disablekb: 1,
+        cc_load_policy: 1,
+        iv_load_policy: 3,
+        modestbranding: 1,
+        playsinline: 1,
+        enablecastapi: 1,
+        rel: 0,
+        showinfo: 0,
+        enablejsapi: 1,
+        html5: 1
       },
       events: {
         onStateChange: this.onPlayerStateChange
@@ -220,15 +235,28 @@ export default {
     })
 
     setTimeout(() => {
+      // Set volume initially
+      this.player.setVolume(this.playerData.volume)
+      this.playerData.isMuted = this.playerData.volume === 0
+
+      // Load video
       this.playVideoAnon()
       this.playerData.isPaused = false
+
+      // If video is playing, update time
       if (this.stream.state === 1) {
         this.setYouTubeVideoTime({
           stream: this.stream,
           time: this.stream.time + 2
         })
       }
-      this.seekToAnon(this.stream.time)
+
+      // If player is not brand new
+      if (this.stream.state !== -1) {
+        this.seekToAnon(this.stream.time)
+      }
+
+      // If player is paused, pause it
       if (this.stream.state === 2) {
         this.pauseVideoAnon()
         this.playerData.isPaused = true
@@ -245,10 +273,12 @@ export default {
         time: this.stream.time + 1
       })
 
+      // Update player time info
       this.playerData.time = playerTime
       this.playerData.duration = this.player.getDuration()
     }, 1000)
 
+    // On new time
     this.sockets.SFU.subscribe(
       `room-stream-youtube-${this.stream.id}-player-time-update`,
       ({ time }) => {
@@ -257,6 +287,7 @@ export default {
       }
     )
 
+    // On play
     this.sockets.SFU.subscribe(
       `room-stream-youtube-${this.stream.id}-played`, () => {
         this.playVideoAnon()
@@ -265,6 +296,7 @@ export default {
       }
     )
 
+    // On pause
     this.sockets.SFU.subscribe(
       `room-stream-youtube-${this.stream.id}-paused`, () => {
         this.pauseVideoAnon()
@@ -284,6 +316,7 @@ export default {
       }
     )
 
+    // On video skip
     this.sockets.SFU.subscribe(
       `room-stream-youtube-${this.stream.id}-skip-video`,
       index => {
@@ -315,6 +348,18 @@ export default {
       const t = this.playerData.duration
       if (!t) return "0:00"
       return `${Math.floor(t/60)}:${("0"+(Math.floor(t%60))).substr(-2)}`
+    }
+  },
+
+  watch: {
+    "playerData.volume"(volume) {
+      this.player.setVolume(volume)
+      if (volume > 0) this.playerData.isMuted = false
+      else this.playerData.isMuted = true
+    },
+    "playerData.isMuted"(val) {
+      if (val) this.player.mute()
+      else this.player.unMute()
     }
   },
 
@@ -355,24 +400,15 @@ export default {
     },
 
     loadVideoAnon(videoId) {
-      this.ignoreEvents = true
       this.player.loadVideoById(videoId)
-      setTimeout(() => {
-        this.playVideoAnon()
-        setTimeout(() => this.ignoreEvents = false, 1000)
-      }, 2000)
     },
 
     playVideoAnon() {
-      this.ignoreEvents = true
       this.player.playVideo()
-      this.ignoreEvents = false
     },
 
     pauseVideoAnon() {
-      this.ignoreEvents = true
       this.player.pauseVideo()
-      this.ignoreEvents = false
     },
 
     onTimeChange(event) {
@@ -385,9 +421,7 @@ export default {
     },
 
     seekToAnon(time) {
-      this.ignoreEvents = true
       this.player.seekTo(time)
-      this.ignoreEvents = false
     },
 
     addYouTubeStream() {
@@ -407,18 +441,14 @@ export default {
     },
 
     skipCurrentVideo() {
-      this.ignoreEvents = true
-      this.isLoadingVideo = true
       this.$socket.SFU.emit(`room-stream-youtube-skip-video`, {
         id: this.stream.id,
         index: 0
       })
       this.setYouTubeVideoTime({ stream: this.stream, time: 0 })
-      setTimeout(() => {
-        this.ignoreEvents = false,
-        this.isLoadingVideo = false
-      }, 2000)
-    }
+    },
+
+    toggleFullscreen() {}
   }
 }
 </script>
