@@ -240,7 +240,7 @@ export default {
       this.playerData.isMuted = this.playerData.volume === 0
 
       // Load video
-      this.playVideoAnon()
+      this.playVideo()
       this.playerData.isPaused = false
 
       // If video is playing, update time
@@ -253,12 +253,12 @@ export default {
 
       // If player is not brand new
       if (this.stream.state !== -1) {
-        this.seekToAnon(this.stream.time)
+        this.seekTo(this.stream.time)
       }
 
       // If player is paused, pause it
       if (this.stream.state === 2) {
-        this.pauseVideoAnon()
+        this.pauseVideo()
         this.playerData.isPaused = true
       }
     }, 2000)
@@ -283,14 +283,14 @@ export default {
       `room-stream-youtube-${this.stream.id}-player-time-update`,
       ({ time }) => {
         this.setYouTubeVideoTime({ stream: this.stream, time })
-        this.seekToAnon(time)
+        this.seekTo(time)
       }
     )
 
     // On play
     this.sockets.SFU.subscribe(
       `room-stream-youtube-${this.stream.id}-played`, () => {
-        this.playVideoAnon()
+        this.playVideo()
         this.setYouTubeVideoState({ state: 1, stream: this.stream })
         this.playerData.isPaused = false
       }
@@ -299,7 +299,7 @@ export default {
     // On pause
     this.sockets.SFU.subscribe(
       `room-stream-youtube-${this.stream.id}-paused`, () => {
-        this.pauseVideoAnon()
+        this.pauseVideo()
         this.setYouTubeVideoState({ state: 2, stream: this.stream })
         this.playerData.isPaused = true
       }
@@ -311,7 +311,7 @@ export default {
         this.addVideoToYouTubeQueue({ stream: this.stream, videoId })
         // If this video is the only video in queue, play it
         if (this.stream.queue.length === 1) {
-          this.loadVideoAnon(this.stream.queue[0])
+          this.loadVideo(this.stream.queue[0])
         }
       }
     )
@@ -323,7 +323,7 @@ export default {
         this.removeVideoFromYouTubeQueue({ stream: this.stream, index })
         // If skipped video is current playing video, load next video
         if (index === 0) {
-          this.loadVideoAnon(this.stream.queue[0])
+          this.loadVideo(this.stream.queue[0])
         }
       }
     )
@@ -373,9 +373,9 @@ export default {
 
     onPlayerStateChange(event) {
       if (event.data === 1 && this.stream.state === 2) {
-        this.pauseVideoAnon()
+        this.pauseVideo()
       } else if (event.data === 2 && this.stream.state === 1) {
-        this.playVideoAnon()
+        this.playVideo()
       }
     },
 
@@ -386,7 +386,7 @@ export default {
       })
       this.setYouTubeVideoState({ state: 1, stream: this.stream })
       this.playerData.isPaused = false
-      this.playVideoAnon()
+      this.playVideo()
     },
 
     onPause() {
@@ -396,18 +396,18 @@ export default {
       })
       this.setYouTubeVideoState({ state: 2, stream: this.stream })
       this.playerData.isPaused = true
-      this.pauseVideoAnon()
+      this.pauseVideo()
     },
 
-    loadVideoAnon(videoId) {
+    loadVideo(videoId) {
       this.player.loadVideoById(videoId)
     },
 
-    playVideoAnon() {
+    playVideo() {
       this.player.playVideo()
     },
 
-    pauseVideoAnon() {
+    pauseVideo() {
       this.player.pauseVideo()
     },
 
@@ -420,7 +420,7 @@ export default {
       })
     },
 
-    seekToAnon(time) {
+    seekTo(time) {
       this.player.seekTo(time)
     },
 
