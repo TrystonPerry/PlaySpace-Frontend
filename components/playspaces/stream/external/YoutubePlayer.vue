@@ -69,7 +69,7 @@
       </div>
     </p-modal>
     <div
-      v-if="controls"
+      v-if="controls && stream.queue.length"
       class="controls absolute flex"
       style="left:50%;top:50%;transform:translate(-50%,-50%)"
     >
