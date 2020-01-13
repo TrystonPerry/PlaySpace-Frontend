@@ -1,5 +1,10 @@
 <template>
-  <div @mouseenter="controls = true" @mouseleave="controls = false" class="h-full w-full relative">
+  <div 
+    @mouseenter="controls = true" 
+    @mouseleave="controls = false"
+    :id="`${stream.id}-container`" 
+    class="h-full w-full relative"
+  >
     <div v-show="stream.queue.length > 0" class="h-full w-full">
       <div :id="stream.id" :src="src" frameborder="0" class="w-full h-full" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"></div>
     </div>
@@ -448,7 +453,14 @@ export default {
       this.setYouTubeVideoTime({ stream: this.stream, time: 0 })
     },
 
-    toggleFullscreen() {}
+    toggleFullscreen() {
+      // If is in fullscreen
+      if (document.fullscreenElement) {
+        document.exitFullscreen()
+        return
+      }
+      document.getElementById(this.stream.id + "-container").requestFullscreen()
+    }
   }
 }
 </script>
