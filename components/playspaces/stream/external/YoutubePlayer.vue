@@ -109,13 +109,17 @@
     >
       <div v-if="isStreamer" class="relative w-full h-full">
         <input 
-          type="range" 
+          type="range"
+          @input="onTimeChange($event)" 
+          min="0"
+          :value="playerData.time"
+          :max="playerData.duration"
           class="absolute left-0 w-full h-4"
           style="top:-0.5rem" 
         />
       </div>
         <div class="flex items-center ">
-          <p-btn>
+          <p-btn variant="none">
           <p-icon icon="fas fa-pause" screen-reader-text="Pause" />
         </p-btn>
         <div 
@@ -123,26 +127,26 @@
           @mouseleave="showVolume = false"
           class="flex items-center"
         >
-          <p-btn>
+          <p-btn variant="none">
             <p-icon icon="fas fa-volume-up" screen-reader-text="Volume" />
           </p-btn>
           <input 
             v-if="showVolume"
             type="range" 
             class="w-24"
-            value="0"
             min="0"
+            v-model="playerData.volume"
             max="100"
           >
         </div>
         <span class="ml-2 text-xs opacity-75">
-          0:00 / 12:23
+          {{ playerTime }} / {{ playerDuration }}
         </span>
         <div class="flex-grow"></div>
-        <p-btn>
+        <p-btn variant="none">
           <p-icon icon="fas fa-cog" screen-reader-text="Video Quality" />
         </p-btn>
-        <p-btn>
+        <p-btn variant="none">
           <p-icon icon="fas fa-expand" screen-reader-text="Fullscreen" />
         </p-btn>
       </div>
@@ -173,6 +177,13 @@ export default {
     player: null,
     ignoreEvents: true,
     isBuffering: true,
+    
+    playerData: {
+      time: 0,
+      duration: 0,
+      volume: 0,
+      isPaused: true,
+    },
 
     isLoadingVideo: true,
     interval: null,
@@ -213,9 +224,6 @@ export default {
 
     // Add interval to check if time and state are synced
     this.interval = setInterval(() => {
-      // If player is paused, return
-      if (this.stream.state === 2) return
-
       const playerTime = this.player.getCurrentTime()
 
       // Add 1 second to goal time
@@ -223,7 +231,12 @@ export default {
         stream: this.stream,
         time: this.stream.time + 1
       })
-  
+
+      this.playerData.time = playerTime
+      this.playerData.duration = this.player.getDuration()
+
+      return
+
       // If is authorized to skim video
       if (this.isStreamer && !this.ignoreEvents) {
         // If there is a video
@@ -235,14 +248,6 @@ export default {
             this.skipCurrentVideo()
             return
           }
-
-          // If player time is behind or ahead by 500ms, tell server its new time
-          if (playerTime < this.stream.time - 1 || playerTime > this.stream.time + 1) {
-            this.$socket.SFU.emit(`room-steam-youtube-player-time`, {
-              id: this.stream.id,
-              time: playerTime
-            })
-          }
         }
       } 
       
@@ -252,31 +257,23 @@ export default {
 
         // If player time is behind or ahead by 500ms, seek to goal time
         if (playerTime < this.stream.time - 0.5 || playerTime > this.stream.time + 0.5) {
-          this.seekToAnon(this.stream.time)
+          // this.seekToAnon(this.stream.time)
         }
       }
     }, 1000)
 
     this.sockets.SFU.subscribe(
       `room-stream-youtube-${this.stream.id}-player-time-update`,
-      time => {
+      ({ time }) => {
         this.setYouTubeVideoTime({ stream: this.stream, time })
-        this.ignoreEvents = true
-        setTimeout(() => this.ignoreEvents = false, 1000)
         this.seekToAnon(time)
       }
-    )
-
-    this.sockets.SFU.subscribe(
-      `room-stream-youtube-${this.stream.id}-unstarted`,
-      this.playVideoAnon
     )
 
     this.sockets.SFU.subscribe(
       `room-stream-youtube-${this.stream.id}-played`, () => {
         this.playVideoAnon()
       }
-      
     )
 
     this.sockets.SFU.subscribe(
@@ -315,7 +312,19 @@ export default {
   computed: {
     ...mapGetters({
       isStreamer: "playSpace/isStreamer"
-    })
+    }),
+
+    playerTime() {
+      const t = this.playerData.time
+      if (!t) return "0:00"
+      return `${Math.floor(t/60)}:${("0"+(Math.floor(t%60))).substr(-2)}`
+    },
+
+    playerDuration() {
+      const t = this.playerData.duration
+      if (!t) return "0:00"
+      return `${Math.floor(t/60)}:${("0"+(Math.floor(t%60))).substr(-2)}`
+    }
   },
 
   methods: {
@@ -329,6 +338,8 @@ export default {
     onPlayerReady(event) {},
 
     onPlayerStateChange(event) {
+      return
+
       if (event.data !== 3 && event.data !== 2) {
         this.isBuffering = false
       }
@@ -449,13 +460,17 @@ export default {
       this.ignoreEvents = false
     },
 
-    seekTo(time) {
-      this.player.seekTo(time)
+    onTimeChange(event) {
+      const time = Number(event.target.value)
+      this.$socket.SFU.emit(`room-steam-youtube-player-time`, {
+        id: this.stream.id,
+        time
+      })
     },
 
     seekToAnon(time) {
       this.ignoreEvents = true
-      this.seekTo(time)
+      this.player.seekTo(time)
       this.ignoreEvents = false
     },
 
