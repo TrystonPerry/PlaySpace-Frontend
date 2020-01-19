@@ -1,22 +1,28 @@
 <template>
-  <div class="landing container px-2 mx-auto my-6 py-6 text-gray-400">
-    <div>
-      <div class="w-full md:w-6/12 mx-auto text-center">
-        <h1 class="text-5xl font-bold text-primary">PlaySpace</h1>
-        <h2 class="text-gray-400 mt-1 mb-4">
-          Watch videos, play games, or browse the internet with your friends.
-          All from your web browser, no software needed.
+  <div class="landing px-2 mx-auto my-6 py-6 text-gray-400">
+    <div class="container">
+      <div class="w-full text-center md:text-left pt-6 pb-20">
+        <h1
+          class="text-3xl md:text-5xl font-bold text-gray-300 leading-none mb-3"
+        >
+          Create online rooms to watch <br class="hidden md:block" />
+          anything with anyone.
+        </h1>
+        <h2 class="text-gray-400 md:text-lg mt-1 mb-4">
+          Create an online room, or space, to stream
+          <br class="hidden md:block" />
+          games, watch videos, and chat with friends.
+          <br class="hidden md:block" />
+          No downloads or account required. <br class="hidden md:block" />
+          Just have fun.
         </h2>
         <div class="mb-2">
-          <p-link to="/live" variant="primary" class="mr-2 mb-2 text-center">
-            Browse PlaySpaces
-          </p-link>
-          <p-link to="/create" variant="primary-hover" class="text-center">
+          <p-link to="/create" variant="primary" class="mr-2 mb-2 text-center">
             Create a PlaySpace
           </p-link>
         </div>
         <ul
-          class="flex justify-center social-media list-style-none pl-0 text-gray-400"
+          class="flex justify-center md:justify-start social-media list-style-none pl-0 text-gray-400"
           aria-label="PlaySpace's Social Media"
         >
           <li class="mr-2">
@@ -93,36 +99,16 @@
           </li>
         </ul>
       </div>
-      <div class="w-full mx-auto mt-6">
-        <img src="https://i.imgur.com/rVvXT9C.jpg" class="w-full" />
-      </div>
     </div>
 
-    <!-- What is a PlaySpace? -->
-    <!-- <div class="container text-center md:text-right my-6 ml-auto">
-      <h1 class="text-2xl font-bold text-primary">What is a PlaySpace?</h1>
-      <h2 class="text-xl md:w-6/12 ml-auto mb-3">
-        A PlaySpace is a virtual room you can create to easily share gameplay,
-        videos or browse the internet with friends.
-      </h2>
-      <div class="flex flex-wrap ml-auto -px-2 md:w-9/12">
-        <div class="w-full md:w-6/12 p-2">
-          <h2 class="text-xl font-bold text-primary">Public PlaySpaces</h2>
-          <h3 class="text-center md:text-right text-lg">
-            Public PlaySpaces are rooms for streaming yourself to anyone on the
-            intertnet. It's much like streaming on Twitch or Youtube.
-          </h3>
-        </div>
-        <div class="w-full md:w-6/12 p-2">
-          <h2 class="text-xl font-bold text-primary">Private PlaySpaces</h2>
-          <h3 class="text-center md:text-right text-lg">
-            Private PlaySpaces are private rooms only accessible to those with
-            an invite link. They are intended to be used when you want to watch
-            content with only people you know.
-          </h3>
-        </div>
-      </div>
-    </div> -->
+    <div class="bg-primary w-full">
+      <video
+        src="https://tryston.net/public/videos/PlaySpace-Demo.mp4"
+        controls
+        playsinline
+        style="max-width:60rem"
+      ></video>
+    </div>
 
     <!-- Use Cases -->
     <div class="container my-6">
