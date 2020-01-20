@@ -1,64 +1,37 @@
 <template>
-  <div class="landing px-2 mx-auto my-6 py-6 text-gray-400">
-    <div class="container">
-      <div class="w-full text-center md:text-left pt-6 pb-20">
-        <h1
-          class="text-3xl md:text-5xl font-bold text-gray-300 leading-none mb-3"
-        >
-          Create online rooms to watch <br class="hidden md:block" />
-          anything with anyone.
+  <div class="landing py-6 text-gray-400 overflow-x-hidden">
+    <div class="relative container flex-shrink-0 mx-auto px-2 pt-6 md:pb-20">
+      <div class="w-full text-center md:text-left">
+        <h1 class="text-3xl md:text-5xl font-bold text-gray-300 leading-none mb-3">
+          Create online rooms to watch
+          <br class="hidden md:block" />anything with anyone.
         </h1>
         <h2 class="text-gray-400 md:text-lg mt-1 mb-4">
           Create an online room, or space, to stream
-          <br class="hidden md:block" />
-          games, watch videos, and chat with friends.
-          <br class="hidden md:block" />
-          No downloads or account required. <br class="hidden md:block" />
-          Just have fun.
+          <br class="hidden md:block" />games, watch videos, and chat with friends.
+          <br class="hidden md:block" />No downloads or account required.
+          <br class="hidden md:block" />Just have fun.
         </h2>
         <div class="mb-2">
-          <p-link to="/create" variant="primary" class="mr-2 mb-2 text-center">
-            Create a PlaySpace
-          </p-link>
+          <p-link to="/create" variant="primary" class="mr-2 mb-2 text-center">Create a PlaySpace</p-link>
         </div>
         <ul
           class="flex justify-center md:justify-start social-media list-style-none pl-0 text-gray-400"
           aria-label="PlaySpace's Social Media"
         >
           <li class="mr-2">
-            <a
-              href="https://twitter.com/playspacetv"
-              target="_blank"
-              class="text-primary"
-            >
-              <p-icon
-                icon="fab fa-twitter"
-                screen-reader-text="PlaySpace Twitter"
-              />
+            <a href="https://twitter.com/playspacetv" target="_blank" class="text-primary">
+              <p-icon icon="fab fa-twitter" screen-reader-text="PlaySpace Twitter" />
             </a>
           </li>
           <li class="mr-2">
-            <a
-              href="https://discord.gg/WwewP4D"
-              target="_blank"
-              class="text-primary"
-            >
-              <p-icon
-                icon="fab fa-discord"
-                screen-reader-text="PlaySpace Discord"
-              />
+            <a href="https://discord.gg/WwewP4D" target="_blank" class="text-primary">
+              <p-icon icon="fab fa-discord" screen-reader-text="PlaySpace Discord" />
             </a>
           </li>
           <li class="mr-2">
-            <a
-              href="https://medium.com/@playspacetv"
-              target="_blank"
-              class="text-primary"
-            >
-              <p-icon
-                icon="fab fa-medium"
-                screen-reader-text="PlaySpace Medium"
-              />
+            <a href="https://medium.com/@playspacetv" target="_blank" class="text-primary">
+              <p-icon icon="fab fa-medium" screen-reader-text="PlaySpace Medium" />
             </a>
           </li>
           <li class="mr-2">
@@ -67,51 +40,42 @@
               target="_blank"
               class="text-primary"
             >
-              <p-icon
-                icon="fab fa-youtube"
-                screen-reader-text="PlaySpace YouTube"
-              />
+              <p-icon icon="fab fa-youtube" screen-reader-text="PlaySpace YouTube" />
             </a>
           </li>
           <li class="mr-2">
-            <a
-              href="https://reddit.com/r/playspacetv"
-              target="_blank"
-              class="text-primary"
-            >
-              <p-icon
-                icon="fab fa-reddit"
-                screen-reader-text="PlaySpace Reddit"
-              />
+            <a href="https://reddit.com/r/playspacetv" target="_blank" class="text-primary">
+              <p-icon icon="fab fa-reddit" screen-reader-text="PlaySpace Reddit" />
             </a>
           </li>
           <li class="mr-2">
-            <a
-              href="https://instagram.com/playspacetv"
-              target="_blank"
-              class="text-primary"
-            >
-              <p-icon
-                icon="fab fa-instagram"
-                screen-reader-text="PlaySpace Instagram"
-              />
+            <a href="https://instagram.com/playspacetv" target="_blank" class="text-primary">
+              <p-icon icon="fab fa-instagram" screen-reader-text="PlaySpace Instagram" />
             </a>
           </li>
         </ul>
       </div>
+      <img src="https://i.imgur.com/SA0tlaE.png" class="tiled-content absolute hidden md:block" />
     </div>
+    <img src="https://i.imgur.com/SA0tlaE.png" class="md:hidden" />
 
-    <div class="bg-primary w-full">
+    <div class="bg-primary w-full text-center py-20 md:mt-32 lg:mt-64">
+      <h1 class="text-3xl md:text-5xl font-bold text-gray-300 leading-none pb-10 px-4">
+        The web was meant to be
+        <br class="hidden md:block" />experienced
+        <u>together</u>.
+      </h1>
       <video
         src="https://tryston.net/public/videos/PlaySpace-Demo.mp4"
         controls
         playsinline
+        class="mx-auto sm:p-4 w-full"
         style="max-width:60rem"
       ></video>
     </div>
 
     <!-- Use Cases -->
-    <div class="container my-6">
+    <div class="container mx-auto my-20">
       <h1 class="text-3xl font-bold text-primary">Use Cases</h1>
       <p>What is PlaySpace great for?</p>
       <div class="flex flex-wrap -mx-2">
@@ -122,9 +86,7 @@
                 @click="curUseCase = i"
                 :variant="curUseCase === i ? 'primary' : 'primary-hover'"
                 class="mb-2 w-full sm:text-left"
-              >
-                {{ useCase.title }}
-              </p-btn>
+              >{{ useCase.title }}</p-btn>
             </li>
           </ul>
         </div>
@@ -132,12 +94,8 @@
           <ul class="list-style-none pl-0">
             <li v-for="(useCase, i) in useCases" :key="i">
               <div v-show="curUseCase === i">
-                <h2 class="font-bold mb-1 text-primary">
-                  {{ useCase.title }}
-                </h2>
-                <h3 class="text-3xl leading-tight">
-                  {{ useCase.desc }}
-                </h3>
+                <h2 class="font-bold mb-1 text-primary">{{ useCase.title }}</h2>
+                <h3 class="text-3xl leading-tight">{{ useCase.desc }}</h3>
               </div>
             </li>
           </ul>
@@ -145,16 +103,14 @@
       </div>
     </div>
 
-    <h2 class="text-center text-2xl font-bold">
-      More coming to this page soon...
-    </h2>
+    <h2 class="text-center text-2xl font-bold">More coming to this page soon...</h2>
 
     <!-- Quote Statement -->
     <!-- <div class="fav-content">
       <h1 class="container-sm text-5xl font-bold mb-4">
         Your favorite content was meant to be watched together.
       </h1>
-    </div> -->
+    </div>-->
 
     <!-- Browser Support -->
     <!-- <div class="container container-sm mt-5 text-center">
@@ -205,7 +161,7 @@
           </div>
         </div>
       </div>
-    </div> -->
+    </div>-->
   </div>
 </template>
 
@@ -277,6 +233,12 @@ export default {
         top: -6vw;
       }
     }
+  }
+
+  .tiled-content {
+    top: 0;
+    left: 500px;
+    transform: rotate(-35deg);
   }
 
   .card {
