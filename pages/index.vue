@@ -8,51 +8,26 @@
           All from your web browser, no software needed.
         </h2>
         <div class="mb-2">
-          <p-link to="/live" variant="primary" class="mr-2 mb-2 text-center">
-            Browse PlaySpaces
-          </p-link>
-          <p-link to="/create" variant="primary-hover" class="text-center">
-            Create a PlaySpace
-          </p-link>
+          <p-link to="/live" variant="primary" class="mr-2 mb-2 text-center">Browse PlaySpaces</p-link>
+          <p-link to="/create" variant="primary-hover" class="text-center">Create a PlaySpace</p-link>
         </div>
         <ul
           class="flex justify-center social-media list-style-none pl-0 text-gray-400"
           aria-label="PlaySpace's Social Media"
         >
           <li class="mr-2">
-            <a
-              href="https://twitter.com/playspacetv"
-              target="_blank"
-              class="text-primary"
-            >
-              <p-icon
-                icon="fab fa-twitter"
-                screen-reader-text="PlaySpace Twitter"
-              />
+            <a href="https://twitter.com/playspacetv" target="_blank" class="text-primary">
+              <p-icon icon="fab fa-twitter" screen-reader-text="PlaySpace Twitter" />
             </a>
           </li>
           <li class="mr-2">
-            <a
-              href="https://discord.gg/WwewP4D"
-              target="_blank"
-              class="text-primary"
-            >
-              <p-icon
-                icon="fab fa-discord"
-                screen-reader-text="PlaySpace Discord"
-              />
+            <a href="https://discord.gg/WwewP4D" target="_blank" class="text-primary">
+              <p-icon icon="fab fa-discord" screen-reader-text="PlaySpace Discord" />
             </a>
           </li>
           <li class="mr-2">
-            <a
-              href="https://medium.com/@playspacetv"
-              target="_blank"
-              class="text-primary"
-            >
-              <p-icon
-                icon="fab fa-medium"
-                screen-reader-text="PlaySpace Medium"
-              />
+            <a href="https://medium.com/@playspacetv" target="_blank" class="text-primary">
+              <p-icon icon="fab fa-medium" screen-reader-text="PlaySpace Medium" />
             </a>
           </li>
           <li class="mr-2">
@@ -61,34 +36,17 @@
               target="_blank"
               class="text-primary"
             >
-              <p-icon
-                icon="fab fa-youtube"
-                screen-reader-text="PlaySpace YouTube"
-              />
+              <p-icon icon="fab fa-youtube" screen-reader-text="PlaySpace YouTube" />
             </a>
           </li>
           <li class="mr-2">
-            <a
-              href="https://reddit.com/r/playspacetv"
-              target="_blank"
-              class="text-primary"
-            >
-              <p-icon
-                icon="fab fa-reddit"
-                screen-reader-text="PlaySpace Reddit"
-              />
+            <a href="https://reddit.com/r/playspacetv" target="_blank" class="text-primary">
+              <p-icon icon="fab fa-reddit" screen-reader-text="PlaySpace Reddit" />
             </a>
           </li>
           <li class="mr-2">
-            <a
-              href="https://instagram.com/playspacetv"
-              target="_blank"
-              class="text-primary"
-            >
-              <p-icon
-                icon="fab fa-instagram"
-                screen-reader-text="PlaySpace Instagram"
-              />
+            <a href="https://instagram.com/playspacetv" target="_blank" class="text-primary">
+              <p-icon icon="fab fa-instagram" screen-reader-text="PlaySpace Instagram" />
             </a>
           </li>
         </ul>
@@ -122,7 +80,7 @@
           </h3>
         </div>
       </div>
-    </div> -->
+    </div>-->
 
     <!-- Use Cases -->
     <div class="container my-6">
@@ -136,9 +94,7 @@
                 @click="curUseCase = i"
                 :variant="curUseCase === i ? 'primary' : 'primary-hover'"
                 class="mb-2 w-full sm:text-left"
-              >
-                {{ useCase.title }}
-              </p-btn>
+              >{{ useCase.title }}</p-btn>
             </li>
           </ul>
         </div>
@@ -146,12 +102,8 @@
           <ul class="list-style-none pl-0">
             <li v-for="(useCase, i) in useCases" :key="i">
               <div v-show="curUseCase === i">
-                <h2 class="font-bold mb-1 text-primary">
-                  {{ useCase.title }}
-                </h2>
-                <h3 class="text-3xl leading-tight">
-                  {{ useCase.desc }}
-                </h3>
+                <h2 class="font-bold mb-1 text-primary">{{ useCase.title }}</h2>
+                <h3 class="text-3xl leading-tight">{{ useCase.desc }}</h3>
               </div>
             </li>
           </ul>
@@ -159,16 +111,14 @@
       </div>
     </div>
 
-    <h2 class="text-center text-2xl font-bold">
-      More coming to this page soon...
-    </h2>
+    <h2 class="text-center text-2xl font-bold">More coming to this page soon...</h2>
 
     <!-- Quote Statement -->
     <!-- <div class="fav-content">
       <h1 class="container-sm text-5xl font-bold mb-4">
         Your favorite content was meant to be watched together.
       </h1>
-    </div> -->
+    </div>-->
 
     <!-- Browser Support -->
     <!-- <div class="container container-sm mt-5 text-center">
@@ -219,7 +169,7 @@
           </div>
         </div>
       </div>
-    </div> -->
+    </div>-->
   </div>
 </template>
 

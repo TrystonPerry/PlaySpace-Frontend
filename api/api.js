@@ -1,4 +1,4 @@
-const BASE_URL = process.env.API_URL
+const BASE_URL = process.env.apiUrl
 
 import Vue from "vue"
 
