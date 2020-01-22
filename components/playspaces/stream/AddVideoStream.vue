@@ -9,7 +9,7 @@
       >
         <li
           v-if="
-            $store.state.stream.streams.video.length < 2 &&
+            $store.state.stream.streams.video.length < 5 &&
               !$store.state.stream.tracks.video
           "
         >
@@ -18,6 +18,19 @@
             class="bg-primary font-bold text-gray-300 py-2 w-full"
           >
             <p-icon icon="fas fa-desktop" />Desktop
+          </button>
+        </li>
+        <li
+          v-if="
+            $store.state.stream.streams.video.length < 5 &&
+              !$store.state.stream.tracks.video
+          "
+        >
+          <button
+            @click="getWebcamStream"
+            class="bg-primary font-bold text-gray-300 py-2 w-full"
+          >
+            <p-icon icon="fas fa-camera" />Webcam
           </button>
         </li>
         <li v-if="$store.state.stream.streams.external.length < 5">
@@ -139,6 +152,42 @@ export default {
       }
 
       const res = await WebRTC.getDisplayMedia(constraints)
+
+      if (!res.success) {
+        if (res.error !== "Permission denied") {
+          this.$notify({
+            type: "error",
+            title: "Error getting your desktop",
+            text: res.error
+          })
+        }
+        return
+      }
+
+      this.setLocalTrack({
+        type: "video",
+        track: res.stream.getVideoTracks()[0]
+      })
+      this.setLocalTrack({
+        type: "audio",
+        track: res.stream.getAudioTracks()[0]
+      })
+    },
+
+    async getWebcamStream() {
+      const constraints = {
+        video: {
+          width: {
+            max: "1280"
+          },
+          height: {
+            max: "720"
+          }
+        },
+        audio: false
+      }
+
+      const res = await WebRTC.getUserMedia(constraints)
 
       if (!res.success) {
         if (res.error !== "Permission denied") {
