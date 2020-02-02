@@ -77,6 +77,20 @@ export default {
         // })
       },
 
+      "chat-user-joined"(username) {
+        this.messages.push({
+          isServerMessage: true,
+          text: username + " joined the chat."
+        })
+      },
+
+      "chat-user-left"(username) {
+        this.messages.push({
+          isServerMessage: true,
+          text: username + " left the chat."
+        })
+      },
+
       reconnect() {
         this.attemptConnect()
       },

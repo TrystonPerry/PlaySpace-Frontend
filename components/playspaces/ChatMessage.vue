@@ -5,25 +5,30 @@
     class="relative flex flex-column hover:bg-black-300 px-1"
     :class="{ 'opacity-25': message.isBanned }"
   >
-    <p-avatar :avatar="message.avatar" size="xs" class="flex-shrink-0" />
-    <div class="w-full ml-1 max-h-64 overflow-hidden rounded-md">
-      <h3 class="text-sm font-bold">{{ message.username }}</h3>
-      <p v-if="type === 'text'" class="text-xs break-words" v-html="computedMessage"></p>
-      <img v-else-if="type === 'img'" :src="computedMessage" class="w-full rounded-md" />
-      <p v-else-if="type === 'banned'" class="text-xs break-words italic">Message removed</p>
+    <div v-if="!message.isServerMessage">
+      <p-avatar :avatar="message.avatar" size="xs" class="flex-shrink-0" />
+      <div class="w-full ml-1 max-h-64 overflow-hidden rounded-md">
+        <h3 class="text-sm font-bold">{{ message.username }}</h3>
+        <p v-if="type === 'text'" class="text-xs break-words" v-html="computedMessage"></p>
+        <img v-else-if="type === 'img'" :src="computedMessage" class="w-full rounded-md" />
+        <p v-else-if="type === 'banned'" class="text-xs break-words italic">Message removed</p>
+      </div>
+      <small
+        v-if="isControls"
+        class="absolute flex text-gray-200 py-1 px-2 text-center"
+        style="top:50%;left:50%;transform:translate(-50%,-50%)"
+      >
+        <p-btn @click="banUser(900)" variant="none" size="xs" class="bg-orange-500 text-xs mr-1">
+          <p-icon icon="fas fa-trash p-1" />
+        </p-btn>
+        <p-btn @click="banUser(-1)" variant="none" size="xs" class="bg-red-500 text-xs">
+          <p-icon icon="fas fa-trash p-1" />
+        </p-btn>
+      </small>
     </div>
-    <small
-      v-if="isControls"
-      class="absolute flex text-gray-200 py-1 px-2 text-center"
-      style="top:50%;left:50%;transform:translate(-50%,-50%)"
-    >
-      <p-btn @click="banUser(900)" variant="none" size="xs" class="bg-orange-500 text-xs mr-1">
-        <p-icon icon="fas fa-trash p-1" />
-      </p-btn>
-      <p-btn @click="banUser(-1)" variant="none" size="xs" class="bg-red-500 text-xs">
-        <p-icon icon="fas fa-trash p-1" />
-      </p-btn>
-    </small>
+    <div v-else>
+      <p class="text-xs opacity-75 break-words italic">{{ message.text }}</p>
+    </div>
   </li>
 </template>
 
