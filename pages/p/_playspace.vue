@@ -105,7 +105,7 @@
       />
     </div>
     <AddVideoStream
-      v-if="totalStreams && canStream"
+      v-if="totalStreams && canStream && !$store.state.nav.isMobile"
       drop-up
       class="absolute bottom-0 left-0 m-2"
     />

@@ -15,13 +15,14 @@
         </NavDivider>
         <ul class="list-style-none overflow-y-auto" style="max-height:10rem">
           <li
-            v-for="mic in $store.state.stream.streams.mic" :key="mic.producerId"
+            v-for="mic in $store.state.stream.streams.mic"
+            :key="mic.producerId"
             class="bg-black-500 shadow hover:bg-black-400 hover:shadow-reg rounded-lg mb-2"
           >
             <VoiceChatter :mic="mic" />
           </li>
           <li
-            v-if="$store.state.stream.tracks.mic"
+            v-if="$store.state.stream.tracks.mic && !$store.state.nav.isMobile"
             class="bg-black-500 shadow hover:bg-black-400 hover:shadow-reg rounded-lg mb-2"
           >
             <VoiceProducer />
@@ -64,7 +65,10 @@ export default {
 
   computed: {
     chatterCount() {
-      return this.$store.state.stream.streams.mic.length + !!this.$store.state.stream.tracks.mic
+      return (
+        this.$store.state.stream.streams.mic.length +
+        !!this.$store.state.stream.tracks.mic
+      )
     }
   }
 }

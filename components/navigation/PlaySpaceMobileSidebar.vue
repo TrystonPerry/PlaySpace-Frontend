@@ -26,30 +26,33 @@
         </p-btn>
       </div>
       <div class="flex flex-col flex-grow">
-        <Chat v-if="isTextChat" class="flex-grow mb-1" />
-        <ChatBox v-if="isTextChat" />
-        <!-- <ul v-if="!isTextChat" class="list-style-none">
-          <li
-            class="bg-black-500 shadow hover:bg-black-400 hover:shadow-reg rounded-lg mb-2"
-          >
-            <VoiceChatter :playSpace="{ username: 'trystonperry' }" />
-          </li>
-          <li
-            class="bg-black-500 shadow hover:bg-black-400 hover:shadow-reg rounded-lg mb-2"
-          >
-            <VoiceChatter :playSpace="{ username: 'justadamokay' }" />
-          </li>
-          <li
-            class="bg-black-500 shadow hover:bg-black-400 hover:shadow-reg rounded-lg mb-2"
-          >
-            <VoiceChatter :playSpace="{ username: 'deusmat' }" />
-          </li>
-          <li
-            class="bg-black-500 shadow hover:bg-black-400 hover:shadow-reg rounded-lg mb-2"
-          >
-            <VoiceChatter :playSpace="{ username: 'renoops' }" />
-          </li>
-        </ul> -->
+        <Chat v-show="isTextChat" class="flex-grow mb-1" />
+        <ChatBox v-show="isTextChat" />
+        <div v-show="!isTextChat" class="flex flex-col h-full">
+          <div class="opacity-75 text-sm font-bold text-center">
+            ({{ chatterCount }} /
+            {{ $store.state.playSpace.current.maxAudioStreams }}) users in voice
+            chat
+          </div>
+          <ul class="list-style-none overflow-y-auto flex-grow">
+            <li
+              v-for="mic in $store.state.stream.streams.mic"
+              :key="mic.producerId"
+              class="bg-black-500 shadow hover:bg-black-400 hover:shadow-reg rounded-lg mb-2"
+            >
+              <VoiceChatter :mic="mic" />
+            </li>
+            <li
+              v-if="$store.state.stream.tracks.mic"
+              class="bg-black-500 shadow hover:bg-black-400 hover:shadow-reg rounded-lg mb-2"
+            >
+              <VoiceProducer />
+            </li>
+          </ul>
+          <div class="text-center">
+            <VoiceChatControls />
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -58,6 +61,8 @@
 <script>
 import NavDivider from "./NavDivider"
 import VoiceChatter from "@/components/playspaces/VoiceChatter"
+import VoiceProducer from "@/components/playspaces/VoiceProducer"
+import VoiceChatControls from "@/components/playspaces/VoiceChatControls"
 import Chat from "@/components/playspaces/Chat"
 import ChatBox from "@/components/playspaces/ChatBox"
 
@@ -65,13 +70,24 @@ export default {
   components: {
     NavDivider,
     VoiceChatter,
+    VoiceProducer,
+    VoiceChatControls,
     Chat,
     ChatBox
   },
 
   data: () => ({
     isTextChat: true
-  })
+  }),
+
+  computed: {
+    chatterCount() {
+      return (
+        this.$store.state.stream.streams.mic.length +
+        !!this.$store.state.stream.tracks.mic
+      )
+    }
+  }
 }
 </script>
 
