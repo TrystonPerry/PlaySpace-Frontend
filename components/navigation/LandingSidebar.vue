@@ -15,12 +15,12 @@
       <NavLink @click="close" to="/live">
         <span>Live</span>
       </NavLink>
-      <NavLink @click="close" to="/categories">
+      <!-- <NavLink @click="close" to="/categories">
         <span>Browse</span>
-      </NavLink>
-      <NavLink @click="close" to="/">
+      </NavLink> -->
+      <!-- <NavLink @click="close" to="/">
         <span>About</span>
-      </NavLink>
+      </NavLink> -->
       <div class="flex-grow"></div>
       <ul
         v-if="!$store.state.user.username"

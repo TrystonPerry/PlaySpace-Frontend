@@ -18,14 +18,20 @@
         <NavLink to="/live" class="hidden sm:block">
           <span>Live</span>
         </NavLink>
-        <NavLink to="/about" class="hidden sm:block">
+        <!-- <NavLink to="/about" class="hidden sm:block">
           <span>About</span>
-        </NavLink>
+        </NavLink> -->
       </ul>
       <ul
         v-if="!$store.state.user.username"
         class="list-none flex items-center"
       >
+        <NavLink to="/login" class="hidden sm:block">
+          <span>Log In</span>
+        </NavLink>
+        <NavLink to="/signup" class="hidden sm:block">
+          <span>Sign Up</span>
+        </NavLink>
         <li class="px-1 py-2">
           <p-tooltip text="Create a PlaySpace">
             <p-link to="/create" variant="primary" size="sm">

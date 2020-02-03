@@ -82,11 +82,11 @@
                 Live
               </nuxt-link>
             </li>
-            <li>
+            <!-- <li>
               <nuxt-link to="/about" class="opacity-75 hover:underline">
                 About
               </nuxt-link>
-            </li>
+            </li> -->
             <li>
               <nuxt-link to="/create" class="opacity-75 hover:underline">
                 Create a PlaySpace
