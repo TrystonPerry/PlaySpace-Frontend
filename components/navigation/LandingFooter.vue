@@ -74,6 +74,38 @@
         </div>
         <div class="w-6/12 p-4">
           <div class="font-bold">
+            Pages
+          </div>
+          <ul>
+            <li>
+              <nuxt-link to="/live" class="opacity-75 hover:underline">
+                Live
+              </nuxt-link>
+            </li>
+            <li>
+              <nuxt-link to="/about" class="opacity-75 hover:underline">
+                About
+              </nuxt-link>
+            </li>
+            <li>
+              <nuxt-link to="/create" class="opacity-75 hover:underline">
+                Create a PlaySpace
+              </nuxt-link>
+            </li>
+            <li>
+              <nuxt-link to="/signup" class="opacity-75 hover:underline">
+                Sign Up
+              </nuxt-link>
+            </li>
+            <li>
+              <nuxt-link to="/login" class="opacity-75 hover:underline">
+                Log In
+              </nuxt-link>
+            </li>
+          </ul>
+        </div>
+        <!-- <div class="w-6/12 p-4">
+          <div class="font-bold">
             Legal
           </div>
           <ul>
@@ -94,7 +126,7 @@
               >
             </li>
           </ul>
-        </div>
+        </div> -->
       </div>
     </div>
     <div class="text-center mt-4">
@@ -107,5 +139,4 @@
 export default {}
 </script>
 
-<style>
-</style>
+<style></style>
