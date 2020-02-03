@@ -1,8 +1,8 @@
 <template>
-  <div class="bg-dark-1 text-gray-300">
+  <div class="flex flex-col min-h-screen bg-dark-1 text-gray-300">
     <LandingNavbar />
     <div class="h-12"></div>
-    <nuxt />
+    <nuxt class="flex-grow" />
     <LandingFooter />
   </div>
 </template>

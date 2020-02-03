@@ -65,7 +65,8 @@ module.exports = {
       "64": "16rem"
     },
     minHeight: {
-      "screen-75": "75vh"
+      "screen-75": "75vh",
+      screen: "100vh"
     },
     textColor: theme => ({
       ...theme("colors"),
