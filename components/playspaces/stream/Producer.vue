@@ -1,16 +1,27 @@
 <template>
   <div class="flex items-center justify-center">
     <div class="flex items-center justify-center w-full h-full">
-      <video ref="video" id="local" class="w-full h-full" autoplay muted playsinline></video>
+      <video
+        ref="video"
+        id="local"
+        class="w-full h-full"
+        autoplay
+        muted
+        playsinline
+      ></video>
     </div>
-    <p-btn @click="stopProduce" variant="none" class="absolute p-btn bg-red-400 text-white py-1 px-2">
+    <p-btn
+      @click="stopProduce"
+      variant="none"
+      class="absolute p-btn bg-red-400 text-white py-1 px-2"
+    >
       End Desktop Stream
     </p-btn>
   </div>
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapActions } from "vuex"
 export default {
   props: {
     sendTransport: {
@@ -42,11 +53,11 @@ export default {
 
   methods: {
     ...mapActions({
-      "setLocalTrack": "stream/setLocalTrack"
+      setLocalTrack: "stream/setLocalTrack"
     }),
 
     // Produce this video stream
-    async produce() {      
+    async produce() {
       const videoTrack = this.$store.state.stream.tracks.video
       const audioTrack = this.$store.state.stream.tracks.audio
 
@@ -57,9 +68,12 @@ export default {
 
       this.$socket.SFU.emit("room-stream-video", {
         producerId: this.videoProducer.id,
-        audio: !audioTrack ? undefined : {
-          producerId: this.audioProducer.id
-        }
+        audio: !audioTrack
+          ? undefined
+          : {
+              producerId: this.audioProducer.id
+            },
+        username: this.$store.state.user.fullUsername
       })
 
       document.getElementById("local").srcObject = this.stream
@@ -77,7 +91,10 @@ export default {
         }
       })
 
-      this.sockets.SFU.subscribe(`producer-stream-closed-${this.videoProducer.id}`, this.stopProduce)
+      this.sockets.SFU.subscribe(
+        `producer-stream-closed-${this.videoProducer.id}`,
+        this.stopProduce
+      )
     },
 
     async produceAudio(track) {
@@ -90,9 +107,12 @@ export default {
         }
       })
 
-      this.sockets.SFU.subscribe(`producer-stream-closed-${this.audioProducer.id}`, () => {
-        // TODO error handeling that your stream was closed
-      })
+      this.sockets.SFU.subscribe(
+        `producer-stream-closed-${this.audioProducer.id}`,
+        () => {
+          // TODO error handeling that your stream was closed
+        }
+      )
     },
 
     // Stop producing all tracks
@@ -124,5 +144,4 @@ export default {
 }
 </script>
 
-<style>
-</style>
+<style></style>

@@ -8,11 +8,7 @@
     <h3 class="flex-grow font-bold">
       {{ $store.state.user.fullUsername }}
     </h3>
-    <p-btn
-      @click="toggleMute"
-      variant="none"
-      size="xs"
-    >
+    <p-btn @click="toggleMute" variant="none" size="xs">
       <p-icon
         icon="fas fa-microphone-slash"
         size="md"
@@ -52,21 +48,24 @@ export default {
 
       this.$socket.SFU.emit("room-stream-mic", {
         producerId: this.producer.id,
-        // fullUsername: this.$store.state.user.fullUsername
+        username: this.$store.state.user.fullUsername
       })
 
       this.$store.dispatch("stream/setProducerId", {
-        type: "mic", 
+        type: "mic",
         producerId: this.producer.id
       })
 
-      this.sockets.SFU.subscribe(`producer-stream-closed-${this.producer.id}`, () => {
-        // On producer closed (error)
-      })
+      this.sockets.SFU.subscribe(
+        `producer-stream-closed-${this.producer.id}`,
+        () => {
+          // On producer closed (error)
+        }
+      )
     },
 
     toggleMute() {
-      const state = this.muted ? 'resume' : "pause"
+      const state = this.muted ? "resume" : "pause"
       this.muted = !this.muted
       this.$socket.SFU.emit("room-producer-pause", {
         producerId: this.producer.id,

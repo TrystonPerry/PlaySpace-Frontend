@@ -8,7 +8,9 @@
       <div
         class="text-center text-gray-300 overflow-y-auto"
         :class="{ 'flex-shrink-0': $store.state.nav.isMobile && totalStreams }"
-        :style="$store.state.nav.isMobile && !totalStreams ? 'max-height:40vh' : ''"
+        :style="
+          $store.state.nav.isMobile && !totalStreams ? 'max-height:40vh' : ''
+        "
       >
         <VideoContainer
           v-if="device"
@@ -285,7 +287,7 @@ export default {
         this.connectTransport(this.sendTransport)
 
         this.sendTransport.on("produce", (params, callback, errback) => {
-          const requestID = Math.random()
+          const requestId = Math.random()
             .toString(36)
             .substr(2, 9)
 
@@ -299,7 +301,7 @@ export default {
           })
 
           this.sockets.SFU.subscribe(
-            `room-transport-produced-${requestID}`,
+            `room-transport-produced-${requestId}`,
             callback
           )
         })

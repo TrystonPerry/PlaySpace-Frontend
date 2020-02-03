@@ -5,7 +5,7 @@ if (process.env.NODE_ENV !== "production") {
 
 module.exports = {
   server: {
-    port: process.env.PORT, // default 8000
+    port: process.env.PORT,
     host: process.env.HOST || "localhost"
   },
   mode: "universal",
@@ -91,7 +91,7 @@ module.exports = {
   /*
    ** Nuxt.js environment variables
    */
-  dotenv: {
+  env: {
     apiUrl: process.env.API_URL,
     sfuUrl: process.env.SFU_URL
   },
