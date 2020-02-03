@@ -83,13 +83,15 @@
         </div>
 
         <client-only>
-          <div
-            v-if="!totalStreams && canStream && !$store.state.nav.isMobile"
-            class="pt-4 mt-6"
-          >
+          <div v-if="!totalStreams && canStream" class="py-4 mt-6">
             <h2 class="text-lg font-bold">
-              Click below to share your desktop, a YouTube video, or Twitch
-              Stream
+              <span v-if="!$store.state.nav.isMobile">
+                Click below to share your desktop, a YouTube video, or Twitch
+                Stream
+              </span>
+              <span v-else>
+                Click below to share your webcam
+              </span>
             </h2>
             <AddVideoStream class="max-w-48 w-full mx-auto mt-5" />
           </div>
