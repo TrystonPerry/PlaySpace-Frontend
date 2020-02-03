@@ -18,7 +18,7 @@ module.exports = {
       "dark-5": "#4F4F4F",
       "dark-4": "#404040",
       "dark-3": "#383838",
-      "dark-2": "#404040",
+      "dark-2": "#303030",
       "dark-1": "#202020"
     }),
     borderColor: theme => ({
@@ -64,14 +64,17 @@ module.exports = {
     minWidth: {
       "64": "16rem"
     },
+    minHeight: {
+      "screen-75": "75vh"
+    },
     textColor: theme => ({
       ...theme("colors"),
       primary: "#009dee",
       "dark-5": "#4F4F4F",
       "dark-4": "#404040",
       "dark-3": "#383838",
-      "dark-2": "#404040",
-      "dark-1": "#252525",
+      "dark-2": "#303030",
+      "dark-1": "#202020",
       white: "#fff"
     })
   },

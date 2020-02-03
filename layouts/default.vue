@@ -3,15 +3,18 @@
     <LandingNavbar />
     <div class="h-12"></div>
     <nuxt />
+    <LandingFooter />
   </div>
 </template>
 
 <script>
 import LandingNavbar from "@/components/navigation/LandingNavbar"
+import LandingFooter from "@/components/navigation/LandingFooter"
 
 export default {
   components: {
-    LandingNavbar
+    LandingNavbar,
+    LandingFooter
   },
 
   mounted() {

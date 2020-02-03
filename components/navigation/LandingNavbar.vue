@@ -7,7 +7,7 @@
         <button @click="showSidebar = true" class="w-12 h-12">
           <p-icon icon="fas fa-bars" screen-reader-text="Menu" size="lg" />
         </button>
-        <NavLink to="/live" class="font-bold">
+        <NavLink to="/" class="font-bold">
           <img
             src="/img/playspace-icon-trans.png"
             alt="PlaySpace logo"
@@ -15,10 +15,10 @@
           />
           <span>PlaySpace</span>
         </NavLink>
-        <NavLink to="/categories" class="hidden sm:block">
-          <span>Browse</span>
+        <NavLink to="/live" class="hidden sm:block">
+          <span>Live</span>
         </NavLink>
-        <NavLink to="/" class="hidden sm:block">
+        <NavLink to="/about" class="hidden sm:block">
           <span>About</span>
         </NavLink>
       </ul>
@@ -26,11 +26,12 @@
         v-if="!$store.state.user.username"
         class="list-none flex items-center"
       >
-        <li class="hidden sm:block px-1 py-2">
-          <p-link to="/login" variant="primary-hover" size="sm">Log In</p-link>
-        </li>
         <li class="px-1 py-2">
-          <p-link to="/signup" variant="primary" size="sm">Sign Up</p-link>
+          <p-tooltip text="Create a PlaySpace">
+            <p-link to="/create" variant="primary" size="sm">
+              Create a PlaySpace
+            </p-link>
+          </p-tooltip>
         </li>
       </ul>
       <ul v-else class="list-style-none flex">
