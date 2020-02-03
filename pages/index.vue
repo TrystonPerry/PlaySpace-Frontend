@@ -129,7 +129,7 @@
       <div class="flex flex-wrap container mx-auto justify-center">
         <div class="md:w-6/12 lg:w-4/12 p-2" style="max-width:350px">
           <p-card class="flex flex-col h-full">
-            <img src="https://i.stack.imgur.com/XW25s.jpg" alt="" />
+            <img src="https://i.imgur.com/IerG6cP.png" alt="" />
             <h2 class="text-2xl mt-2 mb-2 font-bold">
               Stream Your Gameplay
             </h2>
@@ -138,33 +138,36 @@
               the world. No software needed. Just send out the link!
             </p>
             <div>
-              <p-btn variant="primary" size="xs" class="py-1 px-3">
+              <!-- <p-btn variant="primary" size="xs" class="py-1 px-3">
                 Learn More
-              </p-btn>
+              </p-btn> -->
             </div>
           </p-card>
         </div>
         <div class="md:w-6/12 lg:w-4/12 p-2" style="max-width:350px">
           <p-card class="flex flex-col h-full">
-            <img src="https://i.stack.imgur.com/XW25s.jpg" alt="" />
+            <img src="https://i.imgur.com/czupxMf.png" alt="" />
             <h2 class="text-2xl mt-2 mb-2 font-bold">
               Watch YouTube in Sync
             </h2>
             <p class="flex-grow mb-6">
-              With our native YouTube player, all video is synchornized for
+              With our native YouTube player, all videos are synchornized for
               anyone watching. When someone pauses, plays, or skims the video,
               it updates for all.
             </p>
             <div>
-              <p-btn variant="primary" size="xs" class="py-1 px-3">
+              <!-- <p-btn variant="primary" size="xs" class="py-1 px-3">
                 Learn More
-              </p-btn>
+              </p-btn> -->
             </div>
           </p-card>
         </div>
         <div class="md:w-6/12 lg:w-4/12 p-2" style="max-width:350px">
           <p-card class="flex flex-col h-full">
-            <img src="https://i.stack.imgur.com/XW25s.jpg" alt="" />
+            <img
+              src="https://i.imgur.com/OoGV3ZA.png"
+              alt="PlaySpace UI Mockup"
+            />
             <h2 class="text-2xl mt-2 mb-2 font-bold">
               Mix & Match Streams
             </h2>
@@ -173,9 +176,9 @@
               streaming to a single PlaySpace.
             </p>
             <div>
-              <p-btn variant="primary" size="xs" class="py-1 px-3">
+              <!-- <p-btn variant="primary" size="xs" class="py-1 px-3">
                 Learn More
-              </p-btn>
+              </p-btn> -->
             </div>
           </p-card>
         </div>
@@ -198,7 +201,7 @@
     <!-- Testimonials -->
     <div class="my-16 md:my-32 px-2 mx-auto" style="max-width:1500px">
       <h2 class="text-2xl md:text-4xl pb-6 font-bold text-center">
-        What are our users saying about us?
+        What are our people saying about us?
       </h2>
       <div class="flex flex-wrap">
         <div class="sm:w-6/12 md:w-3/12 p-4 flex flex-col w-full">
