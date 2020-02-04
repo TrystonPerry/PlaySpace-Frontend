@@ -37,7 +37,8 @@
         </li>
         <li
           v-if="
-            $store.state.stream.streams.video.length < 5 &&
+            $store.state.nav.isMobile &&
+              $store.state.stream.streams.video.length < 5 &&
               !$store.state.stream.tracks.video
           "
         >
@@ -50,7 +51,8 @@
         </li>
         <li
           v-if="
-            $store.state.stream.streams.video.length < 5 &&
+            $store.state.nav.isMobile &&
+              $store.state.stream.streams.video.length < 5 &&
               !$store.state.stream.tracks.video
           "
         >
