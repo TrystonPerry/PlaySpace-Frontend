@@ -5,8 +5,8 @@ if (process.env.NODE_ENV !== "production") {
 
 module.exports = {
   server: {
-    port: process.env.PORT,
-    host: process.env.HOST || "localhost"
+    port: process.env.PORT || 0000,
+    host: process.env.HOST || "0.0.0.0"
   },
   mode: "universal",
   /*

@@ -24,10 +24,6 @@ async function start() {
   // Give nuxt middleware to express
   app.use(nuxt.render)
 
-  app.get("/privacy_policy", (req, res) => {
-    res.send("Hello World!")
-  })
-
   // Listen the server
   app.listen(port, host)
   consola.ready({
