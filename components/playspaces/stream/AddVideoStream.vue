@@ -23,7 +23,8 @@
         </li>
         <li
           v-if="
-            $store.state.stream.streams.video.length < 5 &&
+            !$store.state.nav.isMobile &&
+              $store.state.stream.streams.video.length < 5 &&
               !$store.state.stream.tracks.video
           "
         >
@@ -32,6 +33,32 @@
             class="bg-primary font-bold text-gray-300 py-2 w-full"
           >
             <p-icon icon="fas fa-camera" />Webcam
+          </button>
+        </li>
+        <li
+          v-if="
+            $store.state.stream.streams.video.length < 5 &&
+              !$store.state.stream.tracks.video
+          "
+        >
+          <button
+            @click="getWebcamStream({ facingMode: 'user' })"
+            class="bg-primary font-bold text-gray-300 py-2 w-full"
+          >
+            <p-icon icon="fas fa-camera" />Front Camera
+          </button>
+        </li>
+        <li
+          v-if="
+            $store.state.stream.streams.video.length < 5 &&
+              !$store.state.stream.tracks.video
+          "
+        >
+          <button
+            @click="getWebcamStream({ facingMode: { exact: 'environment' } })"
+            class="bg-primary font-bold text-gray-300 py-2 w-full"
+          >
+            <p-icon icon="fas fa-camera" />Back Camera
           </button>
         </li>
         <li
@@ -185,7 +212,7 @@ export default {
       })
     },
 
-    async getWebcamStream() {
+    async getWebcamStream(video, audio) {
       const constraints = {
         video: {
           width: {
@@ -193,9 +220,10 @@ export default {
           },
           height: {
             max: "720"
-          }
+          },
+          ...video
         },
-        audio: false
+        audio: audio ? audio : false
       }
 
       const res = await WebRTC.getUserMedia(constraints)
@@ -204,7 +232,7 @@ export default {
         if (res.error !== "Permission denied") {
           this.$notify({
             type: "error",
-            title: "Error getting your desktop",
+            title: "Error getting your camera",
             text: res.error
           })
         }
