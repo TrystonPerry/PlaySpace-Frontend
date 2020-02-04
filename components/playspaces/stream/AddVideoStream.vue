@@ -1,15 +1,16 @@
 <template>
-  <div v-if="!$store.state.nav.isMobile" class="add-video-stream">
+  <div class="add-video-stream">
     <p-dropdown btn-classes="p-btn btn-primary-dashed w-48">
       <p-icon icon="fas fa-plus" />Add a Stream
       <ul
         slot="content"
-        class="absolute list-style-none bg-dark-5 shadow-reg w-48"
+        class="list-style-none bg-dark-5 shadow-reg w-48"
         :style="dropUp ? 'bottom:44px' : ''"
       >
         <li
           v-if="
-            $store.state.stream.streams.video.length < 5 &&
+            !$store.state.nav.isMobile &&
+              $store.state.stream.streams.video.length < 5 &&
               !$store.state.stream.tracks.video
           "
         >
@@ -22,7 +23,8 @@
         </li>
         <li
           v-if="
-            $store.state.stream.streams.video.length < 5 &&
+            !$store.state.nav.isMobile &&
+              $store.state.stream.streams.video.length < 5 &&
               !$store.state.stream.tracks.video
           "
         >
@@ -33,7 +35,40 @@
             <p-icon icon="fas fa-camera" />Webcam
           </button>
         </li>
-        <li v-if="$store.state.stream.streams.external.length < 5">
+        <li
+          v-if="
+            $store.state.nav.isMobile &&
+              $store.state.stream.streams.video.length < 5 &&
+              !$store.state.stream.tracks.video
+          "
+        >
+          <button
+            @click="getWebcamStream({ facingMode: 'user' })"
+            class="bg-primary font-bold text-gray-300 py-2 w-full"
+          >
+            <p-icon icon="fas fa-camera" />Front Camera
+          </button>
+        </li>
+        <li
+          v-if="
+            $store.state.nav.isMobile &&
+              $store.state.stream.streams.video.length < 5 &&
+              !$store.state.stream.tracks.video
+          "
+        >
+          <button
+            @click="getWebcamStream({ facingMode: { exact: 'environment' } })"
+            class="bg-primary font-bold text-gray-300 py-2 w-full"
+          >
+            <p-icon icon="fas fa-camera" />Back Camera
+          </button>
+        </li>
+        <li
+          v-if="
+            !$store.state.nav.isMobile &&
+              $store.state.stream.streams.external.length < 5
+          "
+        >
           <button
             @click="isYoutube = true"
             class="text-gray-300 py-2 w-full font-bold"
@@ -42,7 +77,12 @@
             <p-icon icon="fab fa-youtube" />YouTube
           </button>
         </li>
-        <li v-if="$store.state.stream.streams.external.length < 5">
+        <li
+          v-if="
+            !$store.state.nav.isMobile &&
+              $store.state.stream.streams.external.length < 5
+          "
+        >
           <button
             @click="isTwitch = true"
             class="text-gray-300 py-2 w-full font-bold"
@@ -174,7 +214,7 @@ export default {
       })
     },
 
-    async getWebcamStream() {
+    async getWebcamStream(video, audio) {
       const constraints = {
         video: {
           width: {
@@ -182,9 +222,10 @@ export default {
           },
           height: {
             max: "720"
-          }
+          },
+          ...video
         },
-        audio: false
+        audio: audio ? audio : false
       }
 
       const res = await WebRTC.getUserMedia(constraints)
@@ -193,7 +234,7 @@ export default {
         if (res.error !== "Permission denied") {
           this.$notify({
             type: "error",
-            title: "Error getting your desktop",
+            title: "Error getting your camera",
             text: res.error
           })
         }

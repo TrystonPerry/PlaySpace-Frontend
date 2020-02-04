@@ -7,14 +7,14 @@
         <i class="fas fa-globe"></i>
         <span class="hidden md:block ml-2">Live</span>
       </NavLink>
-      <NavLink to="/categories" class="w-full">
+      <!-- <NavLink to="/categories" class="w-full">
         <i class="fas fa-book"></i>
         <span class="hidden md:block ml-2">Browse</span>
-      </NavLink>
-      <NavLink to="/" class="w-full">
+      </NavLink> -->
+      <!-- <NavLink to="/" class="w-full">
         <i class="fab fa-amilia"></i>
         <span class="hidden md:block ml-2">About</span>
-      </NavLink>
+      </NavLink> -->
       <NavDivider v-if="$store.state.user.username" class="hidden md:flex">
         <h2>Your PlaySpaces</h2>
       </NavDivider>
@@ -31,6 +31,29 @@
           />
         </ul>
         <p-loading v-else />
+      </li>
+      <li class="flex-grow"></li>
+      <li>
+        <ul
+          v-if="!$store.state.user.username"
+          class="list-none flex text-center px-1"
+        >
+          <li class="px-1 py-2 w-6/12">
+            <p-link to="/signup" variant="primary" size="sm" class="w-full">
+              Sign Up
+            </p-link>
+          </li>
+          <li class="px-1 py-2 w-6/12">
+            <p-link
+              to="/login"
+              variant="primary-hover"
+              size="sm"
+              class="w-full"
+            >
+              Log In
+            </p-link>
+          </li>
+        </ul>
       </li>
     </ul>
   </div>

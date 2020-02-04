@@ -1,5 +1,5 @@
 <template>
-  <div class="mx-auto">
+  <div class="mx-auto pb-20">
     <client-only>
       <div v-if="myPlaySpaces.length && $store.state.user.username">
         <h1 class="text-3xl text-primary text-center font-bold mt-6 mb-2">

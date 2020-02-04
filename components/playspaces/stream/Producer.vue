@@ -5,6 +5,7 @@
         ref="video"
         id="local"
         class="w-full h-full"
+        controls
         autoplay
         muted
         playsinline
@@ -15,7 +16,7 @@
       variant="none"
       class="absolute p-btn bg-red-400 text-white py-1 px-2"
     >
-      End Desktop Stream
+      End Stream
     </p-btn>
   </div>
 </template>

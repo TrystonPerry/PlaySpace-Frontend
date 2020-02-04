@@ -1,175 +1,285 @@
 <template>
-  <div class="landing container px-2 mx-auto my-6 py-6 text-gray-400">
-    <div>
-      <div class="w-full md:w-6/12 mx-auto text-center">
-        <h1 class="text-5xl font-bold text-primary">PlaySpace</h1>
-        <h2 class="text-gray-400 mt-1 mb-4">
-          Watch videos, play games, or browse the internet with your friends.
-          All from your web browser, no software needed.
-        </h2>
-        <div class="mb-2">
-          <p-link to="/live" variant="primary" class="mr-2 mb-2 text-center">Browse PlaySpaces</p-link>
-          <p-link to="/create" variant="primary-hover" class="text-center">Create a PlaySpace</p-link>
-        </div>
-        <ul
-          class="flex justify-center social-media list-style-none pl-0 text-gray-400"
-          aria-label="PlaySpace's Social Media"
-        >
-          <li class="mr-2">
-            <a href="https://twitter.com/playspacetv" target="_blank" class="text-primary">
-              <p-icon icon="fab fa-twitter" screen-reader-text="PlaySpace Twitter" />
-            </a>
-          </li>
-          <li class="mr-2">
-            <a href="https://discord.gg/WwewP4D" target="_blank" class="text-primary">
-              <p-icon icon="fab fa-discord" screen-reader-text="PlaySpace Discord" />
-            </a>
-          </li>
-          <li class="mr-2">
-            <a href="https://medium.com/@playspacetv" target="_blank" class="text-primary">
-              <p-icon icon="fab fa-medium" screen-reader-text="PlaySpace Medium" />
-            </a>
-          </li>
-          <li class="mr-2">
-            <a
-              href="https://www.youtube.com/channel/UC7Uqb7o-sthQtJLarbBGIcg"
-              target="_blank"
-              class="text-primary"
+  <div class="landing pt-6 text-gray-400 overflow-x-hidden">
+    <!-- Hero -->
+    <div
+      class="container lg:flex items-center mx-auto px-2 pt-6 lg:min-h-screen-75"
+    >
+      <div class="mb-8 lg:w-5/12">
+        <div class="w-full text-center lg:text-left">
+          <h1
+            class="text-3xl md:text-5xl font-bold text-gray-300 leading-none mb-3"
+          >
+            Online rooms to watch anything with anyone.
+          </h1>
+          <div class="mx-auto lg:mx-0 max-w-96">
+            <p class="text-gray-400 md:text-lg mt-1 mb-4">
+              Create an online room to stream games, watch videos, and chat with
+              friends. No downloads or account required. Just have fun.
+            </p>
+          </div>
+          <div class="mb-2">
+            <p-link
+              to="/create"
+              variant="primary"
+              class="mr-2 mb-2 text-center"
             >
-              <p-icon icon="fab fa-youtube" screen-reader-text="PlaySpace YouTube" />
-            </a>
-          </li>
-          <li class="mr-2">
-            <a href="https://reddit.com/r/playspacetv" target="_blank" class="text-primary">
-              <p-icon icon="fab fa-reddit" screen-reader-text="PlaySpace Reddit" />
-            </a>
-          </li>
-          <li class="mr-2">
-            <a href="https://instagram.com/playspacetv" target="_blank" class="text-primary">
-              <p-icon icon="fab fa-instagram" screen-reader-text="PlaySpace Instagram" />
-            </a>
+              Create a PlaySpace
+            </p-link>
+          </div>
+          <ul
+            class="flex justify-center lg:justify-start social-media list-style-none pl-0 text-gray-400"
+            aria-label="PlaySpace's Social Media"
+          >
+            <li class="mr-2">
+              <a
+                href="https://twitter.com/playspacetv"
+                target="_blank"
+                class="text-primary"
+              >
+                <p-icon
+                  icon="fab fa-twitter"
+                  screen-reader-text="PlaySpace Twitter"
+                />
+              </a>
+            </li>
+            <li class="mr-2">
+              <a
+                href="https://discord.gg/WwewP4D"
+                target="_blank"
+                class="text-primary"
+              >
+                <p-icon
+                  icon="fab fa-discord"
+                  screen-reader-text="PlaySpace Discord"
+                />
+              </a>
+            </li>
+            <li class="mr-2">
+              <a
+                href="https://medium.com/@playspacetv"
+                target="_blank"
+                class="text-primary"
+              >
+                <p-icon
+                  icon="fab fa-medium"
+                  screen-reader-text="PlaySpace Medium"
+                />
+              </a>
+            </li>
+            <li class="mr-2">
+              <a
+                href="https://www.youtube.com/channel/UC7Uqb7o-sthQtJLarbBGIcg"
+                target="_blank"
+                class="text-primary"
+              >
+                <p-icon
+                  icon="fab fa-youtube"
+                  screen-reader-text="PlaySpace YouTube"
+                />
+              </a>
+            </li>
+            <li class="mr-2">
+              <a
+                href="https://reddit.com/r/playspacetv"
+                target="_blank"
+                class="text-primary"
+              >
+                <p-icon
+                  icon="fab fa-reddit"
+                  screen-reader-text="PlaySpace Reddit"
+                />
+              </a>
+            </li>
+            <li class="mr-2">
+              <a
+                href="https://instagram.com/playspacetv"
+                target="_blank"
+                class="text-primary"
+              >
+                <p-icon
+                  icon="fab fa-instagram"
+                  screen-reader-text="PlaySpace Instagram"
+                />
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="lg:ml-8 lg:w-7/12">
+        <div
+          style="width:100%;height:0px;position:relative;padding-bottom:56.250%;"
+        >
+          <iframe
+            src="https://streamable.com/s/zgbow/moiyfr"
+            frameborder="0"
+            width="100%"
+            height="100%"
+            allowfullscreen
+            style="width:100%;height:100%;position:absolute;left:0px;top:0px;overflow:hidden;"
+          ></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Features -->
+    <div class="py-12 my-8 rounded bg-dark-2 px-2">
+      <h2 class="text-2xl md:text-4xl pb-6 font-bold text-center">
+        What can you do with a PlaySpace?
+      </h2>
+      <div class="flex flex-wrap container mx-auto justify-center">
+        <div class="md:w-6/12 lg:w-4/12 p-2" style="max-width:350px">
+          <p-card class="flex flex-col h-full">
+            <img src="https://i.imgur.com/IerG6cP.png" alt="" />
+            <h2 class="text-2xl mt-2 mb-2 font-bold">
+              Stream Your Gameplay
+            </h2>
+            <p class="flex-grow mb-6">
+              Stream your Desktop, Web Browser Tab, or Webcam to your friends or
+              the world. No software needed. Just send out the link!
+            </p>
+            <div>
+              <!-- <p-btn variant="primary" size="xs" class="py-1 px-3">
+                Learn More
+              </p-btn> -->
+            </div>
+          </p-card>
+        </div>
+        <div class="md:w-6/12 lg:w-4/12 p-2" style="max-width:350px">
+          <p-card class="flex flex-col h-full">
+            <img src="https://i.imgur.com/czupxMf.png" alt="" />
+            <h2 class="text-2xl mt-2 mb-2 font-bold">
+              Watch YouTube in Sync
+            </h2>
+            <p class="flex-grow mb-6">
+              With our native YouTube player, all videos are synchornized for
+              anyone watching. When someone pauses, plays, or skims the video,
+              it updates for all.
+            </p>
+            <div>
+              <!-- <p-btn variant="primary" size="xs" class="py-1 px-3">
+                Learn More
+              </p-btn> -->
+            </div>
+          </p-card>
+        </div>
+        <div class="md:w-6/12 lg:w-4/12 p-2" style="max-width:350px">
+          <p-card class="flex flex-col h-full">
+            <img
+              src="https://i.imgur.com/OoGV3ZA.png"
+              alt="PlaySpace UI Mockup"
+            />
+            <h2 class="text-2xl mt-2 mb-2 font-bold">
+              Mix & Match Streams
+            </h2>
+            <p class="flex-grow mb-6">
+              When you create a PlaySpace, you can have multiple people
+              streaming to a single PlaySpace.
+            </p>
+            <div>
+              <!-- <p-btn variant="primary" size="xs" class="py-1 px-3">
+                Learn More
+              </p-btn> -->
+            </div>
+          </p-card>
+        </div>
+      </div>
+    </div>
+
+    <!-- Use cases -->
+    <!-- <div class="w-full sm:w-6/12 md:w-9/12 p-2">
+        <ul class="list-style-none pl-0">
+        <li v-for="(useCase, i) in useCases" :key="i">
+            <div v-show="curUseCase === i">
+              <h2 class="font-bold mb-1 text-primary">{{ useCase.title }}</h2>
+              <h3 class="text-3xl leading-tight">{{ useCase.desc }}</h3>
+            </div>
           </li>
         </ul>
       </div>
-      <div class="w-full mx-auto mt-6">
-        <img src="https://i.imgur.com/rVvXT9C.jpg" class="w-full" />
-      </div>
-    </div>
+    </div> -->
 
-    <!-- What is a PlaySpace? -->
-    <!-- <div class="container text-center md:text-right my-6 ml-auto">
-      <h1 class="text-2xl font-bold text-primary">What is a PlaySpace?</h1>
-      <h2 class="text-xl md:w-6/12 ml-auto mb-3">
-        A PlaySpace is a virtual room you can create to easily share gameplay,
-        videos or browse the internet with friends.
+    <!-- Testimonials -->
+    <div class="my-16 md:my-32 px-2 mx-auto" style="max-width:1500px">
+      <h2 class="text-2xl md:text-4xl pb-6 font-bold text-center">
+        What are our people saying about us?
       </h2>
-      <div class="flex flex-wrap ml-auto -px-2 md:w-9/12">
-        <div class="w-full md:w-6/12 p-2">
-          <h2 class="text-xl font-bold text-primary">Public PlaySpaces</h2>
-          <h3 class="text-center md:text-right text-lg">
-            Public PlaySpaces are rooms for streaming yourself to anyone on the
-            intertnet. It's much like streaming on Twitch or Youtube.
-          </h3>
+      <div class="flex flex-wrap">
+        <div class="sm:w-6/12 md:w-3/12 p-4 flex flex-col w-full">
+          <p class="flex-grow">
+            “The future of PlaySpace is loooking really, really good.”
+          </p>
+          <div class="flex items-center">
+            <img
+              src="https://i.imgur.com/QkWf1i3.png"
+              alt="PlaySpace testimonial user image"
+              class="mr-2 mt-2"
+              style="height:32px;width:32px"
+            />
+            <span class="font-bold">derpypineapple13</span>
+          </div>
         </div>
-        <div class="w-full md:w-6/12 p-2">
-          <h2 class="text-xl font-bold text-primary">Private PlaySpaces</h2>
-          <h3 class="text-center md:text-right text-lg">
-            Private PlaySpaces are private rooms only accessible to those with
-            an invite link. They are intended to be used when you want to watch
-            content with only people you know.
-          </h3>
+        <div class="sm:w-6/12 md:w-3/12 p-4 flex flex-col w-full">
+          <p class="flex-grow">
+            “Thank you for making this cool site, we really like how simple and
+            easy it is to just get in and use!”
+          </p>
+          <div class="flex items-center">
+            <img
+              src="https://i.imgur.com/27IoCw7.png"
+              alt="PlaySpace testimonial user image"
+              class="mr-2 mt-2"
+              style="height:32px;width:32px"
+            />
+            <span class="font-bold">Jam</span>
+          </div>
         </div>
-      </div>
-    </div>-->
-
-    <!-- Use Cases -->
-    <div class="container my-6">
-      <h1 class="text-3xl font-bold text-primary">Use Cases</h1>
-      <p>What is PlaySpace great for?</p>
-      <div class="flex flex-wrap -mx-2">
-        <div class="w-full sm:w-6/12 md:w-3/12 p-2">
-          <ul class="list-style-none pl-0">
-            <li v-for="(useCase, i) in useCases" :key="i">
-              <p-btn
-                @click="curUseCase = i"
-                :variant="curUseCase === i ? 'primary' : 'primary-hover'"
-                class="mb-2 w-full sm:text-left"
-              >{{ useCase.title }}</p-btn>
-            </li>
-          </ul>
+        <div class="sm:w-6/12 md:w-3/12 p-4 flex flex-col w-full">
+          <p class="flex-grow">
+            “A great up and coming streaming/social platform that I'm looking
+            forward to see grow and evolve.”
+          </p>
+          <div class="flex items-center">
+            <img
+              src="https://i.imgur.com/VOBnwkO.png"
+              alt="PlaySpace testimonial user image"
+              class="mr-2 mt-2"
+              style="height:32px;width:32px"
+            />
+            <span class="font-bold">Blu3</span>
+          </div>
         </div>
-        <div class="w-full sm:w-6/12 md:w-9/12 p-2">
-          <ul class="list-style-none pl-0">
-            <li v-for="(useCase, i) in useCases" :key="i">
-              <div v-show="curUseCase === i">
-                <h2 class="font-bold mb-1 text-primary">{{ useCase.title }}</h2>
-                <h3 class="text-3xl leading-tight">{{ useCase.desc }}</h3>
-              </div>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </div>
-
-    <h2 class="text-center text-2xl font-bold">More coming to this page soon...</h2>
-
-    <!-- Quote Statement -->
-    <!-- <div class="fav-content">
-      <h1 class="container-sm text-5xl font-bold mb-4">
-        Your favorite content was meant to be watched together.
-      </h1>
-    </div>-->
-
-    <!-- Browser Support -->
-    <!-- <div class="container container-sm mt-5 text-center">
-      <h1 class="font-lg mb-3">Browser Support</h1>
-      <div class="mb-4">
-        <h2 class="font-md mt-0 font-weight-normal">
-          We rely on a web browser technology called WebRTC, its support can
-          sometimes be spotty. It appears that your web browser does not support
-          all the needed requirements.
-          <strong>We recommend using Google Chrome.</strong>
-        </h2>
-        <a
-          href="https://www.google.com/chrome/"
-          target="_blank"
-          class="btn btn-main"
-          >Download Chrome</a
-        >
-      </div>
-      <div class="supported row">
-        <div class="col-xs-12 col-sm-6">
-          <ul class="card h-100 my-0">
-            <h3 class="my-0">Watching</h3>
-            <hr />
-            <li class="supported-item mb-1">
-              <div class="font-md">
-                <i class="fa fa-check mr-2" aria-hidden></i>
-              </div>
-              <span class="font-weight-bold">You can watch!</span>
-            </li>
-          </ul>
-        </div>
-        <div class="col-xs-12 col-sm-6">
-          <div class="card h-100">
-            <h3 class="my-0">Streaming</h3>
-            <hr />
-            <div class="supported-item mb-1 supported-item--false">
-              <div class="font-md">
-                <i class="fa fa-check mr-2" aria-hidden></i>
-              </div>
-              <span class="font-weight-bold">You can't stream video.</span>
-            </div>
-            <div class="supported-item mb-1 supported-item--false">
-              <div class="font-md">
-                <i class="fa fa-check mr-2" aria-hidden></i>
-              </div>
-              <span class="font-weight-bold">You can't stream audio.</span>
-            </div>
+        <div class="sm:w-6/12 md:w-3/12 p-4 flex flex-col w-full">
+          <p class="flex-grow">
+            “PlaySpace was easier to get started with and play games with my
+            buddies then any other VoIP solution out there.”
+          </p>
+          <div class="flex items-center">
+            <img
+              src="https://i.imgur.com/rlQbYJH.png"
+              alt="PlaySpace testimonial user image"
+              class="mr-2 mt-2"
+              style="height:32px;width:32px"
+            />
+            <span class="font-bold">Deus Mat</span>
           </div>
         </div>
       </div>
-    </div>-->
+    </div>
+
+    <div class="py-24 bg-dark-2 px-4 text-center">
+      <div class="container mx-auto">
+        <h2 class="text-2xl md:text-4xl pb-1 font-bold text-center">
+          Ready to get started?
+        </h2>
+        <p class="text-lg max-w-96 mx-auto">
+          Create a PlaySpace, send the link to a friend, and start watching
+          together.
+        </p>
+        <p-link to="/create" variant="primary" class="my-2">
+          Create a PlaySpace
+        </p-link>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -241,6 +351,12 @@ export default {
         top: -6vw;
       }
     }
+  }
+
+  .tiled-content {
+    top: 0;
+    left: 500px;
+    transform: rotate(-35deg);
   }
 
   .card {
