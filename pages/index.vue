@@ -14,7 +14,7 @@
           <div class="mx-auto lg:mx-0 max-w-96">
             <p class="text-gray-400 md:text-lg mt-1 mb-4">
               Create an online room to stream games, watch videos, and chat with
-              friends. No downloads or account required. Just have fun.
+              friends. No download required. Just have fun.
             </p>
           </div>
           <div class="mb-2">
@@ -172,8 +172,9 @@
               Mix & Match Streams
             </h2>
             <p class="flex-grow mb-6">
-              When you create a PlaySpace, you can have multiple people
-              streaming to a single PlaySpace.
+              In a single PlaySpace, you can watch multiple streams at once.
+              Stream your game while you binge watch YouTube videos with your
+              friends.
             </p>
             <div>
               <!-- <p-btn variant="primary" size="xs" class="py-1 px-3">
@@ -201,7 +202,7 @@
     <!-- Testimonials -->
     <div class="my-16 md:my-32 px-2 mx-auto" style="max-width:1500px">
       <h2 class="text-2xl md:text-4xl pb-6 font-bold text-center">
-        What are our people saying about us?
+        What are people saying about us?
       </h2>
       <div class="flex flex-wrap">
         <div class="sm:w-6/12 md:w-3/12 p-4 flex flex-col w-full">
@@ -251,7 +252,7 @@
         <div class="sm:w-6/12 md:w-3/12 p-4 flex flex-col w-full">
           <p class="flex-grow">
             “PlaySpace was easier to get started with and play games with my
-            buddies then any other VoIP solution out there.”
+            buddies than any other VoIP solution out there.”
           </p>
           <div class="flex items-center">
             <img
