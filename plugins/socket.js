@@ -6,7 +6,7 @@ if (process.client) {
   Vue.use(
     new VueSocketIO({
       debug: false,
-      connection: process.env.apiUrl,
+      connection: process.env.apiUrl || "https://api.playspace.tv",
       options: {
         useConnectionNamespace: true,
         namespaceName: "API"
@@ -17,7 +17,7 @@ if (process.client) {
   Vue.use(
     new VueSocketIO({
       debug: false,
-      connection: process.env.sfuUrl,
+      connection: process.env.sfuUrl || "https://sfu.playspace.tv",
       options: {
         useConnectionNamespace: true,
         namespaceName: "SFU"

@@ -1,4 +1,4 @@
-const BASE_URL = process.env.apiUrl
+const BASE_URL = process.env.apiUrl || "https://api.playspace.tv"
 
 import Vue from "vue"
 
