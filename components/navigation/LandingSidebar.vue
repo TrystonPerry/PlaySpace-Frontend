@@ -47,7 +47,10 @@
         <span>My Profile</span>
       </NavLink>
       <NavLink v-if="isLoggedIn" to="/account">
-        <span>My Account</span> -->
+        <span>My Account</span>
+      </NavLink> -->
+      <NavLink v-if="isLoggedIn" @click="logout" type="button">
+        <span>Log Out</span>
       </NavLink>
       <li>
         <ul class="bg-black-400 rounded m-2">
@@ -178,6 +181,11 @@ export default {
   methods: {
     close() {
       this.$emit("close")
+    },
+
+    logout() {
+      this.$store.dispatch("user/logout")
+      this.$router.push({ path: "/" })
     },
 
     updateScreenHeight() {
