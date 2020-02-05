@@ -1,46 +1,51 @@
 <template>
   <p-dropdown btn-classes="px-3 font-bold h-12">
     <p-avatar :src="$store.state.user.avatar" size="sm" />
-    <span class="hidden sm:inline-block ml-1">
+    <span class="ml-1">
       {{ $store.state.user.fullUsername }}
     </span>
     <ul
       slot="content"
-      class="absolute right-0 list-style-none bg-dark-5 px-2 py-1 shadow-reg mb-0 text-right w-48"
+      class="absolute right-0 list-style-none bg-dark-5 mb-0 text-right w-48"
     >
-      <!-- <li>
-        <nuxt-link :to="`/profile/${$store.state.user.username}`">
-          My Profile
-        </nuxt-link>
-      </li> -->
-      <!-- <li>
-        <nuxt-link to="/playspaces">
-          My PlaySpaces
-        </nuxt-link>
-      </li> -->
-      <!-- <li>
-        <nuxt-link to="/account">
-          My Account
-        </nuxt-link>
-      </li> -->
-      <li>
-        <nuxt-link to="/create">
-          Create a PlaySpace
-        </nuxt-link>
-      </li>
-      <li>
-        <a href="#" @click.prevent="$store.dispatch('user/logout')">
-          Log Out
-        </a>
-      </li>
+      <AccountDropdownItem to="/spaces">
+        My PlaySpaces
+      </AccountDropdownItem>
+      <AccountDropdownItem to="/">
+        My Profile
+      </AccountDropdownItem>
+      <AccountDropdownItem to="/">
+        My Account
+      </AccountDropdownItem>
+      <AccountDropdownItem to="/create">
+        Create a PlaySpace
+      </AccountDropdownItem>
+      <AccountDropdownItem
+        to="/"
+        @click.prevent="$store.dispatch('user/logout')"
+      >
+        Log Out
+      </AccountDropdownItem>
     </ul>
   </p-dropdown>
 </template>
 
 <script>
+import AccountDropdownItem from "@/components/navigation/AccountDropdownItem"
+
 export default {
+  components: {
+    AccountDropdownItem
+  },
+
   props: {
     top: true
+  },
+
+  watch: {
+    "$route.fullPath"() {
+      this.showSidebar = false
+    }
   }
 }
 </script>

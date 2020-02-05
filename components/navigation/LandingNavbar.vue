@@ -1,10 +1,10 @@
 <template>
   <div class="relative">
     <div
-      class="app-navbar flex fixed top-0 justify-between w-full h-12 bg-dark-4 text-gray-300 shadow-md"
+      class="app-navbar flex fixed top-0 w-full h-12 bg-dark-4 text-gray-300 shadow-md"
     >
       <ul class="list-none flex items-center">
-        <button @click="showSidebar = true" class="w-12 h-12">
+        <button @click="showSidebar = true" class="hidden sm:block w-12 h-12">
           <p-icon icon="fas fa-bars" screen-reader-text="Menu" size="lg" />
         </button>
         <NavLink to="/" class="font-bold">
@@ -13,46 +13,35 @@
             alt="PlaySpace logo"
             class="h-full"
           />
-          <span>PlaySpace</span>
+          <span class="hidden sm:inline">PlaySpace</span>
         </NavLink>
         <NavLink to="/live" class="hidden sm:block">
           <span>Live</span>
         </NavLink>
-        <!-- <NavLink to="/about" class="hidden sm:block">
-          <span>About</span>
-        </NavLink> -->
       </ul>
-      <ul
-        v-if="!$store.state.user.username"
-        class="list-none flex items-center"
-      >
-        <NavLink to="/login" class="hidden sm:block">
-          <span>Log In</span>
-        </NavLink>
-        <NavLink to="/signup" class="hidden sm:block">
-          <span>Sign Up</span>
-        </NavLink>
-        <li class="px-1 py-2">
-          <p-tooltip text="Create a PlaySpace">
-            <p-link to="/create" variant="primary" size="sm">
-              Create a PlaySpace
-            </p-link>
-          </p-tooltip>
+      <div class="flex-grow"></div>
+      <ul v-if="!$store.state.user.username" class="flex items-center">
+        <li class="hidden sm:block px-1 py-2">
+          <p-link to="/login" variant="primary-hover" size="sm">
+            Log In
+          </p-link>
+        </li>
+        <li class="hidden sm:block px-1 py-2">
+          <p-link to="/signup" variant="primary" size="sm">
+            Sign Up
+          </p-link>
         </li>
       </ul>
-      <ul v-else class="list-style-none flex">
-        <li class="px-1 py-2">
-          <p-tooltip text="Create a PlaySpace">
-            <p-link to="/create" variant="primary" size="sm">
-              <p-icon icon="fas fa-plus" />
-              Create
-            </p-link>
-          </p-tooltip>
-        </li>
+      <!-- <ul v-else class="list-style-none flex">
         <li>
           <AccountDropdown />
         </li>
-      </ul>
+      </ul> -->
+      <div class="sm:hidden">
+        <button @click="showSidebar = true" class="w-12 h-12">
+          <p-icon icon="fas fa-bars" screen-reader-text="Menu" size="lg" />
+        </button>
+      </div>
     </div>
     <LandingSidebar v-if="showSidebar" @close="showSidebar = false" />
   </div>
@@ -74,8 +63,8 @@ export default {
     showSidebar: false
   }),
 
-  methods: {
-    close() {
+  watch: {
+    "$route.fullPath"() {
       this.showSidebar = false
     }
   }

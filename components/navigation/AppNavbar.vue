@@ -8,7 +8,11 @@
           <p-icon icon="fas fa-bars" screen-reader-text="Menu" size="lg" />
         </button>
         <NavLink to="/live" class="font-bold">
-          <img src="/img/playspace-icon-trans.png" alt="PlaySpace logo" class="h-full" />
+          <img
+            src="/img/playspace-icon-trans.png"
+            alt="PlaySpace logo"
+            class="h-full"
+          />
           <span>PlaySpace</span>
         </NavLink>
       </ul>
@@ -18,23 +22,38 @@
         style="left:50%;transform:translateX(-50%)"
       >
         <li class="md:mr-2">
-          <p-avatar :avatar="playSpace.avatar" class="w-12 h-12 rounded-full p-1" />
+          <p-avatar
+            :avatar="playSpace.avatar"
+            class="w-12 h-12 rounded-full p-1"
+          />
         </li>
         <li class="hidden md:block lg:mr-2 font-bold text-lg">
-          <p-tooltip :text="`/p/${playSpace.id}`">{{ playSpace.channelName }}</p-tooltip>
+          <p-tooltip :text="`/p/${playSpace.id}`">{{
+            playSpace.channelName
+          }}</p-tooltip>
         </li>
         <li class="hidden lg:block">
-          <p-tooltip :text="playSpace.title">{{ playSpace.title | truncate(32) }}</p-tooltip>
+          <p-tooltip :text="playSpace.title">{{
+            playSpace.title | truncate(32)
+          }}</p-tooltip>
         </li>
         <li v-if="isOwner">
           <p-tooltip text="Edit PlaySpace">
-            <p-btn @click="isEdit = !isEdit" variant="none" size="sm" class="mx-1">
+            <p-btn
+              @click="isEdit = !isEdit"
+              variant="none"
+              size="sm"
+              class="mx-1"
+            >
               <i class="fas fa-cog"></i>
             </p-btn>
           </p-tooltip>
         </li>
       </ul>
-      <ul v-if="!$store.state.user.username" class="list-none flex items-center">
+      <ul
+        v-if="!$store.state.user.username"
+        class="list-none flex items-center"
+      >
         <!-- <li class="px-1 py-2">
           <p-tooltip text="Create a PlaySpace">
             <p-link to="/create" variant="primary" size="sm">
@@ -61,7 +80,11 @@
           </p-tooltip>
         </li>
         <li v-else class="px-1 py-2">
-          <p-copy :text="`https://playspace.tv/p/${playSpace.id}`" variant="primary" size="sm">
+          <p-copy
+            :text="`https://playspace.tv/p/${playSpace.id}`"
+            variant="primary"
+            size="sm"
+          >
             <p-icon icon="fas fa-link" />
             Copy Link
           </p-copy>
@@ -84,7 +107,8 @@
         Edit Users
       </h1>
       <h3 class="mb-5">
-        Add or remove users who are able to add streams and participate in voice chat.
+        Add or remove users who are able to add streams and participate in voice
+        chat.
       </h3>
       <div class="mb-6">
         <h2 class="text-lg font-bold underline">Streamers</h2>
@@ -93,8 +117,17 @@
             <h4 class="font-bold inline-block">{{ user.username }}</h4>
             <!-- <span>: {{ user.rank }}</span> -->
             <div class="flex-grow"></div>
-            <p-tooltip v-if="user.username !== $store.state.user.username" text="Revoke Streaming Access" position="left">
-              <p-btn @click="revokeUser(user.username)" variant="none" size="sm" class="bg-red-500">
+            <p-tooltip
+              v-if="user.username !== $store.state.user.username"
+              text="Revoke Streaming Access"
+              position="left"
+            >
+              <p-btn
+                @click="revokeUser(user.username)"
+                variant="none"
+                size="sm"
+                class="bg-red-500"
+              >
                 <p-icon icon="fas fa-trash" size="sm" />
               </p-btn>
             </p-tooltip>
@@ -104,8 +137,17 @@
       <div>
         <h2 class="text-lg font-bold">Add a User</h2>
         <form @submit.prevent="onAddUser" class="flex">
-          <p-input v-model="username" placeholder="Username" class="flex-grow" />
-          <p-btn type="submit" variant="primary" class="flex-shrink-0" size="sm">
+          <p-input
+            v-model="username"
+            placeholder="Username"
+            class="flex-grow"
+          />
+          <p-btn
+            type="submit"
+            variant="primary"
+            class="flex-shrink-0"
+            size="sm"
+          >
             <p-icon icon="fas fa-plus" />
             Add User
           </p-btn>
@@ -123,8 +165,13 @@
             data-text="Come hang with me on PlaySpace!"
             data-via="PlaySpaceTV"
             data-show-count="false"
-          >Tweet</a>
-          <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+            >Tweet</a
+          >
+          <script
+            async
+            src="https://platform.twitter.com/widgets.js"
+            charset="utf-8"
+          ></script>
         </li>
         <li>
           <p-btn variant="primary" size="sm">
@@ -160,7 +207,6 @@ export default {
 
   computed: {
     ...mapGetters({
-      isLoggedIn: "user/isLoggedIn",
       users: "playSpace/users"
     }),
 
@@ -190,10 +236,13 @@ export default {
       const { username } = this
       this.username = ""
 
-      const { success, error } = await API.updateUser(this.$route.params.playspace, {
-        username,
-        rank: "streamer"
-      })
+      const { success, error } = await API.updateUser(
+        this.$route.params.playspace,
+        {
+          username,
+          rank: "streamer"
+        }
+      )
 
       if (!success) {
         return
@@ -220,7 +269,7 @@ export default {
 
       this.$notify({
         type: "success",
-        title: "Removed user from PlaySpace",  
+        title: "Removed user from PlaySpace",
         text: `${username} can no longer stream to ${this.playSpace.channelName}`
       })
     }
