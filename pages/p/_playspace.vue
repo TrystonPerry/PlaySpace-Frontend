@@ -4,9 +4,9 @@
     class="relative playspace h-full"
     style="max-height:100%"
   >
-    <div class="flex flex-col h-full">
+    <div class="flex flex-col h-full relative">
       <div
-        class="text-center text-gray-300 overflow-y-auto"
+        class="flex-shrink-0 text-center text-gray-300 overflow-y-auto"
         :class="{ 'flex-shrink-0': $store.state.nav.isMobile && totalStreams }"
         :style="
           $store.state.nav.isMobile && !totalStreams ? 'max-height:40vh' : ''
@@ -35,14 +35,14 @@
               />
               <h1 class="text-2xl font-bold">{{ playSpace.channelName }}</h1>
               <h2 class="text-lg">{{ playSpace.title }}</h2>
-              <p-copy
+              <!-- <p-copy
                 :text="`https://playspace.tv/p/${playSpace.id}`"
                 variant="primary"
                 class="mt-3"
               >
                 <p-icon icon="fas fa-link" />
                 Copy Link
-              </p-copy>
+              </p-copy> -->
             </div>
             <div class="md:w-6/12 md:text-right">
               <h2
@@ -83,19 +83,42 @@
         </div>
 
         <client-only>
-          <div v-if="!totalStreams && canStream" class="py-4 mt-6">
+          <div
+            v-if="!totalStreams && canStream && !$store.state.nav.isMobile"
+            class="py-4 mt-6"
+          >
             <h2 class="text-lg font-bold">
-              <span v-if="!$store.state.nav.isMobile">
-                Click below to share your desktop, a YouTube video, or Twitch
-                Stream
-              </span>
-              <span v-else>
-                Click below to share your webcam
-              </span>
+              Click below to share your desktop, a YouTube video, or Twitch
+              Stream
             </h2>
             <AddVideoStream class="max-w-48 w-full mx-auto mt-5" />
           </div>
         </client-only>
+      </div>
+
+      <div
+        class="channel__actions md:absolute bottom-0 flex flex-shrink-0 p-1 min-w-full overflow-y-hidden overflow-x-auto scrollbar bg-dark-3"
+      >
+        <p-btn variant="none" size="sm">
+          <p-icon icon="fas fa-plus" />
+          Add a Stream
+        </p-btn>
+        <p-copy
+          :text="`https://playspace.tv/p/${playSpace.id}`"
+          variant="none"
+          size="sm"
+        >
+          <p-icon icon="fas fa-link" />
+          Copy Link
+        </p-copy>
+        <p-btn variant="none" size="sm">
+          <p-icon icon="fas fa-user-plus" />
+          Add Users
+        </p-btn>
+        <p-btn variant="none" size="sm">
+          <p-icon icon="fas fa-cog" />
+          Settings
+        </p-btn>
       </div>
 
       <PlaySpaceMobileSidebar
@@ -403,6 +426,11 @@ export default {
     li {
       text-shadow: 0 0 10px black;
     }
+  }
+
+  &__actions > .p-btn {
+    @apply mr-1;
+    @apply flex-shrink-0;
   }
 }
 </style>

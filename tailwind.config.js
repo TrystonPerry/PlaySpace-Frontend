@@ -62,7 +62,8 @@ module.exports = {
       "96": "24rem"
     },
     minWidth: {
-      "64": "16rem"
+      "64": "16rem",
+      full: "100%"
     },
     minHeight: {
       "screen-75": "75vh",
