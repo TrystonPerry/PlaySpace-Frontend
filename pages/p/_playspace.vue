@@ -1,9 +1,5 @@
 <template>
-  <div
-    :key="$route.params.playspace"
-    class="relative playspace h-full"
-    style="max-height:100%"
-  >
+  <div :key="$route.params.playspace" class="relative playspace h-full" style="max-height:100%">
     <div class="flex flex-col h-full">
       <div
         class="text-center text-gray-300 overflow-y-auto"
@@ -12,13 +8,7 @@
           $store.state.nav.isMobile && !totalStreams ? 'max-height:40vh' : ''
         "
       >
-        <VideoContainer
-          v-if="device"
-          :device="device"
-          :sendTransport="sendTransport"
-          :recvTransport="recvTransport"
-          class="video-container"
-        />
+        <VideoContainer v-if="$con.device" class="video-container" />
 
         <div
           v-if="!totalStreams"
@@ -27,12 +17,7 @@
         >
           <div class="md:flex items-center container mx-auto">
             <div class="md:w-6/12 md:text-left">
-              <p-avatar
-                :avatar="playSpace.avatar"
-                size="lg"
-                img-classes="shadow-reg"
-                class="mb-2"
-              />
+              <p-avatar :avatar="playSpace.avatar" size="lg" img-classes="shadow-reg" class="mb-2" />
               <h1 class="text-2xl font-bold">{{ playSpace.channelName }}</h1>
               <h2 class="text-lg">{{ playSpace.title }}</h2>
               <p-copy
@@ -40,39 +25,21 @@
                 variant="primary"
                 class="mt-3"
               >
-                <p-icon icon="fas fa-link" />
-                Copy Link
+                <p-icon icon="fas fa-link" />Copy Link
               </p-copy>
             </div>
             <div class="md:w-6/12 md:text-right">
               <h2
                 class="text-xl mt-4 font-bold inline-block border-b border-gray-300 px-6 md:pr-0 mb-2"
-              >
-                Users
-              </h2>
+              >Users</h2>
               <ul class="list-style-none">
                 <li v-for="user in users" :key="user.username">
-                  <span>{{ user.rank }} - </span>
-                  <h3 class="font-bold inline-block">
-                    {{ user.username }}
-                  </h3>
+                  <span>{{ user.rank }} -</span>
+                  <h3 class="font-bold inline-block">{{ user.username }}</h3>
                 </li>
               </ul>
             </div>
           </div>
-          <!-- <div
-            class="absolute flex"
-            style="left:50%;bottom:-1.5rem;transform:translateX(-50%);"
-          >
-            <p-btn variant="primary" size="lg" class="mr-1">
-              <p-icon icon="fas fa-plus" />
-              Start a Stream
-            </p-btn>
-            <p-btn variant="none" size="lg" class="bg-dark-2">
-              <p-icon icon="fas fa-cog" />
-              Settings
-            </p-btn>
-          </div> -->
           <p-avatar
             :avatar="playSpace.avatar"
             class="w-full h-full absolute top-0 left-0 object-cover bg-gray-100 opacity-25"
@@ -89,9 +56,7 @@
                 Click below to share your desktop, a YouTube video, or Twitch
                 Stream
               </span>
-              <span v-else>
-                Click below to share your webcam
-              </span>
+              <span v-else>Click below to share your webcam</span>
             </h2>
             <AddVideoStream class="max-w-48 w-full mx-auto mt-5" />
           </div>
@@ -119,9 +84,7 @@
           <div
             class="bg-black-600 text-black-800 shadow-reg py-3 px-5 rounded-lg border-4 border-black-800"
           >
-            <h1 class="text-xl font-bold text-center">
-              Sound Muted by Default
-            </h1>
+            <h1 class="text-xl font-bold text-center">Sound Muted by Default</h1>
             <p>
               Your browser has blocked sound from autoplaying, click to hear
               everyone.
@@ -132,8 +95,7 @@
                 variant="none"
                 class="bg-black-800 mt-4"
               >
-                <p-icon icon="fas fa-volume-mute" />
-                Click to Unmute
+                <p-icon icon="fas fa-volume-mute" />Click to Unmute
               </p-btn>
             </div>
           </div>
@@ -172,12 +134,6 @@ export default {
     })
   },
 
-  data: () => ({
-    device: null,
-    sendTransport: null,
-    recvTransport: null
-  }),
-
   async asyncData({ params, error }) {
     const { data, success } = await API.getPlaySpace(params.playspace)
 
@@ -192,7 +148,6 @@ export default {
   },
 
   mounted() {
-    // TODO move transports and device to store.
     // TODO only request a new transport once per session
     this.$socket.SFU.emit("room-join", { roomId: this.$route.params.playspace })
     this.$store.dispatch("playSpace/setCurrentPlaySpace", this.playSpace)
@@ -206,9 +161,9 @@ export default {
     this.$socket.SFU.emit("room-leave")
     this.$store.dispatch("playSpace/removeCurrentPlaySpace")
     this.reset()
-    window.device = null
-    window.sendTransport = null
-    window.recvTransport = null
+    this.$con.device = null
+    this.$con.sendTransport = null
+    this.$con.recvTransport = null
   },
 
   computed: {
@@ -264,18 +219,18 @@ export default {
       "room-joined": async function(roomData) {
         const { routerRtpCapabilities } = roomData
 
-        this.device = new Device()
-        await this.device.load({ routerRtpCapabilities })
-        window.device = this.device
+        this.$con.device = new Device()
+        await this.$con.device.load({ routerRtpCapabilities })
 
-        if (!this.device.canProduce("video")) {
+        if (!this.$con.device.canProduce("video")) {
           return alert("You cant produce video")
         }
-        if (!this.device.canProduce("audio")) {
+        if (!this.$con.device.canProduce("audio")) {
           return alert("You cant produce audio")
         }
 
         this.$socket.SFU.emit("room-transport-create", "recv")
+
         // TODO only call this directly before a produce request
         this.$socket.SFU.emit("room-transport-create", "send")
 
@@ -283,19 +238,19 @@ export default {
       },
 
       "room-sendtransport-created": async function(transportOptions) {
-        this.sendTransport = await this.device.createSendTransport(
+        this.$con.sendTransport = await this.$con.device.createSendTransport(
           transportOptions
         )
-        this.connectTransport(this.sendTransport)
+        this.connectTransport(this.$con.sendTransport)
 
-        this.sendTransport.on("produce", (params, callback, errback) => {
+        this.$con.sendTransport.on("produce", (params, callback, errback) => {
           const requestId = Math.random()
             .toString(36)
             .substr(2, 9)
 
           this.$socket.SFU.emit("room-transport-produce", {
             producerOptions: {
-              transportId: this.sendTransport.id,
+              transportId: this.$con.sendTransport.id,
               kind: params.kind,
               rtpParameters: params.rtpParameters
             },
@@ -307,16 +262,13 @@ export default {
             callback
           )
         })
-
-        window.sendTransport = this.sendTransport
       },
 
       "room-recvtransport-created": async function(transportOptions) {
-        this.recvTransport = await this.device.createRecvTransport(
+        this.$con.recvTransport = await this.$con.device.createRecvTransport(
           transportOptions
         )
-        this.connectTransport(this.recvTransport)
-        window.recvTransport = this.recvTransport
+        this.connectTransport(this.$con.recvTransport)
       },
 
       "room-stream-video": async function(stream) {

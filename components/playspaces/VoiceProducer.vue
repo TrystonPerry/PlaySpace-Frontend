@@ -1,13 +1,7 @@
 <template>
   <div class="flex items-center">
-    <p-avatar
-      avatar="https://i.imgur.com/cvrQlUP.png"
-      size="sm"
-      class="flex-shrink-0 mr-1"
-    />
-    <h3 class="flex-grow font-bold">
-      {{ $store.state.user.fullUsername }}
-    </h3>
+    <p-avatar avatar="https://i.imgur.com/cvrQlUP.png" size="sm" class="flex-shrink-0 mr-1" />
+    <h3 class="flex-grow font-bold">{{ $store.state.user.fullUsername }}</h3>
     <p-btn @click="toggleMute" variant="none" size="xs">
       <p-icon
         icon="fas fa-microphone-slash"
@@ -32,19 +26,19 @@ export default {
   },
 
   beforeDestroy() {
-    window.micProducer = null
+    this.$con.micProducer = null
   },
 
   methods: {
     async produce() {
-      this.producer = await window.sendTransport.produce({
+      this.producer = await this.$con.sendTransport.produce({
         track: this.$store.state.stream.tracks.mic,
         codecOptions: {
           videoGoogleMaxBitrate: 128
         }
       })
 
-      window.micProducer = this.producer
+      this.$con.micProducer = this.producer
 
       this.$socket.SFU.emit("room-stream-mic", {
         producerId: this.producer.id,

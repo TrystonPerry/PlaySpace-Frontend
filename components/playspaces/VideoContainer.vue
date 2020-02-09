@@ -1,19 +1,13 @@
 <template>
   <div class="bg-black">
-    <div
-      ref="videos"
-      class="relative flex flex-wrap items-center justify-center"
-    >
+    <div ref="videos" class="relative flex flex-wrap items-center justify-center">
       <MultiConsumer
-        v-if="$store.state.stream.streams.video.length && recvTransport"
+        v-if="$store.state.stream.streams.video.length && $con.recvTransport"
         @connect="setProperSize"
-        :device="device"
-        :recvTransport="recvTransport"
         class="video"
       />
       <Producer
-        v-if="$store.state.stream.tracks.video"
-        :sendTransport="sendTransport"
+        v-if="$store.state.stream.tracks.video && $con.sendTransport"
         class="video relative w-full h-full"
       />
       <ExternalStream
@@ -40,18 +34,6 @@ export default {
     Producer,
     AddVideoStream,
     ExternalStream
-  },
-
-  props: {
-    device: {
-      required: true
-    },
-    recvTransport: {
-      required: true
-    },
-    sendTransport: {
-      required: true
-    }
   },
 
   data: () => ({
