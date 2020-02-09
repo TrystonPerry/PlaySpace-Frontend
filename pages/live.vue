@@ -67,7 +67,7 @@
 <script>
 import API from "@/api/api"
 
-import PlaySpace from "@/components/playspaces/PlaySpace"
+import PlaySpace from "@/components/playspaces/LivePlaySpace"
 
 export default {
   components: {

@@ -61,6 +61,11 @@ export default {
   computed: {
     isLoggedIn() {
       return !!this.$store.state.user.username
+    },
+
+    // TODO also check if is banned from playspace
+    isAbleToSpeak() {
+      return this.isLoggedIn || !!this.$store.state.playSpace.current.isTemp
     }
   },
 
@@ -73,10 +78,7 @@ export default {
     "$store.state.user.token": {
       handler(token) {
         if (token) {
-          this.$socket.API.emit("chat-auth", {
-            id: this.$route.params.playspace,
-            token
-          })
+          this.$socket.API.emit("chat-auth", { token })
         } else {
           // TODO: de-auth user
         }
@@ -89,7 +91,6 @@ export default {
     API: {
       reconnect() {
         this.$socket.API.emit("chat-auth", {
-          id: this.$route.params.playspace,
           token: this.$store.state.user.token
         })
       }
@@ -98,7 +99,9 @@ export default {
 
   methods: {
     sendMessage() {
-      if (!this.isLoggedIn) {
+      console.log(this.$store.state.playSpace.current)
+
+      if (!this.isAbleToSpeak) {
         this.showLogin = true
         return
       }

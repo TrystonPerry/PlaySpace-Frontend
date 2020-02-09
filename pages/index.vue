@@ -18,13 +18,7 @@
             </p>
           </div>
           <div class="mb-2">
-            <p-link
-              to="/create"
-              variant="primary"
-              class="mr-2 mb-2 text-center"
-            >
-              Create a PlaySpace
-            </p-link>
+            <CreateTempPlaySpace class="mr-2 mb-2 text-center" />
           </div>
           <ul
             class="flex justify-center lg:justify-start social-media list-style-none pl-0 text-gray-400"
@@ -275,16 +269,20 @@
           Create a PlaySpace, send the link to a friend, and start watching
           together.
         </p>
-        <p-link to="/create" variant="primary" class="my-2">
-          Create a PlaySpace
-        </p-link>
+        <CreateTempPlaySpace class="my-2" />
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import CreateTempPlaySpace from "@/components/playspaces/temp/CreateTempPlaySpace"
+
 export default {
+  components: {
+    CreateTempPlaySpace
+  },
+
   data: () => ({
     curUseCase: 0,
     useCases: [
