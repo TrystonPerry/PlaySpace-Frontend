@@ -8,21 +8,19 @@
           @click="isTextChat = true"
           size="sm"
           variant="none"
-          class="w-6/12 opacity-50"
-          :class="{ 'underline opacity-100': isTextChat }"
+          class="w-6/12 opacity-50 rounded-md"
+          :class="{ 'opacity-100 bg-dark-5': isTextChat }"
         >
           <p-icon icon="fas fa-comment-alt" />
-          Text Chat
         </p-btn>
         <p-btn
           @click="isTextChat = false"
           size="sm"
           variant="none"
-          class="w-6/12 opacity-50"
-          :class="{ 'underline opacity-100': !isTextChat }"
+          class="w-6/12 opacity-50 rounded-md"
+          :class="{ 'opacity-100 bg-dark-5': !isTextChat }"
         >
           <p-icon icon="fas fa-phone-alt" />
-          Voice Chat
         </p-btn>
       </div>
       <div class="flex flex-col flex-grow">

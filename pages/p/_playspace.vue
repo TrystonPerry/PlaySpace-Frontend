@@ -35,14 +35,6 @@
               />
               <h1 class="text-2xl font-bold">{{ playSpace.channelName }}</h1>
               <h2 class="text-lg">{{ playSpace.title }}</h2>
-              <!-- <p-copy
-                :text="`https://playspace.tv/p/${playSpace.id}`"
-                variant="primary"
-                class="mt-3"
-              >
-                <p-icon icon="fas fa-link" />
-                Copy Link
-              </p-copy> -->
             </div>
             <div class="md:w-6/12 md:text-right">
               <h2
@@ -91,18 +83,15 @@
               Click below to share your desktop, a YouTube video, or Twitch
               Stream
             </h2>
-            <AddVideoStream class="max-w-48 w-full mx-auto mt-5" />
+            <AddStream class="max-w-48 w-full mx-auto mt-5" />
           </div>
         </client-only>
       </div>
 
-      <div
-        class="channel__actions md:absolute bottom-0 flex flex-shrink-0 p-1 min-w-full overflow-y-hidden overflow-x-auto scrollbar bg-dark-3"
+      <!-- <div
+        class="channel__actions md:absolute bottom-0 flex flex-shrink-0 bg-dark-5 p-1 min-w-full overflow-y-hidden overflow-x-auto scrollbar"
       >
-        <p-btn variant="none" size="sm">
-          <p-icon icon="fas fa-plus" />
-          Add a Stream
-        </p-btn>
+        <AddStream class="flex-shrink-0" />
         <p-copy
           :text="`https://playspace.tv/p/${playSpace.id}`"
           variant="none"
@@ -119,7 +108,7 @@
           <p-icon icon="fas fa-cog" />
           Settings
         </p-btn>
-      </div>
+      </div> -->
 
       <PlaySpaceMobileSidebar
         v-if="$store.state.nav.isMobile"
@@ -127,7 +116,7 @@
         class="flex-grow"
       />
     </div>
-    <AddVideoStream
+    <AddStream
       v-if="totalStreams && canStream && !$store.state.nav.isMobile"
       drop-up
       class="absolute bottom-0 left-0 m-2"
@@ -175,7 +164,7 @@ import API from "@/api/api"
 
 import VideoContainer from "@/components/playspaces/VideoContainer"
 import PlaySpaceMobileSidebar from "@/components/navigation/PlaySpaceMobileSidebar"
-import AddVideoStream from "@/components/playspaces/stream/AddVideoStream"
+import AddStream from "@/components/playspaces/stream/AddStream"
 
 export default {
   layout: "app",
@@ -183,7 +172,7 @@ export default {
   components: {
     VideoContainer,
     PlaySpaceMobileSidebar,
-    AddVideoStream
+    AddStream
   },
 
   head() {
