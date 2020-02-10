@@ -82,16 +82,21 @@ export default {
 
     closeMic() {
       if (this.$con.micProducer) {
-        this.$socket.SFU.emit(
-          "room-producer-close",
-          this.$store.state.stream.producerIds.mic
-        )
+        this.closeMicProducer()
       }
       if (this.track) {
         this.track.stop()
         this.track = null
         this.setLocalTrack({ type: "mic", track: null })
       }
+    },
+
+    closeMicProducer() {
+      this.$socket.SFU.emit(
+        "room-producer-close",
+        this.$store.state.stream.producerIds.mic
+      )
+      this.$con.micProducer.close()
     }
   }
 }

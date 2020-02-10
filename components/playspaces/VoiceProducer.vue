@@ -17,7 +17,6 @@
 <script>
 export default {
   data: () => ({
-    producer: null,
     muted: false
   }),
 
@@ -31,27 +30,25 @@ export default {
 
   methods: {
     async produce() {
-      this.producer = await this.$con.sendTransport.produce({
+      this.$con.micProducer = await this.$con.sendTransport.produce({
         track: this.$store.state.stream.tracks.mic,
         codecOptions: {
           videoGoogleMaxBitrate: 128
         }
       })
 
-      this.$con.micProducer = this.producer
-
       this.$socket.SFU.emit("room-stream-mic", {
-        producerId: this.producer.id,
+        producerId: this.$con.micProducer.id,
         username: this.$store.state.user.fullUsername
       })
 
       this.$store.dispatch("stream/setProducerId", {
         type: "mic",
-        producerId: this.producer.id
+        producerId: this.$con.micProducer.id
       })
 
       this.sockets.SFU.subscribe(
-        `producer-stream-closed-${this.producer.id}`,
+        `producer-stream-closed-${this.$con.micProducer.id}`,
         () => {
           // On producer closed (error)
         }
@@ -61,10 +58,11 @@ export default {
     toggleMute() {
       const state = this.muted ? "resume" : "pause"
       this.muted = !this.muted
-      this.$socket.SFU.emit("room-producer-pause", {
-        producerId: this.producer.id,
-        state
-      })
+      // this.$socket.SFU.emit("room-producer-pause", {
+      //   producerId: this.$con.micProducer.id,
+      //   state
+      // })
+      this.$con.micProducer[state]()
     }
   }
 }
