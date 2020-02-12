@@ -38,16 +38,6 @@
       <h2 class="text-lg mb-3">
         There are currently no live Public PlaySpaces
       </h2>
-      <!-- <div v-if="!$store.state.user.username">
-        <p-link to="/login" variant="primary-hover" size="sm">Log In</p-link>
-        <span>or</span>
-        <p-link to="/signup" variant="primary" size="sm">Sign Up</p-link>
-        <span>to create or join your own.</span>
-      </div>
-      <div v-else>
-        <nuxt-link to="/create">Create</nuxt-link>
-        <span>a your own.</span>
-      </div> -->
     </div>
     <div class="text-center">
       <h1 class="text-2xl text-primary text-center font-bold mt-6 mb-2">

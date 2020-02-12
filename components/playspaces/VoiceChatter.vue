@@ -1,18 +1,8 @@
 <template>
   <div class="flex items-center">
-    <p-avatar
-      avatar="https://i.imgur.com/cvrQlUP.png"
-      size="sm"
-      class="flex-shrink-0 mr-1"
-    />
-    <h3 class="flex-grow font-bold">
-      {{ mic.username }}
-    </h3>
-    <p-btn
-      @click="toggleMute"
-      variant="none"
-      size="xs"
-    >
+    <p-avatar avatar="https://i.imgur.com/cvrQlUP.png" size="sm" class="flex-shrink-0 mr-1" />
+    <h3 class="flex-grow font-bold">{{ mic.username }}</h3>
+    <p-btn @click="toggleMute" variant="none" size="xs">
       <p-icon
         icon="fas fa-volume-mute"
         size="md"
@@ -43,7 +33,7 @@ export default {
 
   async mounted() {
     // TODO fix this shit code
-    if (!window.recvTransport) {
+    if (!this.$con.recvTransport) {
       await new Promise(resolve => {
         setTimeout(() => resolve(), 1000)
       })
@@ -62,7 +52,7 @@ export default {
 
   methods: {
     ...mapActions({
-      "removeStream": "stream/removeStream"
+      removeStream: "stream/removeStream"
     }),
 
     async consume(stream) {
@@ -81,7 +71,7 @@ export default {
       audioPlayer.srcObject = new MediaStream([this.consumer.track])
       try {
         await audioPlayer.play()
-      } catch(err) {
+      } catch (err) {
         this.$store.dispatch("stream/setIsSoundBlocked", true)
         return
       }
@@ -93,22 +83,23 @@ export default {
       return await new Promise((resolve, reject) => {
         this.$socket.SFU.emit("room-transport-consume", {
           producerId,
-          rtpCapabilities: window.device.rtpCapabilities
+          rtpCapabilities: this.$con.device.rtpCapabilities
         })
 
         this.sockets.SFU.subscribe(
           `room-transport-consumed-${producerId}`,
           async consumerOptions => {
-
             // TODO figure out why this code is run multiple times when switching
             // between playspaces
             if (this.consumer) return
-            
-            this.consumer = await window.recvTransport.consume(consumerOptions)
+
+            this.consumer = await this.$con.recvTransport.consume(
+              consumerOptions
+            )
 
             this.$socket.SFU.emit("room-consumer-pause", {
               consumerId: this.consumer.id,
-              state: 'resume'
+              state: "resume"
             })
 
             resolve()
@@ -118,7 +109,7 @@ export default {
     },
 
     toggleMute() {
-      const state = this.muted ? 'resume' : "pause"
+      const state = this.muted ? "resume" : "pause"
       this.$socket.SFU.emit("room-consumer-pause", {
         consumerId: this.consumer.id,
         state

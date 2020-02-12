@@ -1,13 +1,7 @@
 <template>
   <div class="flex items-center">
-    <p-avatar
-      avatar="https://i.imgur.com/cvrQlUP.png"
-      size="sm"
-      class="flex-shrink-0 mr-1"
-    />
-    <h3 class="flex-grow font-bold">
-      {{ $store.state.user.fullUsername }}
-    </h3>
+    <p-avatar avatar="https://i.imgur.com/cvrQlUP.png" size="sm" class="flex-shrink-0 mr-1" />
+    <h3 class="flex-grow font-bold">{{ $store.state.user.fullUsername }}</h3>
     <p-btn @click="toggleMute" variant="none" size="xs">
       <p-icon
         icon="fas fa-microphone-slash"
@@ -23,7 +17,6 @@
 <script>
 export default {
   data: () => ({
-    producer: null,
     muted: false
   }),
 
@@ -32,32 +25,30 @@ export default {
   },
 
   beforeDestroy() {
-    window.micProducer = null
+    this.$con.micProducer = null
   },
 
   methods: {
     async produce() {
-      this.producer = await window.sendTransport.produce({
+      this.$con.micProducer = await this.$con.sendTransport.produce({
         track: this.$store.state.stream.tracks.mic,
         codecOptions: {
           videoGoogleMaxBitrate: 128
         }
       })
 
-      window.micProducer = this.producer
-
       this.$socket.SFU.emit("room-stream-mic", {
-        producerId: this.producer.id,
+        producerId: this.$con.micProducer.id,
         username: this.$store.state.user.fullUsername
       })
 
       this.$store.dispatch("stream/setProducerId", {
         type: "mic",
-        producerId: this.producer.id
+        producerId: this.$con.micProducer.id
       })
 
       this.sockets.SFU.subscribe(
-        `producer-stream-closed-${this.producer.id}`,
+        `producer-stream-closed-${this.$con.micProducer.id}`,
         () => {
           // On producer closed (error)
         }
@@ -67,10 +58,11 @@ export default {
     toggleMute() {
       const state = this.muted ? "resume" : "pause"
       this.muted = !this.muted
-      this.$socket.SFU.emit("room-producer-pause", {
-        producerId: this.producer.id,
-        state
-      })
+      // this.$socket.SFU.emit("room-producer-pause", {
+      //   producerId: this.$con.micProducer.id,
+      //   state
+      // })
+      this.$con.micProducer[state]()
     }
   }
 }
