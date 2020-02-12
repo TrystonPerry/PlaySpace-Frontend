@@ -150,14 +150,10 @@ export default {
   deleteChannel(id) {
     return axis.delete(`/channels/c/${id}`)
   },
-  
-  temp: {
-    getChannelById(id) {
-      return axis.get(`/channels-temp/c/${id}`)
-    },
 
-    createChannel() {
-      return axis.post(`/channels-temp/create`)
+  temp: {
+    getOrCreateChannel(id) {
+      return axis.post(`/channels-temp/c/${id}`)
     }
   },
 

@@ -1,8 +1,5 @@
 <template>
-  <div
-    class="relative playspace h-full"
-    style="max-height:100%"
-  >
+  <div class="relative playspace h-full" style="max-height:100%">
     <div class="flex flex-col h-full">
       <div
         class="text-center text-gray-300 overflow-y-auto"
@@ -26,12 +23,7 @@
         >
           <div class="md:flex items-center container mx-auto">
             <div class="md:w-6/12 md:text-left">
-              <p-avatar
-                :avatar="playSpace.avatar"
-                size="lg"
-                img-classes="shadow-reg"
-                class="mb-2"
-              />
+              <p-avatar :avatar="playSpace.avatar" size="lg" img-classes="shadow-reg" class="mb-2" />
               <h1 class="text-2xl font-bold">{{ playSpace.channelName }}</h1>
               <h2 class="text-lg">{{ playSpace.title }}</h2>
               <p-copy
@@ -39,39 +31,21 @@
                 variant="primary"
                 class="mt-3"
               >
-                <p-icon icon="fas fa-link" />
-                Copy Link
+                <p-icon icon="fas fa-link" />Copy Link
               </p-copy>
             </div>
             <div class="md:w-6/12 md:text-right">
               <h2
                 class="text-xl mt-4 font-bold inline-block border-b border-gray-300 px-6 md:pr-0 mb-2"
-              >
-                Users
-              </h2>
+              >Users</h2>
               <ul class="list-style-none">
                 <li v-for="user in users" :key="user.username">
-                  <span>{{ user.rank }} - </span>
-                  <h3 class="font-bold inline-block">
-                    {{ user.username }}
-                  </h3>
+                  <span>{{ user.rank }} -</span>
+                  <h3 class="font-bold inline-block">{{ user.username }}</h3>
                 </li>
               </ul>
             </div>
           </div>
-          <!-- <div
-            class="absolute flex"
-            style="left:50%;bottom:-1.5rem;transform:translateX(-50%);"
-          >
-            <p-btn variant="primary" size="lg" class="mr-1">
-              <p-icon icon="fas fa-plus" />
-              Start a Stream
-            </p-btn>
-            <p-btn variant="none" size="lg" class="bg-dark-2">
-              <p-icon icon="fas fa-cog" />
-              Settings
-            </p-btn>
-          </div> -->
           <p-avatar
             :avatar="playSpace.avatar"
             class="w-full h-full absolute top-0 left-0 object-cover bg-gray-100 opacity-25"
@@ -88,9 +62,7 @@
                 Click below to share your desktop, a YouTube video, or Twitch
                 Stream
               </span>
-              <span v-else>
-                Click below to share your webcam
-              </span>
+              <span v-else>Click below to share your webcam</span>
             </h2>
             <AddVideoStream class="max-w-48 w-full mx-auto mt-5" />
           </div>
@@ -118,9 +90,7 @@
           <div
             class="bg-black-600 text-black-800 shadow-reg py-3 px-5 rounded-lg border-4 border-black-800"
           >
-            <h1 class="text-xl font-bold text-center">
-              Sound Muted by Default
-            </h1>
+            <h1 class="text-xl font-bold text-center">Sound Muted by Default</h1>
             <p>
               Your browser has blocked sound from autoplaying, click to hear
               everyone.
@@ -131,8 +101,7 @@
                 variant="none"
                 class="bg-black-800 mt-4"
               >
-                <p-icon icon="fas fa-volume-mute" />
-                Click to Unmute
+                <p-icon icon="fas fa-volume-mute" />Click to Unmute
               </p-btn>
             </div>
           </div>
@@ -158,10 +127,6 @@ export default {
     PlaySpaceMobileSidebar,
     AddVideoStream
   },
-  
-  props: {
-    playSpace: Object
-  },
 
   data: () => ({
     device: null,
@@ -169,7 +134,14 @@ export default {
     recvTransport: null
   }),
 
-   mounted() {
+  props: {
+    playSpace: {
+      type: Object,
+      required: true
+    }
+  },
+
+  mounted() {
     // TODO move transports and device to store.
     // TODO only request a new transport once per session
     this.$socket.SFU.emit("room-join", { roomId: this.$route.params.playspace })
@@ -196,6 +168,7 @@ export default {
     }),
 
     canStream() {
+      if (this.playSpace.isTemp) return true
       if (!this.playSpace.users) return false
       const { username } = this.$store.state.user
       return username && !!this.playSpace.users[username]
@@ -321,11 +294,7 @@ export default {
     }
   },
 
-    watch: {
-    "$store.state.playSpace.current"(playSpace) {
-      this.playSpace = playSpace
-    },
-
+  watch: {
     "$store.state.stream.isSoundBlocked"(value) {
       if (value === true) {
         this.onClick = () => {

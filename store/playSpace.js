@@ -19,6 +19,7 @@ export default {
     // TODO rename to isOwner
     isAuthorized(state, getters, rootState) {
       const playSpace = state.current
+      if (playSpace.isTemp) return true
       if (!playSpace || !playSpace.users) return false
       if (!rootState.user.username) return false
       if (playSpace.users[rootState.user.username] === "owner") {
@@ -29,6 +30,7 @@ export default {
 
     isStreamer(state, getters, rootState) {
       const playSpace = state.current
+      if (playSpace.isTemp) return true
       if (!playSpace || !playSpace.users) return false
       if (!rootState.user.username) return false
       if (playSpace.users[rootState.user.username]) {

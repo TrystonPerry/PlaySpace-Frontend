@@ -32,7 +32,9 @@ export default {
   }),
 
   mounted() {
-    this.$socket.API.emit("chat-join", { id: this.$route.params.playspace })
+    this.$socket.API.emit("chat-join", {
+      id: this.$route.params.playspace
+    })
   },
 
   beforeDestroy() {

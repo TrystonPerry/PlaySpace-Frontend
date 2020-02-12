@@ -1,7 +1,5 @@
 <template>
-  <div
-    :key="$route.params.playspace"
-  >
+  <div :key="$route.params.playspace">
     <PlaySpace v-if="playSpace" :playSpace="playSpace" />
   </div>
 </template>
