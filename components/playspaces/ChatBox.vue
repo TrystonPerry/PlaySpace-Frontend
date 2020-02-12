@@ -77,10 +77,11 @@ export default {
     // If user login state changes, authenticate user
     "$store.state.user.token": {
       handler(token) {
+        if (!process.browser) return
         if (token) {
           this.$socket.API.emit("chat-auth", { token })
         } else {
-          // TODO: de-auth user
+          // TODO de-auth
         }
       },
       immediate: true
@@ -99,8 +100,6 @@ export default {
 
   methods: {
     sendMessage() {
-      console.log(this.$store.state.playSpace.current)
-
       if (!this.isAbleToSpeak) {
         this.showLogin = true
         return
@@ -110,7 +109,10 @@ export default {
         return
       }
 
-      this.$socket.API.emit("chat-message", this.text)
+      this.$socket.API.emit("chat-message", {
+        text: this.text,
+        token: this.$store.state.user.token
+      })
       this.text = ""
     },
 
