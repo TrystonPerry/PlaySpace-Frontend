@@ -140,7 +140,7 @@ export default {
       return await new Promise((resolve, reject) => {
         this.$socket.SFU.emit("room-transport-consume", {
           producerId,
-          rtpCapabilities: this.device.rtpCapabilities
+          rtpCapabilities: this.$con.device.rtpCapabilities
         })
 
         this.sockets.SFU.subscribe(
@@ -168,7 +168,7 @@ export default {
       return await new Promise((resolve, reject) => {
         this.$socket.SFU.emit("room-transport-consume", {
           producerId,
-          rtpCapabilities: this.device.rtpCapabilities
+          rtpCapabilities: this.$con.device.rtpCapabilities
         })
 
         this.sockets.SFU.subscribe(

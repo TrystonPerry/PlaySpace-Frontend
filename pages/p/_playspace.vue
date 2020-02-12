@@ -8,7 +8,7 @@
           $store.state.nav.isMobile && !totalStreams ? 'max-height:40vh' : ''
         "
       >
-        <VideoContainer v-if="$con.device" class="video-container" />
+        <VideoContainer v-if="device && sendTransport && recvTransport" class="video-container" />
 
         <div
           v-if="!totalStreams"
@@ -125,6 +125,12 @@ export default {
     AddVideoStream
   },
 
+  data: () => ({
+    device: null,
+    sendTransport: null,
+    recvTransport: null
+  }),
+
   head() {
     return require("@/meta/p/_playspace")({
       title: `${this.playSpace.channelName} - PlaySpace`,
@@ -229,6 +235,8 @@ export default {
           return alert("You cant produce audio")
         }
 
+        this.device = this.$con.device
+
         this.$socket.SFU.emit("room-transport-create", "recv")
 
         // TODO only call this directly before a produce request
@@ -262,6 +270,8 @@ export default {
             callback
           )
         })
+
+        this.sendTransport = this.$con.sendTransport
       },
 
       "room-recvtransport-created": async function(transportOptions) {
@@ -269,6 +279,7 @@ export default {
           transportOptions
         )
         this.connectTransport(this.$con.recvTransport)
+        this.recvTransport = this.$con.recvTransport
       },
 
       "room-stream-video": async function(stream) {
