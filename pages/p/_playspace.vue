@@ -88,37 +88,36 @@
         </client-only>
       </div>
 
-      <!-- <div
-        class="channel__actions md:absolute bottom-0 flex flex-shrink-0 bg-dark-5 p-1 min-w-full overflow-y-hidden overflow-x-auto scrollbar"
-      >
-        <AddStream class="flex-shrink-0" />
-        <p-copy
-          :text="`https://playspace.tv/p/${playSpace.id}`"
-          variant="none"
-          size="sm"
-        >
-          <p-icon icon="fas fa-link" />
-          Copy Link
-        </p-copy>
-        <p-btn variant="none" size="sm">
-          <p-icon icon="fas fa-user-plus" />
-          Add Users
-        </p-btn>
-        <p-btn variant="none" size="sm">
-          <p-icon icon="fas fa-cog" />
-          Settings
-        </p-btn>
-      </div> -->
-
       <PlaySpaceMobileSidebar
         v-if="$store.state.nav.isMobile"
         :key="$route.params.playspace"
         class="flex-grow"
       />
+
+      <div class="channel__actions flex flex-shrink-0 bg-dark-5 w-full">
+        <AddStream
+          class="flex-grow flex-shrink-0 flex items-center"
+          btn-classes="flex-grow"
+        >
+          <p-icon icon="fas fa-plus" />
+          <div class="text-xs">Add Stream</div>
+        </AddStream>
+        <p-btn variant="none" size="sm" class="flex-grow flex-shrink-0">
+          <p-icon icon="fas fa-share-alt" />
+          <div class="text-xs">Share</div>
+        </p-btn>
+        <p-btn variant="none" size="sm" class="flex-grow flex-shrink-0">
+          <p-icon icon="fas fa-user-plus" />
+          <div class="text-xs">Users</div>
+        </p-btn>
+        <p-btn variant="none" size="sm" class="flex-grow flex-shrink-0">
+          <p-icon icon="fas fa-cog" />
+          <div class="text-xs">Settings</div>
+        </p-btn>
+      </div>
     </div>
     <AddStream
       v-if="totalStreams && canStream && !$store.state.nav.isMobile"
-      drop-up
       class="absolute bottom-0 left-0 m-2"
     />
     <client-only>

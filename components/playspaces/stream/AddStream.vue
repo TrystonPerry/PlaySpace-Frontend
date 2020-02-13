@@ -1,7 +1,7 @@
 <template>
   <div v-if="isStreamer" class="add-video-stream">
-    <p-btn @click="isModal = true" variant="none" size="sm">
-      <p-icon icon="fas fa-plus" />Add a Stream
+    <p-btn @click="isModal = true" variant="none" size="sm" :class="btnClasses">
+      <slot></slot>
     </p-btn>
 
     <p-modal v-model="isModal">
@@ -152,9 +152,9 @@ const regex = {
 
 export default {
   props: {
-    dropUp: {
-      type: Boolean,
-      default: false
+    btnClasses: {
+      type: String,
+      default: ""
     }
   },
 
