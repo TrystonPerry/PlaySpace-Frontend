@@ -1,5 +1,5 @@
 <template>
-  <div v-if="$store.state.user.username && isStreamer">
+  <div v-if="isStreamer">
     <div
       v-if="!$store.state.stream.tracks.mic && chatterCount < $store.state.playSpace.current.maxAudioStreams"
     >

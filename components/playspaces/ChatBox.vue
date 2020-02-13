@@ -55,7 +55,8 @@ export default {
       text: ""
     },
     isLogin: false,
-    showLogin: false
+    showLogin: false,
+    isInRoom: false
   }),
 
   computed: {
@@ -75,25 +76,24 @@ export default {
     },
 
     // If user login state changes, authenticate user
-    "$store.state.user.token": {
-      handler(token) {
-        if (!process.browser) return
-        if (token) {
-          this.$socket.API.emit("chat-auth", { token })
-        } else {
-          // TODO de-auth
-        }
-      },
-      immediate: true
+    "$store.state.user.token"(token) {
+      this.attemptAuth(token)
     }
   },
 
   sockets: {
     API: {
+      "room-joined"() {
+        this.isInRoom = true
+        this.attemptAuth()
+      },
+
       reconnect() {
-        this.$socket.API.emit("chat-auth", {
-          token: this.$store.state.user.token
-        })
+        this.attemptAuth()
+      },
+
+      disconnect() {
+        this.isInRoom = false
       }
     }
   },
@@ -109,10 +109,7 @@ export default {
         return
       }
 
-      this.$socket.API.emit("chat-message", {
-        text: this.text,
-        token: this.$store.state.user.token
-      })
+      this.$socket.API.emit("chat-message", this.text)
       this.text = ""
     },
 
@@ -130,6 +127,15 @@ export default {
 
       this.errors.text = ""
       return true
+    },
+
+    attemptAuth(token) {
+      token = token || this.$store.state.user.token
+      if (token) {
+        this.$socket.API.emit("chat-auth", { token })
+      } else {
+        this.$socket.API.emit("chat-anon-auth")
+      }
     }
   }
 }

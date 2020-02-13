@@ -1,7 +1,5 @@
 <template>
-  <div
-    class="playspace-sidebar flex flex-col bg-dark-3 text-gray-300 w-full h-full px-1"
-  >
+  <div class="playspace-sidebar flex flex-col bg-dark-3 text-gray-300 w-full h-full px-1">
     <div class="flex flex-col h-full">
       <div class="flex my-1">
         <p-btn
@@ -11,8 +9,7 @@
           class="w-6/12 opacity-50"
           :class="{ 'underline opacity-100': isTextChat }"
         >
-          <p-icon icon="fas fa-comment-alt" />
-          Text Chat
+          <p-icon icon="fas fa-comment-alt" />Text Chat
         </p-btn>
         <p-btn
           @click="isTextChat = false"
@@ -21,8 +18,7 @@
           class="w-6/12 opacity-50"
           :class="{ 'underline opacity-100': !isTextChat }"
         >
-          <p-icon icon="fas fa-phone-alt" />
-          Voice Chat
+          <p-icon icon="fas fa-phone-alt" />Voice Chat
         </p-btn>
       </div>
       <div class="flex flex-col flex-grow">
