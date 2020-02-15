@@ -40,6 +40,9 @@
       <NavLink to="/live">
         <span>Live</span>
       </NavLink>
+      <NavLink to="/spaces">
+        <span>Your PlaySpaces</span>
+      </NavLink>
       <NavLink v-if="isLoggedIn" @click="logout" type="button">
         <span>Log Out</span>
       </NavLink>
@@ -50,7 +53,7 @@
         v-if="$store.state.user.username"
         class="flex-grow overflow-y-auto scrollbar"
       >
-        <ul v-if="!isLoading" class="list-style-none px-1">
+        <ul class="list-style-none px-1">
           <PlaySpaceNavLink
             v-for="playSpace in myPlaySpaces"
             :key="playSpace.username"
