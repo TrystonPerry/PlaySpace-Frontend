@@ -7,7 +7,7 @@
         <button @click="showSidebar = true" class="hidden sm:block w-12 h-12">
           <p-icon icon="fas fa-bars" screen-reader-text="Menu" size="lg" />
         </button>
-        <NavLink to="/" class="font-bold">
+        <NavLink :to="homePath" class="font-bold">
           <img
             src="/img/playspace-icon-trans.png"
             alt="PlaySpace logo"
@@ -32,11 +32,11 @@
           </p-link>
         </li>
       </ul>
-      <!-- <ul v-else class="list-style-none flex">
+      <ul v-else class="list-style-none flex">
         <li>
           <AccountDropdown />
         </li>
-      </ul> -->
+      </ul>
       <div class="sm:hidden">
         <button @click="showSidebar = true" class="w-12 h-12">
           <p-icon icon="fas fa-bars" screen-reader-text="Menu" size="lg" />
@@ -62,6 +62,13 @@ export default {
   data: () => ({
     showSidebar: false
   }),
+
+  computed: {
+    homePath() {
+      const { username } = this.$store.state.user
+      return username ? "/live" : "/"
+    }
+  },
 
   watch: {
     "$route.fullPath"() {

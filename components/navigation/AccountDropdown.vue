@@ -11,17 +11,11 @@
       <AccountDropdownItem to="/spaces">
         My PlaySpaces
       </AccountDropdownItem>
-      <AccountDropdownItem to="/">
-        My Profile
-      </AccountDropdownItem>
-      <AccountDropdownItem to="/">
-        My Account
-      </AccountDropdownItem>
       <AccountDropdownItem to="/create">
         Create a PlaySpace
       </AccountDropdownItem>
       <AccountDropdownItem
-        to="/"
+        type="button"
         @click.prevent="$store.dispatch('user/logout')"
       >
         Log Out

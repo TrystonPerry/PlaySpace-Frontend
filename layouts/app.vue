@@ -1,17 +1,13 @@
 <template>
   <div>
     <div>
-      <AppNavbar />
+      <LandingNavbar />
       <div class="h-12"></div>
       <div
         class="flex"
         style="overflow:hidden"
         :style="`height: ${screenHeight}`"
       >
-        <AppSidebar
-          v-show="$store.state.nav.side.left.isShown"
-          class="h-100 shadow-reg"
-        />
         <div class="flex-grow overflow-y-auto h-100 bg-dark-1">
           <nuxt />
         </div>
@@ -34,16 +30,20 @@
 </template>
 
 <script>
-import AppNavbar from "@/components/navigation/AppNavbar"
-import AppSidebar from "@/components/navigation/AppSidebar"
+import layout from "@/mixins/layout"
+
+import LandingNavbar from "@/components/navigation/LandingNavbar"
+import LandingSidebar from "@/components/navigation/LandingSidebar"
 import PlaySpaceSidebar from "@/components/navigation/PlaySpaceSidebar"
 
 export default {
   components: {
-    AppNavbar,
-    AppSidebar,
+    LandingNavbar,
+    LandingSidebar,
     PlaySpaceSidebar
   },
+
+  mixins: [layout],
 
   data: () => ({
     screenHeight: "0px"

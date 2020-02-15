@@ -5,7 +5,7 @@
     <ul
       v-click-out="close"
       class="flex flex-col bg-dark-5 rounded sm:rounded-none relative sm:max-w-64 "
-      :style="`height: ${screenHeight}`"
+      :style="`height:${screenHeight}`"
     >
       <li>
         <ul>
@@ -26,7 +26,7 @@
                 size="lg"
               />
             </button>
-            <NavLink to="/" class="font-bold">
+            <NavLink :to="homePath" class="font-bold">
               <img
                 src="/img/playspace-icon-trans.png"
                 alt="PlaySpace logo"
@@ -40,18 +40,25 @@
       <NavLink to="/live">
         <span>Live</span>
       </NavLink>
-      <!-- <NavLink v-if="isLoggedIn" to="/spaces">
-        <span>My PlaySpaces</span>
-      </NavLink>
-      <NavLink v-if="isLoggedIn" :to="`/u/${$store.state.user.username}`">
-        <span>My Profile</span>
-      </NavLink>
-      <NavLink v-if="isLoggedIn" to="/account">
-        <span>My Account</span>
-      </NavLink> -->
       <NavLink v-if="isLoggedIn" @click="logout" type="button">
         <span>Log Out</span>
       </NavLink>
+      <NavDivider v-if="$store.state.user.username" class="flex">
+        <h2>Your PlaySpaces</h2>
+      </NavDivider>
+      <li
+        v-if="$store.state.user.username"
+        class="flex-grow overflow-y-auto scrollbar"
+      >
+        <ul v-if="!isLoading" class="list-style-none px-1">
+          <PlaySpaceNavLink
+            v-for="playSpace in myPlaySpaces"
+            :key="playSpace.username"
+            :playSpace="playSpace"
+            class="mb-2"
+          />
+        </ul>
+      </li>
       <li>
         <ul class="bg-black-400 rounded m-2">
           <NavLink v-if="!isLoggedIn" to="/login" class="sm:hidden">
@@ -67,7 +74,6 @@
           </li>
         </ul>
       </li>
-      <div class="flex-grow"></div>
       <ul
         class="hidden sm:flex justify-center social-media list-style-none pl-0 text-gray-400 py-2 text-center"
         aria-label="PlaySpace's Social Media"
@@ -150,13 +156,19 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex"
+import { mapState, mapGetters } from "vuex"
+
+import API from "@/api/api"
 
 import NavLink from "./NavLink"
+import NavDivider from "./NavDivider"
+import PlaySpaceNavLink from "./PlaySpaceNavLink"
 
 export default {
   components: {
-    NavLink
+    NavLink,
+    NavDivider,
+    PlaySpaceNavLink
   },
 
   data: () => ({
@@ -173,6 +185,15 @@ export default {
   },
 
   computed: {
+    ...mapState({
+      myPlaySpaces: state => state.playSpace.my
+    }),
+
+    homePath() {
+      const { username } = this.$store.state.user
+      return username ? "/live" : "/"
+    },
+
     isLoggedIn() {
       return !!this.$store.state.user.username
     }

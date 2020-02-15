@@ -28,14 +28,14 @@
           />
         </li>
         <li class="hidden md:block lg:mr-2 font-bold text-lg">
-          <p-tooltip :text="`/p/${playSpace.id}`">{{
-            playSpace.channelName
-          }}</p-tooltip>
+          <p-tooltip :text="`/p/${playSpace.id}`">
+            {{ playSpace.channelName }}
+          </p-tooltip>
         </li>
         <li class="hidden lg:block">
-          <p-tooltip :text="playSpace.title">{{
-            playSpace.title | truncate(32)
-          }}</p-tooltip>
+          <p-tooltip :text="playSpace.title">
+            {{ playSpace.title | truncate(32) }}
+          </p-tooltip>
         </li>
         <li v-if="isOwner">
           <p-tooltip text="Edit PlaySpace">
@@ -70,30 +70,6 @@
         </li>
       </ul>
       <ul v-else class="list-style-none flex">
-        <!-- TODO: DONT SHOW IF USER HAS HIT MAX PLAYSPACES -->
-        <!-- <li v-if="isOwner" class="px-1 py-2">
-          <p-tooltip text="Add or Remove Users">
-            <p-btn @click="isEditRanks = true" variant="primary" size="sm">
-              <p-icon icon="fas fa-user-plus" />
-              Add Users
-            </p-btn>
-          </p-tooltip>
-        </li> -->
-        <!-- <li v-else class="px-1 py-2">
-          <p-copy
-            :text="`https://playspace.tv/p/${playSpace.id}`"
-            variant="primary"
-            size="sm"
-          >
-            <p-icon icon="fas fa-link" />
-            Copy Link
-          </p-copy>
-        </li> -->
-        <!-- <li v-else class="px-1 py-2">
-          <p-btn @click="isShow = true" variant="primary" size="sm">
-            <p-icon icon="fas fa-user-plus" />Share
-          </p-btn>
-        </li> -->
         <li>
           <AccountDropdown />
         </li>

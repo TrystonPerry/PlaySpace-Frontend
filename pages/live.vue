@@ -1,22 +1,11 @@
 <template>
   <div class="mx-auto pb-20">
     <client-only>
-      <div v-if="myPlaySpaces.length && $store.state.user.username">
+      <div v-if="username && myPlaySpaces.length">
         <h1 class="text-3xl text-primary text-center font-bold mt-6 mb-2">
           My PlaySpaces
         </h1>
-        <ul class="flex flex-wrap justify-center">
-          <li
-            v-for="playSpace in myPlaySpaces"
-            :key="playSpace.username"
-            class="live__item w-full sm:max-w-64 p-1"
-          >
-            <PlaySpace
-              :stream="playSpace"
-              class="w-full h-full rounded-md shadow-reg"
-            />
-          </li>
-        </ul>
+        <MyPlaySpaces />
       </div>
     </client-only>
     <h1 class="text-3xl text-primary text-center font-bold mt-6 mb-2">
@@ -38,16 +27,6 @@
       <h2 class="text-lg mb-3">
         There are currently no live Public PlaySpaces
       </h2>
-      <!-- <div v-if="!$store.state.user.username">
-        <p-link to="/login" variant="primary-hover" size="sm">Log In</p-link>
-        <span>or</span>
-        <p-link to="/signup" variant="primary" size="sm">Sign Up</p-link>
-        <span>to create or join your own.</span>
-      </div>
-      <div v-else>
-        <nuxt-link to="/create">Create</nuxt-link>
-        <span>a your own.</span>
-      </div> -->
     </div>
     <div class="text-center">
       <h1 class="text-2xl text-primary text-center font-bold mt-6 mb-2">
@@ -65,20 +44,18 @@
 </template>
 
 <script>
+import { mapState } from "vuex"
+
 import API from "@/api/api"
 
-import PlaySpace from "@/components/playspaces/PlaySpace"
+import MyPlaySpaces from "@/components/playspaces/MyPlaySpaces"
 
 export default {
   components: {
-    PlaySpace
+    MyPlaySpaces
   },
 
   head: require("@/meta/live")(),
-
-  data: () => ({
-    myPlaySpaces: []
-  }),
 
   async asyncData() {
     const { data, success } = await API.getLivePlaySpaces()
@@ -86,17 +63,11 @@ export default {
     return { playSpaces: data }
   },
 
-  watch: {
-    "$store.state.user.username": {
-      async handler(value) {
-        if (!value) return
-
-        const { data, success } = await API.getUsersPlaySpaces()
-
-        this.myPlaySpaces = data
-      },
-      immediate: true
-    }
+  computed: {
+    ...mapState({
+      username: state => state.user.username,
+      myPlaySpaces: state => state.playSpace.my
+    })
   }
 }
 </script>

@@ -8,10 +8,10 @@
       placeholder="Enter a message..."
     ></textarea>
     <div class="absolute flex bottom-0 right-0 py-2 px-1 items-center">
-      <p-btn variant="none" size="xs" class="text-gray-200 mr-1">
+      <!-- <p-btn variant="none" size="xs" class="text-gray-200 mr-1">
         <p-icon icon="far fa-smile" size="sm" />
       </p-btn>
-      <p-btn variant="none" size="xs" class="text-gray-200 text-xs font-bold h-4 mr-1 rounded">GIF</p-btn>
+      <p-btn variant="none" size="xs" class="text-gray-200 text-xs font-bold h-4 mr-1 rounded">GIF</p-btn> -->
       <p-btn
         @click="sendMessage"
         variant="primary"

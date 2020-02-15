@@ -7,14 +7,6 @@
         <i class="fas fa-globe"></i>
         <span class="hidden md:block ml-2">Live</span>
       </NavLink>
-      <!-- <NavLink to="/categories" class="w-full">
-        <i class="fas fa-book"></i>
-        <span class="hidden md:block ml-2">Browse</span>
-      </NavLink> -->
-      <!-- <NavLink to="/" class="w-full">
-        <i class="fab fa-amilia"></i>
-        <span class="hidden md:block ml-2">About</span>
-      </NavLink> -->
       <NavDivider v-if="$store.state.user.username" class="hidden md:flex">
         <h2>Your PlaySpaces</h2>
       </NavDivider>

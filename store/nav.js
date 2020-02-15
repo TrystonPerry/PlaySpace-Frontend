@@ -2,7 +2,7 @@ export default {
   state: () => ({
     side: {
       left: {
-        isShown: true
+        isShown: false
       }
     },
     isMobile: false
