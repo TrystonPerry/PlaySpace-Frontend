@@ -71,7 +71,6 @@ export default {
 
   created() {
     const data = this.$store.state.playSpace.current
-
     this.channelName = data.channelName
     this.title = data.title
     this.category = data.category

@@ -4,7 +4,7 @@
       <slot></slot>
     </p-btn>
 
-    <p-modal v-model="isModal">
+    <p-modal v-model="isModal" @input="reset">
       <h1 class="text-2xl font-bold mb-2">
         Add a Stream
       </h1>
@@ -229,6 +229,8 @@ export default {
         type: "audio",
         track: res.stream.getAudioTracks()[0]
       })
+
+      this.reset()
     },
 
     async getWebcamStream(video, audio) {
@@ -266,6 +268,8 @@ export default {
         type: "audio",
         track: res.stream.getAudioTracks()[0]
       })
+
+      this.reset()
     },
 
     addTwitchStream() {
@@ -281,7 +285,7 @@ export default {
         username
       })
 
-      this.isTwitch = false
+      this.reset()
     },
 
     addYouTubeStream() {
@@ -297,7 +301,14 @@ export default {
         videoId: url
       })
 
-      this.isYoutube = false
+      this.reset()
+    },
+
+    reset() {
+      this.isModal = false
+      this.mode = ""
+      this.youtubeUrl = ""
+      this.twitchUsername = ""
     }
   }
 }

@@ -26,21 +26,42 @@
     </div>
 
     <portal-target name="modal-container"></portal-target>
+
+    <!-- Show share current page modal -->
+    <p-modal :value="modal === 'share'" @input="closeModal">
+      <p-share />
+    </p-modal>
+
+    <!-- Show edit ranks of playspace modal -->
+    <p-modal :value="modal === 'users'" @input="closeModal">
+      <EditPlaySpaceUsers />
+    </p-modal>
+
+    <!-- Edit playspace settings modal -->
+    <p-modal :value="modal === 'settings'" @input="closeModal">
+      <EditPlaySpace @edit="closeModal" />
+    </p-modal>
   </div>
 </template>
 
 <script>
+import { mapState } from "vuex"
+
 import layout from "@/mixins/layout"
 
 import LandingNavbar from "@/components/navigation/LandingNavbar"
 import LandingSidebar from "@/components/navigation/LandingSidebar"
 import PlaySpaceSidebar from "@/components/navigation/PlaySpaceSidebar"
+import EditPlaySpaceUsers from "@/components/playspaces/edit/EditPlaySpaceUsers"
+import EditPlaySpace from "@/components/playspaces/EditPlaySpace"
 
 export default {
   components: {
     LandingNavbar,
     LandingSidebar,
-    PlaySpaceSidebar
+    PlaySpaceSidebar,
+    EditPlaySpace,
+    EditPlaySpaceUsers
   },
 
   mixins: [layout],
@@ -63,6 +84,12 @@ export default {
     window.removeEventListener("resize", this.onResize)
   },
 
+  computed: {
+    ...mapState({
+      modal: state => state.nav.modal
+    })
+  },
+
   methods: {
     onResize(e) {
       if (window.innerWidth < 768) {
@@ -72,6 +99,10 @@ export default {
       }
       // Update screen height
       this.screenHeight = window.innerHeight - 48 + "px"
+    },
+
+    closeModal(value) {
+      this.$store.dispatch("nav/setModal", "")
     }
   }
 }

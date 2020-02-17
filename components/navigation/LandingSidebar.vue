@@ -4,7 +4,7 @@
   >
     <ul
       v-click-out="close"
-      class="flex flex-col bg-dark-5 rounded sm:rounded-none relative sm:max-w-64 "
+      class="flex flex-col bg-dark-5 rounded sm:rounded-none relative sm:max-w-64 max-h-full"
       :style="`height:${screenHeight}`"
     >
       <li>

@@ -61,15 +61,30 @@
           <p-icon icon="fas fa-plus" />
           <div class="text-xs">Add Stream</div>
         </AddStream>
-        <p-btn variant="none" size="sm" class="flex-grow flex-shrink-0">
+        <p-btn
+          @click="setModal('share')"
+          variant="none"
+          size="sm"
+          class="flex-grow flex-shrink-0"
+        >
           <p-icon icon="fas fa-share-alt" />
           <div class="text-xs">Share</div>
         </p-btn>
-        <p-btn variant="none" size="sm" class="flex-grow flex-shrink-0">
+        <p-btn
+          @click="setModal('users')"
+          variant="none"
+          size="sm"
+          class="flex-grow flex-shrink-0"
+        >
           <p-icon icon="fas fa-user-plus" />
           <div class="text-xs">Users</div>
         </p-btn>
-        <p-btn variant="none" size="sm" class="flex-grow flex-shrink-0">
+        <p-btn
+          @click="setModal('settings')"
+          variant="none"
+          size="sm"
+          class="flex-grow flex-shrink-0"
+        >
           <p-icon icon="fas fa-cog" />
           <div class="text-xs">Settings</div>
         </p-btn>
@@ -340,7 +355,8 @@ export default {
     ...mapActions({
       addStream: "stream/addStream",
       reset: "stream/reset",
-      setCurrentPlaySpace: "playSpace/setCurrentPlaySpace"
+      setCurrentPlaySpace: "playSpace/setCurrentPlaySpace",
+      setModal: "nav/setModal"
     }),
 
     async connectTransport(transport) {
