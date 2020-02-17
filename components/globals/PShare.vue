@@ -49,7 +49,10 @@ export default {
   computed: {
     text() {
       const { fullUsername } = this.$store.state.user
-      const text = `${fullUsername} has invited you to their PlaySpace!`
+      let text = "Come watch our PlaySpace!"
+      if (fullUsername) {
+        text = `${fullUsername} has invited you to their PlaySpace!`
+      }
       return encodeURI(text)
     },
 

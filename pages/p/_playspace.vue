@@ -74,7 +74,7 @@
           </span>
         </p-btn>
         <p-btn
-          @click="setModal('share')"
+          @click="share"
           variant="none"
           size="sm"
           class="flex-grow flex-shrink-0"
@@ -400,6 +400,27 @@ export default {
       this.$store.dispatch("stream/setLocalTrack", {
         type: "video",
         track: null
+      })
+    },
+
+    // TODO move this share attempt code into p-share component
+    // maybe store the url, text and title in the nav.js store?
+    async share() {
+      if (!navigator.share) {
+        this.setModal("share")
+        return
+      }
+
+      const { fullUsername } = this.$store.state.user
+      let text = "Come watch our PlaySpace!"
+      if (fullUsername) {
+        text = `${fullUsername} has invited you to their PlaySpace!`
+      }
+
+      navigator.share({
+        url: window.location.origin + this.$route.fullPath,
+        text,
+        title: "PlaySpace"
       })
     }
   }
