@@ -14,10 +14,7 @@
       <AccountDropdownItem to="/create">
         Create a PlaySpace
       </AccountDropdownItem>
-      <AccountDropdownItem
-        type="button"
-        @click.prevent="$store.dispatch('user/logout')"
-      >
+      <AccountDropdownItem type="button" @click.prevent="logout">
         Log Out
       </AccountDropdownItem>
     </ul>
@@ -39,6 +36,13 @@ export default {
   watch: {
     "$route.fullPath"() {
       this.showSidebar = false
+    }
+  },
+
+  methods: {
+    logout() {
+      this.$store.dispatch("user/logout")
+      this.$router.push("/")
     }
   }
 }
