@@ -62,6 +62,18 @@
           <div class="text-xs">Add Stream</div>
         </AddStream>
         <p-btn
+          v-if="$store.state.stream.tracks.video"
+          @click="endVideoStream"
+          variant="none"
+          size="sm"
+          class="flex-grow flex-shrink-0 "
+        >
+          <span class="text-red-500">
+            <p-icon icon="fas fa-minus" />
+            <div class="text-xs">End Stream</div>
+          </span>
+        </p-btn>
+        <p-btn
           @click="setModal('share')"
           variant="none"
           size="sm"
@@ -71,6 +83,7 @@
           <div class="text-xs">Share</div>
         </p-btn>
         <p-btn
+          v-if="isOwner"
           @click="setModal('users')"
           variant="none"
           size="sm"
@@ -80,6 +93,7 @@
           <div class="text-xs">Users</div>
         </p-btn>
         <p-btn
+          v-if="isOwner"
           @click="setModal('settings')"
           variant="none"
           size="sm"
@@ -90,10 +104,6 @@
         </p-btn>
       </div>
     </div>
-    <AddStream
-      v-if="totalStreams && canStream && !$store.state.nav.isMobile"
-      class="absolute bottom-0 left-0 m-2"
-    />
     <client-only>
       <portal to="modal-container">
         <div
@@ -198,12 +208,15 @@ export default {
 
   computed: {
     ...mapState({
-      username: state => state.user.username
+      username: state => state.user.username,
+      isMobile: state => state.nav.isMobile
     }),
 
     ...mapGetters({
       totalStreams: "stream/totalStreams",
-      users: "playSpace/users"
+      users: "playSpace/users",
+      isStreamer: "playSpace/isStreamer",
+      isOwner: "playSpace/isAuthorized"
     }),
 
     canStream() {
@@ -380,6 +393,13 @@ export default {
         streams[key].forEach(stream => {
           this.addStream({ type: key, stream })
         })
+      })
+    },
+
+    endVideoStream() {
+      this.$store.dispatch("stream/setLocalTrack", {
+        type: "video",
+        track: null
       })
     }
   }

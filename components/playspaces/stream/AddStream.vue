@@ -1,5 +1,5 @@
 <template>
-  <div v-if="isStreamer" class="add-video-stream">
+  <div v-if="isAddStreamBtnVisible" class="add-video-stream">
     <p-btn @click="isModal = true" variant="none" size="sm" :class="btnClasses">
       <slot></slot>
     </p-btn>
@@ -191,6 +191,17 @@ export default {
 
     canProduceOnMobile() {
       return this.isMobile && this.canProduce
+    },
+
+    isAddStreamBtnVisible() {
+      if (this.isStreamer) {
+        if (this.isMobile) {
+          return !this.isStreaming
+        } else {
+          return this.totalStreams < 5
+        }
+      }
+      return false
     }
   },
 

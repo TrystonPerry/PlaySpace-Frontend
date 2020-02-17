@@ -40,18 +40,6 @@
             {{ playSpace.title | truncate(32) }}
           </p-tooltip>
         </li>
-        <li v-if="isOwner">
-          <p-tooltip text="Edit PlaySpace">
-            <p-btn
-              @click="isEdit = !isEdit"
-              variant="none"
-              size="sm"
-              class="mx-1"
-            >
-              <i class="fas fa-cog"></i>
-            </p-btn>
-          </p-tooltip>
-        </li>
       </ul>
       <div class="flex-grow"></div>
       <ul v-if="!username" class="flex items-center">
