@@ -8,6 +8,8 @@
 </template>
 
 <script>
+import layout from "@/mixins/layout"
+
 import LandingNavbar from "@/components/navigation/LandingNavbar"
 import LandingFooter from "@/components/navigation/LandingFooter"
 
@@ -16,6 +18,8 @@ export default {
     LandingNavbar,
     LandingFooter
   },
+
+  mixins: [layout],
 
   mounted() {
     this.$store.dispatch("user/loginWithToken")

@@ -8,21 +8,24 @@
           @click="isTextChat = true"
           size="sm"
           variant="none"
-          class="w-6/12 opacity-50"
-          :class="{ 'underline opacity-100': isTextChat }"
+          class="w-6/12 opacity-50 rounded-md"
+          :class="{ 'opacity-100 bg-dark-5': isTextChat }"
         >
           <p-icon icon="fas fa-comment-alt" />
-          Text Chat
         </p-btn>
         <p-btn
           @click="isTextChat = false"
           size="sm"
           variant="none"
-          class="w-6/12 opacity-50"
-          :class="{ 'underline opacity-100': !isTextChat }"
+          class="w-6/12 rounded-md"
+          :class="{ 'bg-dark-5': !isTextChat }"
         >
-          <p-icon icon="fas fa-phone-alt" />
-          Voice Chat
+          <p-icon 
+            icon="fas fa-phone-alt"
+            class="opacity-50"
+            :class="{ 'opacity-100': !isTextChat }"
+          />
+          <span v-if="$store.state.stream.tracks.mic" class="text-red-600 text-lg">&#9679</span>
         </p-btn>
       </div>
       <div class="flex flex-col flex-grow">
@@ -30,9 +33,15 @@
         <ChatBox v-show="isTextChat" />
         <div v-show="!isTextChat" class="flex flex-col h-full">
           <div class="opacity-75 text-sm font-bold text-center">
-            ({{ chatterCount }} /
-            {{ $store.state.playSpace.current.maxAudioStreams }}) users in voice
-            chat
+            <div v-if="chatterCount">
+              ({{ chatterCount }} /
+              {{ $store.state.playSpace.current.maxAudioStreams }}) users in
+              voice chat
+            </div>
+            <div v-else class="my-3">
+              <div class="text-6xl">:(</div>
+              No one is currently in voice chat.
+            </div>
           </div>
           <ul class="list-style-none overflow-y-auto flex-grow">
             <li
@@ -49,7 +58,7 @@
               <VoiceProducer />
             </li>
           </ul>
-          <div class="text-center">
+          <div class="text-center my-2">
             <VoiceChatControls />
           </div>
         </div>

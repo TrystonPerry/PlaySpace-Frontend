@@ -1,17 +1,13 @@
 <template>
   <div>
     <div>
-      <AppNavbar />
+      <LandingNavbar />
       <div class="h-12"></div>
       <div
         class="flex"
         style="overflow:hidden"
         :style="`height: ${screenHeight}`"
       >
-        <AppSidebar
-          v-show="$store.state.nav.side.left.isShown"
-          class="h-100 shadow-reg"
-        />
         <div class="flex-grow overflow-y-auto h-100 bg-dark-1">
           <nuxt />
         </div>
@@ -30,20 +26,45 @@
     </div>
 
     <portal-target name="modal-container"></portal-target>
+
+    <!-- Show share current page modal -->
+    <p-modal :value="modal === 'share'" @input="closeModal">
+      <p-share />
+    </p-modal>
+
+    <!-- Show edit ranks of playspace modal -->
+    <p-modal :value="modal === 'users'" @input="closeModal">
+      <EditPlaySpaceUsers />
+    </p-modal>
+
+    <!-- Edit playspace settings modal -->
+    <p-modal :value="modal === 'settings'" @input="closeModal">
+      <EditPlaySpace @edit="closeModal" />
+    </p-modal>
   </div>
 </template>
 
 <script>
-import AppNavbar from "@/components/navigation/AppNavbar"
-import AppSidebar from "@/components/navigation/AppSidebar"
+import { mapState } from "vuex"
+
+import layout from "@/mixins/layout"
+
+import LandingNavbar from "@/components/navigation/LandingNavbar"
+import LandingSidebar from "@/components/navigation/LandingSidebar"
 import PlaySpaceSidebar from "@/components/navigation/PlaySpaceSidebar"
+import EditPlaySpaceUsers from "@/components/playspaces/edit/EditPlaySpaceUsers"
+import EditPlaySpace from "@/components/playspaces/EditPlaySpace"
 
 export default {
   components: {
-    AppNavbar,
-    AppSidebar,
-    PlaySpaceSidebar
+    LandingNavbar,
+    LandingSidebar,
+    PlaySpaceSidebar,
+    EditPlaySpace,
+    EditPlaySpaceUsers
   },
+
+  mixins: [layout],
 
   data: () => ({
     screenHeight: "0px"
@@ -63,6 +84,12 @@ export default {
     window.removeEventListener("resize", this.onResize)
   },
 
+  computed: {
+    ...mapState({
+      modal: state => state.nav.modal
+    })
+  },
+
   methods: {
     onResize(e) {
       if (window.innerWidth < 768) {
@@ -72,6 +99,10 @@ export default {
       }
       // Update screen height
       this.screenHeight = window.innerHeight - 48 + "px"
+    },
+
+    closeModal(value) {
+      this.$store.dispatch("nav/setModal", "")
     }
   }
 }

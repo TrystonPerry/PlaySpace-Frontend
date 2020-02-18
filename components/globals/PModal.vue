@@ -2,7 +2,9 @@
   <portal to="modal-container">
     <div v-if="value" class="modal flex items-center justify-center">
       <div class="modal__box-container">
-        <div class="modal__box bg-dark-5 shadow-reg scrollbar overflow-auto text-gray-300">
+        <div
+          class="modal__box bg-dark-5 shadow-reg scrollbar overflow-auto text-gray-300"
+        >
           <button @click="onClose" class="btn btn-close">X</button>
           <slot></slot>
         </div>
@@ -58,10 +60,10 @@ export default {
         this.$emit("input", false)
       }
     },
-    
+
     onClose() {
-      this.$emit('input', false)
-      this.$emit('input', false)
+      this.$emit("input", false)
+      this.$emit("input", false)
       this.$emit("close")
     }
   }
@@ -101,8 +103,6 @@ export default {
       position: fixed;
       z-index: 1030;
       padding: 1rem;
-      width: 100%;
-      max-width: 600px;
       margin: auto;
     }
   }

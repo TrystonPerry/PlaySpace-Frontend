@@ -2,10 +2,11 @@ export default {
   state: () => ({
     side: {
       left: {
-        isShown: true
+        isShown: false
       }
     },
-    isMobile: false
+    isMobile: false,
+    modal: ""
   }),
 
   mutations: {
@@ -26,6 +27,10 @@ export default {
 
     SET_MOBILE(state, payload) {
       state.isMobile = payload
+    },
+
+    SET_MODAL(state, payload) {
+      state.modal = payload
     }
   },
 
@@ -49,7 +54,9 @@ export default {
       commit("SET_MOBILE", value)
     },
 
-    updateVideoContainer() {}
+    setModal({ commit }, value) {
+      commit("SET_MODAL", value)
+    }
   }
 }
 

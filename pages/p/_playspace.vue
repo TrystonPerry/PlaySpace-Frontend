@@ -4,9 +4,9 @@
     class="relative playspace h-full"
     style="max-height:100%"
   >
-    <div class="flex flex-col h-full">
+    <div class="flex flex-col h-full relative">
       <div
-        class="text-center text-gray-300 overflow-y-auto"
+        class="flex-shrink-0 text-center text-gray-300 overflow-y-auto"
         :class="{ 'flex-shrink-0': $store.state.nav.isMobile && totalStreams }"
         :style="
           $store.state.nav.isMobile && !totalStreams ? 'max-height:40vh' : ''
@@ -35,44 +35,8 @@
               />
               <h1 class="text-2xl font-bold">{{ playSpace.channelName }}</h1>
               <h2 class="text-lg">{{ playSpace.title }}</h2>
-              <p-copy
-                :text="`https://playspace.tv/p/${playSpace.id}`"
-                variant="primary"
-                class="mt-3"
-              >
-                <p-icon icon="fas fa-link" />
-                Copy Link
-              </p-copy>
-            </div>
-            <div class="md:w-6/12 md:text-right">
-              <h2
-                class="text-xl mt-4 font-bold inline-block border-b border-gray-300 px-6 md:pr-0 mb-2"
-              >
-                Users
-              </h2>
-              <ul class="list-style-none">
-                <li v-for="user in users" :key="user.username">
-                  <span>{{ user.rank }} - </span>
-                  <h3 class="font-bold inline-block">
-                    {{ user.username }}
-                  </h3>
-                </li>
-              </ul>
             </div>
           </div>
-          <!-- <div
-            class="absolute flex"
-            style="left:50%;bottom:-1.5rem;transform:translateX(-50%);"
-          >
-            <p-btn variant="primary" size="lg" class="mr-1">
-              <p-icon icon="fas fa-plus" />
-              Start a Stream
-            </p-btn>
-            <p-btn variant="none" size="lg" class="bg-dark-2">
-              <p-icon icon="fas fa-cog" />
-              Settings
-            </p-btn>
-          </div> -->
           <p-avatar
             :avatar="playSpace.avatar"
             class="w-full h-full absolute top-0 left-0 object-cover bg-gray-100 opacity-25"
@@ -81,21 +45,6 @@
             style="z-index:-1; filter: blur(4px)"
           />
         </div>
-
-        <client-only>
-          <div v-if="!totalStreams && canStream" class="py-4 mt-6">
-            <h2 class="text-lg font-bold">
-              <span v-if="!$store.state.nav.isMobile">
-                Click below to share your desktop, a YouTube video, or Twitch
-                Stream
-              </span>
-              <span v-else>
-                Click below to share your webcam
-              </span>
-            </h2>
-            <AddVideoStream class="max-w-48 w-full mx-auto mt-5" />
-          </div>
-        </client-only>
       </div>
 
       <PlaySpaceMobileSidebar
@@ -103,21 +52,67 @@
         :key="$route.params.playspace"
         class="flex-grow"
       />
+
+      <div class="channel__actions flex flex-shrink-0 bg-dark-5 w-full">
+        <AddStream
+          class="flex-grow flex-shrink-0 flex items-center"
+          btn-classes="flex-grow"
+        >
+          <p-icon icon="fas fa-plus" />
+          <div class="text-xs">Add Stream</div>
+        </AddStream>
+        <p-btn
+          v-if="$store.state.stream.tracks.video"
+          @click="endVideoStream"
+          variant="none"
+          size="sm"
+          class="flex-grow flex-shrink-0 "
+        >
+          <span class="text-red-500">
+            <p-icon icon="fas fa-minus" />
+            <div class="text-xs">End Stream</div>
+          </span>
+        </p-btn>
+        <p-btn
+          @click="share"
+          variant="none"
+          size="sm"
+          class="flex-grow flex-shrink-0"
+        >
+          <p-icon icon="fas fa-share-alt" />
+          <div class="text-xs">Share</div>
+        </p-btn>
+        <p-btn
+          v-if="isOwner"
+          @click="setModal('users')"
+          variant="none"
+          size="sm"
+          class="flex-grow flex-shrink-0"
+        >
+          <p-icon icon="fas fa-user-plus" />
+          <div class="text-xs">Users</div>
+        </p-btn>
+        <p-btn
+          v-if="isOwner"
+          @click="setModal('settings')"
+          variant="none"
+          size="sm"
+          class="flex-grow flex-shrink-0"
+        >
+          <p-icon icon="fas fa-cog" />
+          <div class="text-xs">Settings</div>
+        </p-btn>
+      </div>
     </div>
-    <AddVideoStream
-      v-if="totalStreams && canStream && !$store.state.nav.isMobile"
-      drop-up
-      class="absolute bottom-0 left-0 m-2"
-    />
     <client-only>
       <portal to="modal-container">
         <div
           v-if="$store.state.stream.isSoundBlocked"
-          class="absolute w-full p-2 max-w-96 w-full"
+          class="absolute w-full max-w-96 w-full"
           style="bottom: 4rem;left:50%;transform:translateX(-50%);z-index:100"
         >
           <div
-            class="bg-black-600 text-black-800 shadow-reg py-3 px-5 rounded-lg border-4 border-black-800"
+            class="bg-dark-5 text-gray-300 text-center shadow-reg py-3 px-5 rounded-lg shadow-xl"
           >
             <h1 class="text-xl font-bold text-center">
               Sound Muted by Default
@@ -145,14 +140,14 @@
 
 <script>
 import { Device } from "mediasoup-client"
-import { mapGetters, mapActions } from "vuex"
+import { mapState, mapGetters, mapActions } from "vuex"
 
 import Vue from "vue"
 import API from "@/api/api"
 
 import VideoContainer from "@/components/playspaces/VideoContainer"
 import PlaySpaceMobileSidebar from "@/components/navigation/PlaySpaceMobileSidebar"
-import AddVideoStream from "@/components/playspaces/stream/AddVideoStream"
+import AddStream from "@/components/playspaces/stream/AddStream"
 
 export default {
   layout: "app",
@@ -160,7 +155,7 @@ export default {
   components: {
     VideoContainer,
     PlaySpaceMobileSidebar,
-    AddVideoStream
+    AddStream
   },
 
   head() {
@@ -212,9 +207,16 @@ export default {
   },
 
   computed: {
+    ...mapState({
+      username: state => state.user.username,
+      isMobile: state => state.nav.isMobile
+    }),
+
     ...mapGetters({
       totalStreams: "stream/totalStreams",
-      users: "playSpace/users"
+      users: "playSpace/users",
+      isStreamer: "playSpace/isStreamer",
+      isOwner: "playSpace/isAuthorized"
     }),
 
     canStream() {
@@ -227,19 +229,19 @@ export default {
   sockets: {
     API: {
       "room-users-update"(user) {
-        if (
-          user.username === this.$store.state.user.username &&
-          user.rank !== "none"
-        ) {
+        const { username, rank } = user
+
+        // If you were granted access to playspace
+        if (username === this.username && rank !== "none") {
           this.$notify({
             type: "success",
             title: "You have been granted access to this PlaySpace",
             text: `You can now stream on ${this.playSpace.channelName}`
           })
-        } else if (
-          user.username === this.$store.state.user.username &&
-          user.rank === "none"
-        ) {
+        }
+
+        // If you were revoked access to this playspace
+        else if (username === this.username && rank === "none") {
           // TODO handle better
           location.reload()
           this.$notify({
@@ -248,6 +250,7 @@ export default {
             text: `You can no longer stream on ${this.playSpace.channelName}`
           })
         }
+
         this.$store.dispatch("playSpace/updateUserRankInCurrentPlaySpace", user)
       }
     },
@@ -365,7 +368,8 @@ export default {
     ...mapActions({
       addStream: "stream/addStream",
       reset: "stream/reset",
-      setCurrentPlaySpace: "playSpace/setCurrentPlaySpace"
+      setCurrentPlaySpace: "playSpace/setCurrentPlaySpace",
+      setModal: "nav/setModal"
     }),
 
     async connectTransport(transport) {
@@ -390,6 +394,34 @@ export default {
           this.addStream({ type: key, stream })
         })
       })
+    },
+
+    endVideoStream() {
+      this.$store.dispatch("stream/setLocalTrack", {
+        type: "video",
+        track: null
+      })
+    },
+
+    // TODO move this share attempt code into p-share component
+    // maybe store the url, text and title in the nav.js store?
+    async share() {
+      if (!navigator.share) {
+        this.setModal("share")
+        return
+      }
+
+      const { fullUsername } = this.$store.state.user
+      let text = "Come watch our PlaySpace!"
+      if (fullUsername) {
+        text = `${fullUsername} has invited you to their PlaySpace!`
+      }
+
+      navigator.share({
+        url: window.location.origin + this.$route.fullPath,
+        text,
+        title: "PlaySpace"
+      })
     }
   }
 }
@@ -403,6 +435,11 @@ export default {
     li {
       text-shadow: 0 0 10px black;
     }
+  }
+
+  &__actions > .p-btn {
+    @apply mr-1;
+    @apply flex-shrink-0;
   }
 }
 </style>

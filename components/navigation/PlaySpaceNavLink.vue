@@ -1,7 +1,11 @@
 <template>
   <li
     class="bg-black-500 shadow hover:bg-black-400 hover:shadow-reg rounded-lg"
-    :class="$route.params.playspace === playSpace.id ? 'bg-black-700 hover:bg-black-600' : ''"
+    :class="
+      $route.params.playspace === playSpace.id
+        ? 'bg-black-700 hover:bg-black-600'
+        : ''
+    "
   >
     <nuxt-link
       :to="`/p/${playSpace.id}`"
@@ -9,7 +13,7 @@
       :class="{ 'items-center': !stream.isLive }"
     >
       <p-avatar :avatar="playSpace.avatar" size="md" class="flex-shrink-0" />
-      <div class="hidden md:block ml-1">
+      <div class="ml-1">
         <h3 class="font-bold">{{ playSpace.channelName }}</h3>
         <div v-if="stream.isLive">
           <p class="font-thin text-sm">{{ playSpace.title | truncate(24) }}</p>
@@ -45,9 +49,5 @@ export default {
 <style lang="scss" scoped>
 li {
   transition-duration: 100ms;
-
-  &:hover {
-    transform: scale(1.02);
-  }
 }
 </style>

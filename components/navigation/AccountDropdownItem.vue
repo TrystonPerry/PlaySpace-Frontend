@@ -4,15 +4,15 @@
       v-if="type === 'link'"
       v-bind="$attrs"
       v-on="$listeners"
-      class="nav-link flex items-center justify-center md:justify-start hover:bg-black-500 h-12 py-1 px-2"
+      class="account-dropdown-item flex items-center justify-end hover:bg-black-500 h-10 py-1 px-2 w-full"
     >
       <slot></slot>
     </nuxt-link>
     <button
-      v-else-if="type === 'button'"
+      v-if="type === 'button'"
       v-bind="$attrs"
       v-on="$listeners"
-      class="nav-link flex items-center justify-center md:justify-start hover:bg-black-500 h-12 w-full py-1 px-2"
+      class="account-dropdown-item flex items-center justify-end hover:bg-black-500 h-10 py-1 px-2 w-full"
     >
       <slot></slot>
     </button>
@@ -34,7 +34,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.nav-link {
+.account-dropdown-item {
   transition-duration: 50ms;
 }
 </style>
