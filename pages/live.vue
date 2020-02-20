@@ -49,10 +49,12 @@ import { mapState } from "vuex"
 import API from "@/api/api"
 
 import MyPlaySpaces from "@/components/playspaces/MyPlaySpaces"
+import PlaySpace from "@/components/playspaces/PlaySpace"
 
 export default {
   components: {
-    MyPlaySpaces
+    MyPlaySpaces,
+    PlaySpace
   },
 
   head: require("@/meta/live")(),

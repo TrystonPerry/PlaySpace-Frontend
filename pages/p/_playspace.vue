@@ -6,7 +6,7 @@
   >
     <div class="flex flex-col h-full relative">
       <div
-        class="flex-shrink-0 text-center text-gray-300 overflow-y-auto"
+        class="flex-shrink-0 text-center text-gray-300 bg-dark-2 overflow-y-auto"
         :class="{ 'flex-shrink-0': $store.state.nav.isMobile && totalStreams }"
         :style="
           $store.state.nav.isMobile && !totalStreams ? 'max-height:40vh' : ''
@@ -25,21 +25,24 @@
           class="channel__header relative px-5 py-5 sm:py-20"
           style="z-index:2"
         >
-          <div class="md:flex items-center container mx-auto">
-            <div class="md:w-6/12 md:text-left">
+          <div class="container mx-auto">
+            <div class="flex md:block items-center text-left">
               <p-avatar
                 :avatar="playSpace.avatar"
-                size="lg"
-                img-classes="shadow-reg"
-                class="mb-2"
+                img-classes="shadow-reg w-12 h-12 md:w-24 md:h-24"
+                class="flex-shrink-0 md:mb-2"
               />
-              <h1 class="text-2xl font-bold">{{ playSpace.channelName }}</h1>
-              <h2 class="text-lg">{{ playSpace.title }}</h2>
+              <div class="ml-2 md:ml-0">
+                <h1 class="text-lg md:text-2xl font-bold">
+                  {{ playSpace.channelName }}
+                </h1>
+                <h2 class="md:text-lg">{{ playSpace.title }}</h2>
+              </div>
             </div>
           </div>
           <p-avatar
             :avatar="playSpace.avatar"
-            class="w-full h-full absolute top-0 left-0 object-cover bg-gray-100 opacity-25"
+            class="hidden sm:block w-full h-full absolute top-0 left-0 object-cover bg-gray-100 opacity-25"
             img-classes="w-full h-full"
             no-rounded
             style="z-index:-1; filter: blur(4px)"
@@ -59,7 +62,9 @@
           btn-classes="flex-grow"
         >
           <p-icon icon="fas fa-plus" />
-          <div class="text-xs">Add Stream</div>
+          <div class="text-xs">
+            {{ totalStreams ? "Add Stream" : "Start Stream" }}
+          </div>
         </AddStream>
         <p-btn
           v-if="$store.state.stream.tracks.video"

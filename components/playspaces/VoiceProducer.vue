@@ -8,13 +8,19 @@
     <h3 class="flex-grow font-bold">
       {{ $store.state.user.fullUsername }}
     </h3>
-    <p-btn @click="toggleMute" variant="none" size="xs">
+    <p-btn @click="toggleMute" size="xs" variant="none" class="w-10">
       <p-icon
+        v-if="muted"
         icon="fas fa-microphone-slash"
         size="md"
-        screen-reader-text="Toggle Mute"
-        class="mr-5"
-        :class="{ 'text-red-600': muted }"
+        screen-reader-text="Unmute your microphone"
+        class="text-red-600"
+      />
+      <p-icon
+        v-else
+        icon="fas fa-microphone"
+        size="md"
+        screen-reader-text="Mute your microphone"
       />
     </p-btn>
   </div>
