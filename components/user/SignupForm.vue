@@ -1,6 +1,8 @@
 <template>
   <form @submit.prevent>
-    <h1 class="text-3xl text-primary font-bold mb-2">Sign Up</h1>
+    <h1 v-if="!hideTitle" class="text-3xl text-primary font-bold mb-2">
+      Sign Up
+    </h1>
     <p-input
       v-model="email"
       @blur="checkEmail"
@@ -68,6 +70,13 @@ const regex = {
 }
 
 export default {
+  props: {
+    hideTitle: {
+      type: Boolean,
+      default: false
+    }
+  },
+
   data: () => ({
     email: "",
     username: "",

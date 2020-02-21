@@ -1,6 +1,9 @@
 <template>
   <label class="block text-lg">
-    <div class="flex flex-wrap items-center">
+    <div
+      class="flex"
+      :class="{ 'flex-wrap items-center': type !== 'checkbox' }"
+    >
       <input
         v-if="type === 'checkbox'"
         type="checkbox"
@@ -15,7 +18,8 @@
           title="Required"
           aria-hidden
           class="text-red-500"
-        >*</span>
+          >*</span
+        >
       </span>
       <input
         v-if="['text', 'email', 'password'].indexOf(type) > -1"

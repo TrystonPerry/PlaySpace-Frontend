@@ -1,9 +1,5 @@
 <template>
-  <p-btn
-    @click="copy"
-    :variant="variant"
-    :size="size"
-  >
+  <p-btn @click="copy" :variant="variant" :size="size">
     <slot></slot>
   </p-btn>
 </template>
@@ -27,23 +23,23 @@ export default {
 
   methods: {
     copy() {
-      const el = document.createElement('textarea');
+      const el = document.createElement("textarea")
       el.classList.add("visually-hidden")
-      el.value = this.text;
-      document.body.appendChild(el);
-      el.select();
-      document.execCommand('copy');
-      document.body.removeChild(el);
+      el.value = this.text
+      document.body.appendChild(el)
+      el.select()
+      document.execCommand("copy")
+      document.body.removeChild(el)
       this.$notify({
         type: "success",
         title: "Link copied!",
         text: "Send this link to your friends so they can join!"
       })
+      this.$emit("copy")
     }
   }
 }
 </script>
 
 <style>
-
 </style>

@@ -9,12 +9,12 @@
           <h1
             class="text-3xl md:text-5xl font-bold text-gray-300 leading-none mb-3"
           >
-            Online rooms to watch anything with anyone.
+            Watch anything with anyone.
           </h1>
           <div class="mx-auto lg:mx-0 max-w-96">
             <p class="text-gray-400 md:text-lg mt-1 mb-4">
               Create an online room to stream games, watch videos, and chat with
-              friends. No downloads or account required. Just have fun.
+              friends. No downloads required. Just have fun.
             </p>
           </div>
           <div class="mb-2">
@@ -133,9 +133,9 @@
             <h2 class="text-2xl mt-2 mb-2 font-bold">
               Stream Your Gameplay
             </h2>
-            <p class="flex-grow mb-6">
-              Stream your Desktop, Web Browser Tab, or Webcam to your friends or
-              the world. No software needed. Just send out the link!
+            <p class="flex-grow">
+              Easily stream your desktop, web browser tab, or webcam to anyone!
+              No software needed. Just send out the link!
             </p>
             <div>
               <!-- <p-btn variant="primary" size="xs" class="py-1 px-3">
@@ -150,10 +150,10 @@
             <h2 class="text-2xl mt-2 mb-2 font-bold">
               Watch YouTube in Sync
             </h2>
-            <p class="flex-grow mb-6">
-              With our native YouTube player, all videos are synchornized for
-              anyone watching. When someone pauses, plays, or skims the video,
-              it updates for all.
+            <p class="flex-grow">
+              No more "3. 2. 1. Go!". With our dedicated YouTube synchronized
+              player, watching videos with your friends has never been more
+              seamless.
             </p>
             <div>
               <!-- <p-btn variant="primary" size="xs" class="py-1 px-3">
@@ -171,9 +171,10 @@
             <h2 class="text-2xl mt-2 mb-2 font-bold">
               Mix & Match Streams
             </h2>
-            <p class="flex-grow mb-6">
-              When you create a PlaySpace, you can have multiple people
-              streaming to a single PlaySpace.
+            <p class="flex-grow">
+              Up to 5 people can stream in a single PlaySpace at once. See all
+              of your friends' perspectives in the game your playing. Or use it
+              as a collaboration utility.
             </p>
             <div>
               <!-- <p-btn variant="primary" size="xs" class="py-1 px-3">
@@ -185,23 +186,10 @@
       </div>
     </div>
 
-    <!-- Use cases -->
-    <!-- <div class="w-full sm:w-6/12 md:w-9/12 p-2">
-        <ul class="list-style-none pl-0">
-        <li v-for="(useCase, i) in useCases" :key="i">
-            <div v-show="curUseCase === i">
-              <h2 class="font-bold mb-1 text-primary">{{ useCase.title }}</h2>
-              <h3 class="text-3xl leading-tight">{{ useCase.desc }}</h3>
-            </div>
-          </li>
-        </ul>
-      </div>
-    </div> -->
-
     <!-- Testimonials -->
     <div class="my-16 md:my-32 px-2 mx-auto" style="max-width:1500px">
       <h2 class="text-2xl md:text-4xl pb-6 font-bold text-center">
-        What are our people saying about us?
+        What are people saying about us?
       </h2>
       <div class="flex flex-wrap">
         <div class="sm:w-6/12 md:w-3/12 p-4 flex flex-col w-full">
@@ -251,7 +239,7 @@
         <div class="sm:w-6/12 md:w-3/12 p-4 flex flex-col w-full">
           <p class="flex-grow">
             “PlaySpace was easier to get started with and play games with my
-            buddies then any other VoIP solution out there.”
+            buddies than any other VoIP solution out there.”
           </p>
           <div class="flex items-center">
             <img
@@ -271,20 +259,116 @@
         <h2 class="text-2xl md:text-4xl pb-1 font-bold text-center">
           Ready to get started?
         </h2>
-        <p class="text-lg max-w-96 mx-auto">
+        <!-- <p class="text-lg max-w-96 mx-auto">
           Create a PlaySpace, send the link to a friend, and start watching
           together.
-        </p>
-        <p-link to="/create" variant="primary" class="my-2">
+        </p> -->
+        <div class=" mt-3">
+          <ol class="max-w-96 mx-auto">
+            <li>
+              <div
+                class="flex items-center justify-center max-w-64 mx-auto font-bold mb-3"
+                :class="{ 'opacity-25': signupStep > 1 }"
+              >
+                <span
+                  class="flex-shrink-0 rounded-full border-primary border-2 h-8 w-8 mr-2"
+                >
+                  1
+                </span>
+                <p class="text-left">
+                  Sign up for free.
+                </p>
+              </div>
+              <SignupForm
+                v-if="signupStep === 1"
+                @signup="signupStep++"
+                hide-title
+                class="mb-5"
+              />
+            </li>
+            <li>
+              <div
+                class="flex items-center justify-center max-w-64 mx-auto font-bold mb-3"
+                :class="{ 'opacity-25': signupStep > 2 }"
+              >
+                <span
+                  class="flex-shrink-0 rounded-full border-primary border-2 h-8 w-8 mr-2"
+                >
+                  2
+                </span>
+                <p class="text-left">
+                  Create your first PlaySpace.
+                </p>
+              </div>
+              <PlaySpaceForm
+                v-if="signupStep === 2"
+                @create="onCreatePlaySpace"
+                hide-title
+                class="mb-5 text-left"
+              />
+            </li>
+            <li>
+              <div
+                class="flex items-center justify-center max-w-64 mx-auto font-bold mb-3"
+                :class="{ 'opacity-25': signupStep > 3 }"
+              >
+                <span
+                  class="flex-shrink-0 rounded-full border-primary border-2 h-8 w-8 mr-2"
+                >
+                  3
+                </span>
+                <p class="text-left">
+                  Copy the link and send it to a friend.
+                </p>
+              </div>
+              <p-copy
+                v-if="signupStep === 3"
+                @copy="signupStep++"
+                :text="computedNewPlaySpaceLink"
+                variant="primary"
+                class="mb-5"
+              >
+                Copy Link
+              </p-copy>
+            </li>
+            <li>
+              <div
+                class="flex items-center justify-center max-w-64 mx-auto font-bold mb-3"
+                :class="{ 'opacity-25': signupStep > 4 }"
+              >
+                <span
+                  class="flex-shrink-0 rounded-full border-primary border-2 h-8 w-8 mr-2"
+                >
+                  4
+                </span>
+                <p class="text-left">
+                  Start watching together.
+                </p>
+              </div>
+              <div v-if="signupStep === 4">
+                Redirecting you in 3 seconds...
+              </div>
+            </li>
+          </ol>
+        </div>
+        <!-- <p-link to="/create" variant="primary" class="my-2">
           Create a PlaySpace
-        </p-link>
+        </p-link> -->
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import SignupForm from "@/components/user/SignupForm"
+import PlaySpaceForm from "@/components/user/PlaySpaceForm"
+
 export default {
+  components: {
+    SignupForm,
+    PlaySpaceForm
+  },
+
   data: () => ({
     curUseCase: 0,
     useCases: [
@@ -314,18 +398,48 @@ export default {
           "Are you a developer who wants to share their code with the world and help teach people concepts or just have fun building things? PlaySpace is the best way to do that! With sub-second delay, it makes online teaching & cooperation easier."
       }
     ],
-    pros: [
-      "Sub-second video streaming",
-      "Web Browser-based, no software required",
-      "Stream with the click of a few buttons",
-      "Consume all web-based content in a single place."
-    ],
-    cons: [
-      "Lower video quality than Twitch and YouTube Live",
-      "With low latency, stream snipers could be a problem",
-      "It’s still a Beta run by 1 person :P"
-    ]
-  })
+    // pros: [
+    //   "Sub-second video streaming",
+    //   "Web Browser-based, no software required",
+    //   "Stream with the click of a few buttons",
+    //   "Consume all web-based content in a single place."
+    // ],
+    // cons: [
+    //   "Lower video quality than Twitch and YouTube Live",
+    //   "With low latency, stream snipers could be a problem",
+    //   "It’s still a Beta run by 1 person :P"
+    // ],
+    signupStep: 1,
+    newPlaySpaceId: ""
+  }),
+
+  computed: {
+    computedNewPlaySpaceLink() {
+      return `${window.location.origin}/${this.newPlaySpaceId}`
+    }
+  },
+
+  methods: {
+    onCreatePlaySpace(channelId) {
+      this.newPlaySpaceId = channelId
+      this.signupStep++
+    }
+  },
+
+  watch: {
+    signupStep(value) {
+      // If final step, redirect to newly created playspace in 3 seconds
+      if (value === 4) {
+        setTimeout(() => {
+          this.$router.push(`/p/${this.newPlaySpaceId}`)
+        }, 3000)
+      }
+    },
+
+    "$store.state.user.username"(value) {
+      this.signupStep = value ? 2 : 1
+    }
+  }
 }
 </script>
 
