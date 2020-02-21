@@ -85,10 +85,6 @@ const regex = {
 }
 
 export default {
-  head: {
-    title: "Create - PlaySpace"
-  },
-
   props: {
     hideTitle: {
       type: Boolean,

@@ -75,6 +75,10 @@ export default {
     PlaySpaceForm
   },
 
+  head: {
+    title: "Create - PlaySpace"
+  },
+
   data: () => ({
     showSignup: true
   }),
