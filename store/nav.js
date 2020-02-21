@@ -56,7 +56,10 @@ export default {
 
     setModal({ commit }, value) {
       commit("SET_MODAL", value)
-    }
+    },
+
+    // Just used to force update for video container, no real functionality
+    updateVideoContainer() {}
   }
 }
 
