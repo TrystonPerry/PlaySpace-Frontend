@@ -173,8 +173,8 @@
             </h2>
             <p class="flex-grow">
               Up to 5 people can stream in a single PlaySpace at once. See all
-              of your friends' perspectives in the game your playing. Or use it
-              as a collaboration utility.
+              of your friends' perspectives in the game you're playing. Or use
+              it as a collaboration utility.
             </p>
             <div>
               <!-- <p-btn variant="primary" size="xs" class="py-1 px-3">
