@@ -49,7 +49,9 @@ export default {
     },
 
     computedClasses() {
-      return `w-${this.computedSize} h-${this.computedSize} object-cover ${this.imgClasses} ${this.noRounded ? '' : 'rounded-full'}`
+      return `w-${this.computedSize} h-${this.computedSize} object-cover ${
+        this.imgClasses
+      } ${this.noRounded ? "" : "rounded-full"}`
     }
   }
 }

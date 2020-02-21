@@ -8,17 +8,19 @@
     <h3 class="flex-grow font-bold">
       {{ mic.username }}
     </h3>
-    <p-btn
-      @click="toggleMute"
-      variant="none"
-      size="xs"
-    >
+    <p-btn @click="toggleMute" variant="none" size="xs" class="w-10">
       <p-icon
+        v-if="muted"
         icon="fas fa-volume-mute"
         size="md"
-        screen-reader-text="Toggle Mute"
-        class="mr-5"
-        :class="{ 'text-red-600': muted }"
+        :screen-reader-text="`Unmute ${mic.username}'s voice`"
+        class="text-red-600"
+      />
+      <p-icon
+        v-else
+        icon="fas fa-volume-up"
+        size="md"
+        :screen-reader-text="`Mute ${mic.username}'s voice`"
       />
     </p-btn>
     <audio :muted="muted" :id="mic.producerId" />
@@ -62,7 +64,7 @@ export default {
 
   methods: {
     ...mapActions({
-      "removeStream": "stream/removeStream"
+      removeStream: "stream/removeStream"
     }),
 
     async consume(stream) {
@@ -81,7 +83,7 @@ export default {
       audioPlayer.srcObject = new MediaStream([this.consumer.track])
       try {
         await audioPlayer.play()
-      } catch(err) {
+      } catch (err) {
         this.$store.dispatch("stream/setIsSoundBlocked", true)
         return
       }
@@ -99,16 +101,15 @@ export default {
         this.sockets.SFU.subscribe(
           `room-transport-consumed-${producerId}`,
           async consumerOptions => {
-
             // TODO figure out why this code is run multiple times when switching
             // between playspaces
             if (this.consumer) return
-            
+
             this.consumer = await window.recvTransport.consume(consumerOptions)
 
             this.$socket.SFU.emit("room-consumer-pause", {
               consumerId: this.consumer.id,
-              state: 'resume'
+              state: "resume"
             })
 
             resolve()
@@ -118,7 +119,7 @@ export default {
     },
 
     toggleMute() {
-      const state = this.muted ? 'resume' : "pause"
+      const state = this.muted ? "resume" : "pause"
       this.$socket.SFU.emit("room-consumer-pause", {
         consumerId: this.consumer.id,
         state

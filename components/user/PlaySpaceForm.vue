@@ -1,12 +1,14 @@
 <template>
   <form @submit.prevent>
-    <h1 class="text-3xl text-primary font-bold">Create a PlaySpace</h1>
-    <h2 class="text-xl mb-3">You can change any of these later.</h2>
+    <div v-if="!hideTitle">
+      <h1 class="text-3xl text-primary font-bold">Create a PlaySpace</h1>
+      <h2 class="text-xl mb-3">You can change any of these later.</h2>
+    </div>
     <label>
       <div class="text-lg font-bold text-primary">Name</div>
-      <div class="mb-1">
+      <!-- <div class="mb-1">
         This is the name users will see when they see your PlaySpace in the app.
-      </div>
+      </div> -->
       <p-input
         v-model="channelName"
         @blur="checkChannelName"
@@ -32,16 +34,16 @@
         v-model="isPublic"
         :checked="isPublic"
         type="checkbox"
-        label="Do you want your PlaySpace to be discoverable to anyone?"
+        label="Do you want this PlaySpace to be indexed on the site?"
         class="mb-2"
       />
     </label>
     <div class="mb-3"></div>
     <label v-if="isPublic">
       <div class="text-lg font-bold text-primary">Identifier</div>
-      <div class="mb-1">
+      <!-- <div class="mb-1">
         The is the name that will be used in the url bar to find your PlaySpace.
-      </div>
+      </div> -->
       <p-input
         v-model="id"
         @blur="checkId"
@@ -50,10 +52,10 @@
         :required="isPublic"
         :disabled="!isPublic"
       />
-      <span v-if="!isPublic" class="mt-3">
+      <!-- <span v-if="!isPublic" class="mt-3">
         Note: When making a Private PlaySpace, you will be assigned a random
         identifier. You can change it later if you change it to Public.
-      </span>
+      </span> -->
       <small v-if="errors.id" class="text-red-500">
         {{ errors.id }}
       </small>
@@ -84,7 +86,14 @@ const regex = {
 
 export default {
   head: {
-    title: "Create - PlaySpace",
+    title: "Create - PlaySpace"
+  },
+
+  props: {
+    hideTitle: {
+      type: Boolean,
+      default: false
+    }
   },
 
   data: () => ({

@@ -2,7 +2,7 @@
   <div>
     <div
       v-if="!$store.state.user.username"
-      class="flex flex-wrap container mx-auto px-2 mt-6"
+      class="flex flex-wrap container mx-auto px-2 my-6"
     >
       <div class="w-full md:w-6/12 p-2 mb-6">
         <h1 class="text-4xl font-bold text-primary mb-2">
@@ -16,24 +16,16 @@
           You need to create an account or log in first.
         </h3>
         <div v-if="showSignup">
-          <p>Already have an account with us?</p>
-          <p-btn
-            @click="showSignup = false"
-            to="/login"
-            variant="primary-hover"
-            size="sm"
-          >
+          <p class="mb-2">Already have an account with us?</p>
+          <p-btn @click="showSignup = false" variant="primary-hover" size="sm">
             Log In Instead
           </p-btn>
         </div>
         <div v-else>
-          <p>Don't have an account yet? You need one to create a PlaySpace</p>
-          <p-btn
-            @click="showSignup = true"
-            to="/login"
-            variant="primary-hover"
-            size="sm"
-          >
+          <p class="mb-2">
+            Don't have an account yet? You need one to create a PlaySpace
+          </p>
+          <p-btn @click="showSignup = true" variant="primary-hover" size="sm">
             Sign Up Instead
           </p-btn>
         </div>

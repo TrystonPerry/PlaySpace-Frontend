@@ -12,6 +12,7 @@ import PModal from "@/components/globals/PModal"
 import PTooltip from "@/components/globals/PTooltip"
 import PLoading from "@/components/globals/PLoading"
 import PCopy from "@/components/globals/PCopy"
+import PShare from "@/components/globals/PShare"
 
 Vue.component("popper", Popper)
 Vue.component("p-avatar", PAvatar)
@@ -25,3 +26,4 @@ Vue.component("p-modal", PModal)
 Vue.component("p-tooltip", PTooltip)
 Vue.component("p-loading", PLoading)
 Vue.component("p-copy", PCopy)
+Vue.component("p-share", PShare)

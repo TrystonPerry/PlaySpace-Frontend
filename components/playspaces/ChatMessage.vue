@@ -1,29 +1,91 @@
 <template>
   <li
-    @mouseenter="showControls"
-    @mouseleave="hideControls"
-    class="relative flex flex-column hover:bg-black-300 px-1"
+    class="relative flex flex-column px-1"
     :class="{ 'opacity-25': message.isBanned }"
   >
     <p-avatar :avatar="message.avatar" size="xs" class="flex-shrink-0" />
     <div class="w-full ml-1 max-h-64 overflow-hidden rounded-md">
-      <h3 class="text-sm font-bold">{{ message.username }}</h3>
-      <p v-if="type === 'text'" class="text-xs break-words" v-html="computedMessage"></p>
-      <img v-else-if="type === 'img'" :src="computedMessage" class="w-full rounded-md" />
-      <p v-else-if="type === 'banned'" class="text-xs break-words italic">Message removed</p>
+      <button @click="toggleControls" class="m-0 p-0">
+        <h3 class="text-sm font-bold">{{ message.username }}</h3>
+      </button>
+      <p
+        v-if="type === 'text'"
+        class="text-xs break-words"
+        v-html="computedMessage"
+      ></p>
+      <img
+        v-else-if="type === 'img'"
+        :src="computedMessage"
+        class="w-full rounded-md"
+      />
+      <p v-else-if="type === 'banned'" class="text-xs break-words italic">
+        Message removed
+      </p>
     </div>
-    <small
+    <div
       v-if="isControls"
-      class="absolute flex text-gray-200 py-1 px-2 text-center"
-      style="top:50%;left:50%;transform:translate(-50%,-50%)"
+      v-click-out="toggleControls"
+      class="absolute bg-black-300 shadow rounded p-2"
+      style="z-index:110"
     >
-      <p-btn @click="banUser(900)" variant="none" size="xs" class="bg-orange-500 text-xs mr-1">
-        <p-icon icon="fas fa-trash p-1" />
-      </p-btn>
-      <p-btn @click="banUser(-1)" variant="none" size="xs" class="bg-red-500 text-xs">
-        <p-icon icon="fas fa-trash p-1" />
-      </p-btn>
-    </small>
+      <div class="flex items-center">
+        <p-avatar :avatar="message.avatar" size="sm" />
+        <h1 class="flex-grow font-bold ml-1">
+          {{ message.username }}
+        </h1>
+        <p-btn @click="toggleControls" variant="none" size="xs">
+          <p-icon icon="fas fa-times" />
+        </p-btn>
+      </div>
+      <div v-if="canEditUser" class="flex mt-3">
+        <p-btn
+          v-if="!isStreamer"
+          @click="onAddUser"
+          variant="none"
+          size="sm"
+          class="block flex-grow text-sm"
+        >
+          <p-icon icon="fas fa-user-plus" />
+          <div class="text-xs">
+            Make Streamer
+          </div>
+        </p-btn>
+        <p-btn
+          v-else
+          @click="revokeUser"
+          variant="none"
+          size="sm"
+          class="block flex-grow text-sm"
+        >
+          <p-icon icon="fas fa-user-plus" />
+          <div class="text-xs">
+            Remove Streamer
+          </div>
+        </p-btn>
+        <p-btn
+          @click="banUser(900)"
+          variant="none"
+          size="sm"
+          class="block flex-grow text-sm"
+        >
+          <p-icon icon="fas fa-clock" />
+          <div class="text-xs">
+            Timeout
+          </div>
+        </p-btn>
+        <p-btn
+          @click="banUser"
+          variant="none"
+          size="sm"
+          class="block flex-grow text-sm"
+        >
+          <p-icon icon="fas fa-ban" />
+          <div class="text-xs">
+            Ban
+          </div>
+        </p-btn>
+      </div>
+    </div>
   </li>
 </template>
 
@@ -73,26 +135,25 @@ export default {
         )
       }
       return out
+    },
+
+    canEditUser() {
+      return (
+        this.isAuthorized &&
+        this.message.username.toLowerCase() !== this.$store.state.user.username
+      )
+    },
+
+    isStreamer() {
+      return this.$store.state.playSpace.current.users[
+        this.message.username.toLowerCase()
+      ]
     }
   },
 
   methods: {
-    showControls() {
-      if (!this.isAuthorized) return
-      if (
-        this.message.username.toLowerCase() === this.$store.state.user.username
-      )
-        return
-      this.isControls = true
-    },
-
-    hideControls() {
-      if (!this.isAuthorized) return
-      if (
-        this.message.username.toLowerCase() === this.$store.state.user.username
-      )
-        return
-      this.isControls = false
+    toggleControls() {
+      this.isControls = !this.isControls
     },
 
     async banUser(time) {
@@ -123,6 +184,47 @@ export default {
         type: "success",
         title: `Ban successful`,
         text: `User ${text}`
+      })
+    },
+
+    async onAddUser() {
+      const { username } = this.message
+
+      const { success, error } = await API.updateUser(
+        this.$route.params.playspace,
+        {
+          username,
+          rank: "streamer"
+        }
+      )
+
+      if (!success) {
+        return
+      }
+
+      this.$notify({
+        type: "success",
+        title: "Added user to PlaySpace",
+        text: `${username} can now stream to "${this.$store.state.playSpace.current.channelName}"!`
+      })
+    },
+
+    async revokeUser() {
+      const { username } = this.message
+
+      const { success } = await API.updateUser(this.$route.params.playspace, {
+        username,
+        rank: "none"
+      })
+
+      if (!success) {
+        return
+      }
+
+      this.$notify({
+        type: "success",
+        title: "Removed user from PlaySpace",
+        text: `${username} can no longer stream to ${this.$store.state.playSpace.current.channelName}`
       })
     }
   }

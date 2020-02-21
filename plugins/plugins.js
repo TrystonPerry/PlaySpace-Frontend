@@ -2,7 +2,7 @@ import Vue from "vue"
 
 import Vuelidate from "vuelidate"
 import PortalVue from "portal-vue"
-import Notifications from 'vue-notification/dist/ssr.js'
+import Notifications from "vue-notification/dist/ssr.js"
 
 Vue.directive("click-out", {
   bind(el, binding, vnode) {

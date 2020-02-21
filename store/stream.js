@@ -25,6 +25,14 @@ export default {
         state.streams.external.length +
         !!state.tracks.video
       )
+    },
+
+    totalExternalStreams(state) {
+      return state.streams.external.length
+    },
+
+    isStreaming(state) {
+      return !!state.tracks.video
     }
   },
 

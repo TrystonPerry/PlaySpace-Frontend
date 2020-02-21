@@ -8,9 +8,9 @@
         label="Name"
         type="text"
       />
-      <small v-if="errors.channelName" class="text-red-500">{{
-        errors.channelName
-      }}</small>
+      <small v-if="errors.channelName" class="text-red-500">
+        {{ errors.channelName }}
+      </small>
     </div>
     <div class="mb-2">
       <p-input v-model="title" @blur="checkTitle" label="Title" type="text" />
@@ -71,7 +71,6 @@ export default {
 
   created() {
     const data = this.$store.state.playSpace.current
-
     this.channelName = data.channelName
     this.title = data.title
     this.category = data.category

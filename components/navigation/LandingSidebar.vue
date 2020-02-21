@@ -1,56 +1,177 @@
 <template>
   <div
-    class="app-sidebar fixed top-0 bg-dark-5 text-gray-300 h-screen w-full max-w-64 shadow-reg"
+    class="app-sidebar fixed top-0 text-gray-300 w-screen h-screen p-4 sm:p-0 shadow-reg"
   >
     <ul
       v-click-out="close"
-      class="flex flex-col list-style-none h-full"
-      :style="`height: ${screenHeight}`"
+      class="flex flex-col bg-dark-5 rounded sm:rounded-none relative sm:max-w-64 max-h-full"
+      :style="`height:${screenHeight}`"
     >
       <li>
-        <button @click="close" class="w-12 h-12">
-          <p-icon icon="fas fa-bars" screen-reader-text="Menu" size="lg" />
-        </button>
+        <ul>
+          <li class="absolute right-0">
+            <button @click="close" class="sm:hidden w-12 h-12">
+              <p-icon
+                icon="fas fa-times"
+                screen-reader-text="Close menu"
+                size="lg"
+              />
+            </button>
+          </li>
+          <li class="sm:flex">
+            <button @click="close" class="hidden sm:block w-12 h-12">
+              <p-icon
+                icon="fas fa-bars"
+                screen-reader-text="Close menu"
+                size="lg"
+              />
+            </button>
+            <NavLink :to="homePath" class="font-bold">
+              <img
+                src="/img/playspace-icon-trans.png"
+                alt="PlaySpace logo"
+                class="h-full"
+              />
+              <span>PlaySpace</span>
+            </NavLink>
+          </li>
+        </ul>
       </li>
-      <NavLink @click="close" to="/live">
+      <NavLink to="/live">
         <span>Live</span>
       </NavLink>
-      <!-- <NavLink @click="close" to="/categories">
-        <span>Browse</span>
-      </NavLink> -->
-      <!-- <NavLink @click="close" to="/">
-        <span>About</span>
-      </NavLink> -->
-      <div class="flex-grow"></div>
-      <ul
-        v-if="!$store.state.user.username"
-        class="list-none flex text-center px-1"
+      <NavLink to="/spaces">
+        <span>Your PlaySpaces</span>
+      </NavLink>
+      <NavLink v-if="isLoggedIn" @click="logout" type="button">
+        <span>Log Out</span>
+      </NavLink>
+      <NavDivider v-if="$store.state.user.username" class="flex">
+        <h2>Your PlaySpaces</h2>
+      </NavDivider>
+      <li
+        v-if="$store.state.user.username"
+        class="flex-grow overflow-y-auto scrollbar"
       >
-        <li class="px-1 py-2 w-6/12">
-          <p-link to="/signup" variant="primary" size="sm" class="w-full">
-            Sign Up
-          </p-link>
+        <ul class="list-style-none px-1">
+          <PlaySpaceNavLink
+            v-for="playSpace in myPlaySpaces"
+            :key="playSpace.username"
+            :playSpace="playSpace"
+            class="mb-2"
+          />
+        </ul>
+      </li>
+      <li>
+        <ul class="bg-black-400 rounded m-2">
+          <NavLink v-if="!isLoggedIn" to="/login" class="sm:hidden">
+            <span>Log In</span>
+          </NavLink>
+          <NavLink v-if="!isLoggedIn" to="/signup" class="sm:hidden">
+            <span>Sign Up</span>
+          </NavLink>
+          <li class="w-full text-center">
+            <p-link to="/create" variant="primary" size="md" class="w-full">
+              Create a PlaySpace
+            </p-link>
+          </li>
+        </ul>
+      </li>
+      <ul
+        class="hidden sm:flex justify-center social-media list-style-none pl-0 text-gray-400 py-2 text-center"
+        aria-label="PlaySpace's Social Media"
+      >
+        <li class="mr-2">
+          <a
+            href="https://twitter.com/playspacetv"
+            target="_blank"
+            class="text-gray-300"
+          >
+            <p-icon
+              icon="fab fa-twitter"
+              screen-reader-text="PlaySpace Twitter"
+            />
+          </a>
         </li>
-        <li class="px-1 py-2 w-6/12">
-          <p-link to="/login" variant="primary-hover" size="sm" class="w-full">
-            Log In
-          </p-link>
+        <li class="mr-2">
+          <a
+            href="https://discord.gg/WwewP4D"
+            target="_blank"
+            class="text-gray-300"
+          >
+            <p-icon
+              icon="fab fa-discord"
+              screen-reader-text="PlaySpace Discord"
+            />
+          </a>
+        </li>
+        <li class="mr-2">
+          <a
+            href="https://medium.com/@playspacetv"
+            target="_blank"
+            class="text-gray-300"
+          >
+            <p-icon
+              icon="fab fa-medium"
+              screen-reader-text="PlaySpace Medium"
+            />
+          </a>
+        </li>
+        <li class="mr-2">
+          <a
+            href="https://www.youtube.com/channel/UC7Uqb7o-sthQtJLarbBGIcg"
+            target="_blank"
+            class="text-gray-300"
+          >
+            <p-icon
+              icon="fab fa-youtube"
+              screen-reader-text="PlaySpace YouTube"
+            />
+          </a>
+        </li>
+        <li class="mr-2">
+          <a
+            href="https://reddit.com/r/playspacetv"
+            target="_blank"
+            class="text-gray-300"
+          >
+            <p-icon
+              icon="fab fa-reddit"
+              screen-reader-text="PlaySpace Reddit"
+            />
+          </a>
+        </li>
+        <li>
+          <a
+            href="https://instagram.com/playspacetv"
+            target="_blank"
+            class="text-gray-300"
+          >
+            <p-icon
+              icon="fab fa-instagram"
+              screen-reader-text="PlaySpace Instagram"
+            />
+          </a>
         </li>
       </ul>
     </ul>
-    <!-- <div
-      class="app-sidebar-bg fixed top-0 left-0 h-screen w-screen"
-      style="background:rgba(0,0,0,0.2)"
-    ></div> -->
   </div>
 </template>
 
 <script>
+import { mapState, mapGetters } from "vuex"
+
+import API from "@/api/api"
+
 import NavLink from "./NavLink"
+import NavDivider from "./NavDivider"
+import PlaySpaceNavLink from "./PlaySpaceNavLink"
 
 export default {
   components: {
-    NavLink
+    NavLink,
+    NavDivider,
+    PlaySpaceNavLink
   },
 
   data: () => ({
@@ -66,12 +187,37 @@ export default {
     window.removeEventListener("resize", this.updateScreenHeight)
   },
 
+  computed: {
+    ...mapState({
+      myPlaySpaces: state => state.playSpace.my
+    }),
+
+    homePath() {
+      const { username } = this.$store.state.user
+      return username ? "/live" : "/"
+    },
+
+    isLoggedIn() {
+      return !!this.$store.state.user.username
+    }
+  },
+
   methods: {
     close() {
       this.$emit("close")
     },
 
+    logout() {
+      this.$store.dispatch("user/logout")
+      this.$router.push({ path: "/" })
+    },
+
     updateScreenHeight() {
+      // If a mobile 'sm' screen or less, we dont want a full height sidebar
+      if (window.innerWidth < 640) {
+        this.screenHeight = "auto"
+        return
+      }
       this.screenHeight = window.innerHeight + "px"
     }
   }
@@ -81,8 +227,6 @@ export default {
 <style lang="scss" scoped>
 .app-sidebar {
   z-index: 1020;
-}
-.app-sidebar-bg {
-  z-index: 1019;
+  background: rgba(0, 0, 0, 0.25);
 }
 </style>

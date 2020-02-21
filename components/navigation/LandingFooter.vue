@@ -7,7 +7,7 @@
         </div>
         <span class="opacity-75">
           PlaySpace is a platform for sharing experiences with your friends and
-          the world. It was started in 2019 and maintained soley by
+          the world. It was started in 2019 and maintained solely by
           <a
             href="https://twitter.com/trystonperry"
             class="text-primary underline"
