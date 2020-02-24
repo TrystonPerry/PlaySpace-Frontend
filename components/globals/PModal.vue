@@ -45,7 +45,6 @@ export default {
   //     if (value === true) {
   //       await this.$nextTick()
   //       const modal = document.getElementById(this.id)
-  //       console.log(modal, this.id)
   //       const input = modal.querySelector("input")
   //       if (input) {
   //         input.focus()

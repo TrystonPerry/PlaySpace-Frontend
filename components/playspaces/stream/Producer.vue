@@ -1,13 +1,22 @@
 <template>
   <div class="flex items-center justify-center">
     <div class="flex items-center justify-center w-full h-full">
-      <video ref="video" id="local" class="w-full h-full" controls autoplay muted playsinline></video>
+      <video
+        ref="video"
+        id="local"
+        class="w-full h-full"
+        controls
+        autoplay
+        muted
+        playsinline
+      ></video>
     </div>
     <p-btn
       @click="stopProduce"
       variant="none"
       class="absolute p-btn bg-red-400 text-white py-1 px-2"
-    >End Stream</p-btn>
+      >End Stream</p-btn
+    >
   </div>
 </template>
 
@@ -21,7 +30,6 @@ export default {
   }),
 
   mounted() {
-    console.log(this.$store.state.playSpace.current)
     this.produce()
   },
 
