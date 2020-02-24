@@ -19,10 +19,14 @@
       <p-btn
         v-for="stream in streams"
         :key="stream.producerId"
-        :variant="activeProducerId === stream.producerId ? 'primary' : 'primary-hover'"
+        :variant="
+          activeProducerId === stream.producerId ? 'primary' : 'primary-hover'
+        "
         @click="activeProducerId = stream.producerId"
         size="xs"
-      >{{ stream.username | truncate(4) }}</p-btn>
+      >
+        {{ stream.username | truncate(4) }}
+      </p-btn>
     </div>
   </div>
 </template>

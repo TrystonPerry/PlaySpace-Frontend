@@ -274,6 +274,8 @@ export default {
       "room-joined": async function(roomData) {
         const { routerRtpCapabilities } = roomData
 
+        this.$con.createDevice()
+
         this.$con.device = new Device()
         await this.$con.device.load({ routerRtpCapabilities })
 

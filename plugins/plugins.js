@@ -23,7 +23,12 @@ Vue.prototype.$con = {
   device: null,
   sendTransport: null,
   recvTransport: null,
-  micProducer: null
+  producers: {
+    video: null,
+    audio: null,
+    mic: null
+  },
+  consumers: {}
 }
 
 Vue.use(Vuelidate)

@@ -1,7 +1,10 @@
 <template>
   <div v-if="$store.state.user.username && isStreamer">
     <div
-      v-if="!$store.state.stream.tracks.mic && chatterCount < $store.state.playSpace.current.maxAudioStreams"
+      v-if="
+        !$store.state.stream.tracks.mic &&
+          chatterCount < $store.state.playSpace.current.maxAudioStreams
+      "
     >
       <p-btn @click="getMic" variant="none" size="sm" class="text-sm w-full">
         <p-icon icon="fas fa-phone" class="text-xs" />Join Chat
@@ -81,7 +84,7 @@ export default {
     },
 
     closeMic() {
-      if (this.$con.micProducer) {
+      if (this.$con.producers.mic) {
         this.closeMicProducer()
       }
       if (this.track) {
@@ -96,7 +99,7 @@ export default {
         "room-producer-close",
         this.$store.state.stream.producerIds.mic
       )
-      this.$con.micProducer.close()
+      this.$con.producers.mic.close()
     }
   }
 }
