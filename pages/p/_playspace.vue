@@ -195,6 +195,7 @@ export default {
     // TODO move transports and device to store.
     // TODO only request a new transport once per session
     this.$socket.SFU.emit("room-join", { roomId: this.$route.params.playspace })
+    this.$socket.API.emit("chat-join", { id: this.$route.params.playspace })
     this.$store.dispatch("playSpace/setCurrentPlaySpace", this.playSpace)
     // Subscribe to PlaySpace deleted event
     this.sockets.API.subscribe(`room-deleted-${this.playSpace.id}`, () => {
@@ -204,7 +205,9 @@ export default {
 
   beforeDestroy() {
     this.$socket.SFU.emit("room-leave")
+    this.$socket.API.emit("chat-leave")
     this.$store.dispatch("playSpace/removeCurrentPlaySpace")
+    this.$store.commit("chat/SET_MESSAGES", [])
     this.reset()
     window.device = null
     window.sendTransport = null
@@ -233,6 +236,10 @@ export default {
 
   sockets: {
     API: {
+      "chat-message"(messages) {
+        this.$store.commit("chat/ADD_MESSAGES", messages)
+      },
+
       "room-users-update"(user) {
         const { username, rank } = user
 
