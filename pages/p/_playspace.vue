@@ -4,7 +4,7 @@
     class="relative playspace h-full"
     style="max-height:100%"
   >
-    <div class="flex flex-col h-full relative">
+    <div v-if="isSupported" class="flex flex-col h-full relative">
       <div
         class="flex-shrink-0 text-center text-gray-300 bg-dark-2 overflow-y-auto"
         :class="{ 'flex-shrink-0': $store.state.nav.isMobile && totalStreams }"
@@ -106,6 +106,12 @@
         </p-btn>
       </div>
     </div>
+    <div v-else>
+      <h1 class="p-3 text-center text-gray-300 text-2xl font-bold">
+        Sorry, but your device is not supported :(
+      </h1>
+    </div>
+
     <client-only>
       <portal to="modal-container">
         <div
@@ -162,7 +168,8 @@ export default {
   data: () => ({
     device: null,
     sendTransport: null,
-    recvTransport: null
+    recvTransport: null,
+    isSupported: true
   }),
 
   head() {
@@ -274,9 +281,12 @@ export default {
       "room-joined": async function(roomData) {
         const { routerRtpCapabilities } = roomData
 
-        this.$con.createDevice()
-
-        this.$con.device = new Device()
+        let device
+        try {
+          device = await new Device()
+        } catch (err) {
+          this.isSupported = false
+        }
         await this.$con.device.load({ routerRtpCapabilities })
 
         if (!this.$con.device.canProduce("video")) {
