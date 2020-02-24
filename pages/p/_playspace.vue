@@ -281,12 +281,12 @@ export default {
       "room-joined": async function(roomData) {
         const { routerRtpCapabilities } = roomData
 
-        let device
         try {
-          device = await new Device()
+          this.$con.device = await new Device()
         } catch (err) {
           this.isSupported = false
         }
+
         await this.$con.device.load({ routerRtpCapabilities })
 
         if (!this.$con.device.canProduce("video")) {
