@@ -13,10 +13,7 @@
         "
       >
         <VideoContainer
-          v-if="device"
-          :device="device"
-          :sendTransport="sendTransport"
-          :recvTransport="recvTransport"
+          v-if="device && sendTransport && recvTransport"
           class="video-container"
         />
 
@@ -132,8 +129,7 @@
                 variant="none"
                 class="bg-black-800 mt-4"
               >
-                <p-icon icon="fas fa-volume-mute" />
-                Click to Unmute
+                <p-icon icon="fas fa-volume-mute" />Click to Unmute
               </p-btn>
             </div>
           </div>
@@ -163,6 +159,12 @@ export default {
     AddStream
   },
 
+  data: () => ({
+    device: null,
+    sendTransport: null,
+    recvTransport: null
+  }),
+
   head() {
     return require("@/meta/p/_playspace")({
       title: `${this.playSpace.channelName} - PlaySpace`,
@@ -171,12 +173,6 @@ export default {
       url: this.$route.path
     })
   },
-
-  data: () => ({
-    device: null,
-    sendTransport: null,
-    recvTransport: null
-  }),
 
   async asyncData({ params, error }) {
     const { data, success } = await API.getPlaySpace(params.playspace)
@@ -192,7 +188,6 @@ export default {
   },
 
   mounted() {
-    // TODO move transports and device to store.
     // TODO only request a new transport once per session
     this.$socket.SFU.emit("room-join", { roomId: this.$route.params.playspace })
     this.$socket.API.emit("chat-join", { id: this.$route.params.playspace })
@@ -209,9 +204,9 @@ export default {
     this.$store.dispatch("playSpace/removeCurrentPlaySpace")
     this.$store.commit("chat/SET_MESSAGES", [])
     this.reset()
-    window.device = null
-    window.sendTransport = null
-    window.recvTransport = null
+    this.$con.device = null
+    this.$con.sendTransport = null
+    this.$con.recvTransport = null
   },
 
   computed: {
@@ -279,18 +274,20 @@ export default {
       "room-joined": async function(roomData) {
         const { routerRtpCapabilities } = roomData
 
-        this.device = new Device()
-        await this.device.load({ routerRtpCapabilities })
-        window.device = this.device
+        this.$con.device = new Device()
+        await this.$con.device.load({ routerRtpCapabilities })
 
-        if (!this.device.canProduce("video")) {
+        if (!this.$con.device.canProduce("video")) {
           return alert("You cant produce video")
         }
-        if (!this.device.canProduce("audio")) {
+        if (!this.$con.device.canProduce("audio")) {
           return alert("You cant produce audio")
         }
 
+        this.device = this.$con.device
+
         this.$socket.SFU.emit("room-transport-create", "recv")
+
         // TODO only call this directly before a produce request
         this.$socket.SFU.emit("room-transport-create", "send")
 
@@ -298,19 +295,19 @@ export default {
       },
 
       "room-sendtransport-created": async function(transportOptions) {
-        this.sendTransport = await this.device.createSendTransport(
+        this.$con.sendTransport = await this.$con.device.createSendTransport(
           transportOptions
         )
-        this.connectTransport(this.sendTransport)
+        this.connectTransport(this.$con.sendTransport)
 
-        this.sendTransport.on("produce", (params, callback, errback) => {
+        this.$con.sendTransport.on("produce", (params, callback, errback) => {
           const requestId = Math.random()
             .toString(36)
             .substr(2, 9)
 
           this.$socket.SFU.emit("room-transport-produce", {
             producerOptions: {
-              transportId: this.sendTransport.id,
+              transportId: this.$con.sendTransport.id,
               kind: params.kind,
               rtpParameters: params.rtpParameters
             },
@@ -323,15 +320,15 @@ export default {
           )
         })
 
-        window.sendTransport = this.sendTransport
+        this.sendTransport = this.$con.sendTransport
       },
 
       "room-recvtransport-created": async function(transportOptions) {
-        this.recvTransport = await this.device.createRecvTransport(
+        this.$con.recvTransport = await this.$con.device.createRecvTransport(
           transportOptions
         )
-        this.connectTransport(this.recvTransport)
-        window.recvTransport = this.recvTransport
+        this.connectTransport(this.$con.recvTransport)
+        this.recvTransport = this.$con.recvTransport
       },
 
       "room-stream-video": async function(stream) {

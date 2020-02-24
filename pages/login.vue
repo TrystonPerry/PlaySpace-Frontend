@@ -1,5 +1,5 @@
 <template>
-  <div class="login flex flex-wrap container mx-auto px-2 mt-6">
+  <div class="login flex flex-wrap container mx-auto px-2 my-6">
     <div class="w-full md:w-6/12 p-2 mb-6">
       <h1 class="text-4xl font-bold text-primary mb-2">Log In</h1>
       <h2 class="text-xl mb-3">

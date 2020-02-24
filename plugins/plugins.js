@@ -19,6 +19,13 @@ Vue.directive("click-out", {
   }
 })
 
+Vue.prototype.$con = {
+  device: null,
+  sendTransport: null,
+  recvTransport: null,
+  micProducer: null
+}
+
 Vue.use(Vuelidate)
 Vue.use(PortalVue)
 Vue.use(Notifications)

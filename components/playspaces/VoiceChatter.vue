@@ -45,7 +45,7 @@ export default {
 
   async mounted() {
     // TODO fix this shit code
-    if (!window.recvTransport) {
+    if (!this.$con.recvTransport) {
       await new Promise(resolve => {
         setTimeout(() => resolve(), 1000)
       })
@@ -95,7 +95,7 @@ export default {
       return await new Promise((resolve, reject) => {
         this.$socket.SFU.emit("room-transport-consume", {
           producerId,
-          rtpCapabilities: window.device.rtpCapabilities
+          rtpCapabilities: this.$con.device.rtpCapabilities
         })
 
         this.sockets.SFU.subscribe(
@@ -105,7 +105,9 @@ export default {
             // between playspaces
             if (this.consumer) return
 
-            this.consumer = await window.recvTransport.consume(consumerOptions)
+            this.consumer = await this.$con.recvTransport.consume(
+              consumerOptions
+            )
 
             this.$socket.SFU.emit("room-consumer-pause", {
               consumerId: this.consumer.id,
