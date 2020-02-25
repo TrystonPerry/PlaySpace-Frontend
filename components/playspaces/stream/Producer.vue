@@ -1,22 +1,18 @@
 <template>
-  <div class="flex items-center justify-center">
+  <div
+    @mouseenter="showControls = true"
+    @mouseleave="showControls = false"
+    class="flex items-center justify-center"
+  >
     <div class="flex items-center justify-center w-full h-full">
-      <video
-        ref="video"
-        id="local"
-        class="w-full h-full"
-        controls
-        autoplay
-        muted
-        playsinline
-      ></video>
+      <video ref="video" id="local" class="w-full h-full" controls autoplay muted playsinline></video>
     </div>
     <p-btn
+      v-if="showControls"
       @click="stopProduce"
       variant="none"
       class="absolute p-btn bg-red-400 text-white py-1 px-2"
-      >End Stream</p-btn
-    >
+    >End Stream</p-btn>
   </div>
 </template>
 
@@ -26,7 +22,8 @@ export default {
   data: () => ({
     videoProducer: null,
     audioProducer: null,
-    stream: null
+    stream: null,
+    showControls: false
   }),
 
   mounted() {
