@@ -1,16 +1,12 @@
 <template>
   <div class="landing pt-6 text-gray-400 overflow-x-hidden">
     <!-- Hero -->
-    <div
-      class="container lg:flex items-center mx-auto px-2 pt-6 lg:min-h-screen-75"
-    >
+    <div class="container lg:flex items-center mx-auto px-2 pt-6 lg:min-h-screen-75">
       <div class="mb-8 lg:w-5/12">
         <div class="w-full text-center lg:text-left">
           <h1
             class="text-3xl md:text-5xl font-bold text-gray-300 leading-none mb-3"
-          >
-            Watch anything with anyone.
-          </h1>
+          >Watch anything with anyone.</h1>
           <div class="mx-auto lg:mx-0 max-w-96">
             <p class="text-gray-400 md:text-lg mt-1 mb-4">
               Create an online room to stream games, watch videos, and chat with
@@ -18,52 +14,25 @@
             </p>
           </div>
           <div class="mb-2">
-            <p-link
-              to="/create"
-              variant="primary"
-              class="mr-2 mb-2 text-center"
-            >
-              Create a PlaySpace
-            </p-link>
+            <p-link to="/create" variant="primary" class="mr-2 mb-2 text-center">Create a PlaySpace</p-link>
           </div>
           <ul
             class="flex justify-center lg:justify-start social-media list-style-none pl-0 text-gray-400"
             aria-label="PlaySpace's Social Media"
           >
             <li class="mr-2">
-              <a
-                href="https://twitter.com/playspacetv"
-                target="_blank"
-                class="text-primary"
-              >
-                <p-icon
-                  icon="fab fa-twitter"
-                  screen-reader-text="PlaySpace Twitter"
-                />
+              <a href="https://twitter.com/playspacetv" target="_blank" class="text-primary">
+                <p-icon icon="fab fa-twitter" screen-reader-text="PlaySpace Twitter" />
               </a>
             </li>
             <li class="mr-2">
-              <a
-                href="https://discord.gg/WwewP4D"
-                target="_blank"
-                class="text-primary"
-              >
-                <p-icon
-                  icon="fab fa-discord"
-                  screen-reader-text="PlaySpace Discord"
-                />
+              <a href="https://discord.gg/WwewP4D" target="_blank" class="text-primary">
+                <p-icon icon="fab fa-discord" screen-reader-text="PlaySpace Discord" />
               </a>
             </li>
             <li class="mr-2">
-              <a
-                href="https://medium.com/@playspacetv"
-                target="_blank"
-                class="text-primary"
-              >
-                <p-icon
-                  icon="fab fa-medium"
-                  screen-reader-text="PlaySpace Medium"
-                />
+              <a href="https://medium.com/@playspacetv" target="_blank" class="text-primary">
+                <p-icon icon="fab fa-medium" screen-reader-text="PlaySpace Medium" />
               </a>
             </li>
             <li class="mr-2">
@@ -72,67 +41,50 @@
                 target="_blank"
                 class="text-primary"
               >
-                <p-icon
-                  icon="fab fa-youtube"
-                  screen-reader-text="PlaySpace YouTube"
-                />
+                <p-icon icon="fab fa-youtube" screen-reader-text="PlaySpace YouTube" />
               </a>
             </li>
             <li class="mr-2">
-              <a
-                href="https://reddit.com/r/playspacetv"
-                target="_blank"
-                class="text-primary"
-              >
-                <p-icon
-                  icon="fab fa-reddit"
-                  screen-reader-text="PlaySpace Reddit"
-                />
+              <a href="https://reddit.com/r/playspacetv" target="_blank" class="text-primary">
+                <p-icon icon="fab fa-reddit" screen-reader-text="PlaySpace Reddit" />
               </a>
             </li>
             <li class="mr-2">
-              <a
-                href="https://instagram.com/playspacetv"
-                target="_blank"
-                class="text-primary"
-              >
-                <p-icon
-                  icon="fab fa-instagram"
-                  screen-reader-text="PlaySpace Instagram"
-                />
+              <a href="https://instagram.com/playspacetv" target="_blank" class="text-primary">
+                <p-icon icon="fab fa-instagram" screen-reader-text="PlaySpace Instagram" />
               </a>
             </li>
           </ul>
         </div>
       </div>
       <div class="lg:ml-8 lg:w-7/12">
-        <div
-          style="width:100%;height:0px;position:relative;padding-bottom:56.250%;"
-        >
-          <iframe
-            src="https://streamable.com/s/zgbow/moiyfr"
-            frameborder="0"
-            width="100%"
-            height="100%"
-            allowfullscreen
-            style="width:100%;height:100%;position:absolute;left:0px;top:0px;overflow:hidden;"
-          ></iframe>
-        </div>
+        <video
+          src="https://playspace-static.s3-us-west-1.amazonaws.com/videos/trailer.mp4"
+          autoplay
+          muted
+          playsinline
+          loop
+          class="full-width"
+        ></video>
       </div>
     </div>
 
     <!-- Features -->
     <div class="py-12 my-8 rounded bg-dark-2 px-2">
-      <h2 class="text-2xl md:text-4xl pb-6 font-bold text-center">
-        What can you do with a PlaySpace?
-      </h2>
+      <h2 class="text-2xl md:text-4xl pb-6 font-bold text-center">What can you do with a PlaySpace?</h2>
       <div class="flex flex-wrap container mx-auto justify-center">
         <div class="md:w-6/12 lg:w-4/12 p-2" style="max-width:350px">
           <p-card class="flex flex-col h-full">
-            <img src="https://i.imgur.com/IerG6cP.png" alt="" />
-            <h2 class="text-2xl mt-2 mb-2 font-bold">
-              Stream Your Gameplay
-            </h2>
+            <!-- <img src="https://i.imgur.com/IerG6cP.png" alt="" /> -->
+            <video
+              src="https://playspace-static.s3-us-west-1.amazonaws.com/videos/desktop.mp4"
+              autoplay
+              muted
+              playsinline
+              loop
+              class="full-width"
+            ></video>
+            <h2 class="text-2xl mt-2 mb-2 font-bold">Stream Your Gameplay</h2>
             <p class="flex-grow">
               Easily stream your desktop, web browser tab, or webcam to anyone!
               No software needed. Just send out the link!
@@ -140,16 +92,22 @@
             <div>
               <!-- <p-btn variant="primary" size="xs" class="py-1 px-3">
                 Learn More
-              </p-btn> -->
+              </p-btn>-->
             </div>
           </p-card>
         </div>
         <div class="md:w-6/12 lg:w-4/12 p-2" style="max-width:350px">
           <p-card class="flex flex-col h-full">
-            <img src="https://i.imgur.com/czupxMf.png" alt="" />
-            <h2 class="text-2xl mt-2 mb-2 font-bold">
-              Watch YouTube in Sync
-            </h2>
+            <!-- <img src="https://i.imgur.com/czupxMf.png" alt="" /> -->
+            <video
+              src="https://playspace-static.s3-us-west-1.amazonaws.com/videos/youtube.mp4"
+              autoplay
+              muted
+              playsinline
+              loop
+              class="full-width"
+            ></video>
+            <h2 class="text-2xl mt-2 mb-2 font-bold">Watch YouTube in Sync</h2>
             <p class="flex-grow">
               No more "3. 2. 1. Go!". With our dedicated YouTube synchronized
               player, watching videos with your friends has never been more
@@ -158,19 +116,25 @@
             <div>
               <!-- <p-btn variant="primary" size="xs" class="py-1 px-3">
                 Learn More
-              </p-btn> -->
+              </p-btn>-->
             </div>
           </p-card>
         </div>
         <div class="md:w-6/12 lg:w-4/12 p-2" style="max-width:350px">
           <p-card class="flex flex-col h-full">
-            <img
+            <!-- <img
               src="https://i.imgur.com/OoGV3ZA.png"
               alt="PlaySpace UI Mockup"
-            />
-            <h2 class="text-2xl mt-2 mb-2 font-bold">
-              Mix & Match Streams
-            </h2>
+            />-->
+            <video
+              src="https://playspace-static.s3-us-west-1.amazonaws.com/videos/tiled.mp4"
+              autoplay
+              muted
+              playsinline
+              loop
+              class="full-width"
+            ></video>
+            <h2 class="text-2xl mt-2 mb-2 font-bold">Mix & Match Streams</h2>
             <p class="flex-grow">
               Up to 5 people can stream in a single PlaySpace at once. See all
               of your friends' perspectives in the game you're playing. Or use
@@ -179,7 +143,7 @@
             <div>
               <!-- <p-btn variant="primary" size="xs" class="py-1 px-3">
                 Learn More
-              </p-btn> -->
+              </p-btn>-->
             </div>
           </p-card>
         </div>
@@ -188,14 +152,10 @@
 
     <!-- Testimonials -->
     <div class="my-16 md:my-32 px-2 mx-auto" style="max-width:1500px">
-      <h2 class="text-2xl md:text-4xl pb-6 font-bold text-center">
-        What are people saying about us?
-      </h2>
+      <h2 class="text-2xl md:text-4xl pb-6 font-bold text-center">What are people saying about us?</h2>
       <div class="flex flex-wrap">
         <div class="sm:w-6/12 md:w-3/12 p-4 flex flex-col w-full">
-          <p class="flex-grow">
-            “The future of PlaySpace is loooking really, really good.”
-          </p>
+          <p class="flex-grow">“The future of PlaySpace is loooking really, really good.”</p>
           <div class="flex items-center">
             <img
               src="https://i.imgur.com/QkWf1i3.png"
@@ -256,49 +216,30 @@
 
     <div class="py-24 bg-dark-2 px-4 text-center">
       <div class="container mx-auto">
-        <h2 class="text-2xl md:text-4xl pb-1 font-bold text-center">
-          Ready to get started?
-        </h2>
+        <h2 class="text-2xl md:text-4xl pb-1 font-bold text-center">Ready to get started?</h2>
         <!-- <p class="text-lg max-w-96 mx-auto">
           Create a PlaySpace, send the link to a friend, and start watching
           together.
-        </p> -->
-        <div class=" mt-3">
+        </p>-->
+        <div class="mt-3">
           <ol class="max-w-96 mx-auto">
             <li>
               <div
                 class="flex items-center justify-center max-w-64 mx-auto font-bold mb-3"
                 :class="{ 'opacity-25': signupStep > 1 }"
               >
-                <span
-                  class="flex-shrink-0 rounded-full border-primary border-2 h-8 w-8 mr-2"
-                >
-                  1
-                </span>
-                <p class="text-left">
-                  Sign up for free.
-                </p>
+                <span class="flex-shrink-0 rounded-full border-primary border-2 h-8 w-8 mr-2">1</span>
+                <p class="text-left">Sign up for free.</p>
               </div>
-              <SignupForm
-                v-if="signupStep === 1"
-                @signup="signupStep++"
-                hide-title
-                class="mb-5"
-              />
+              <SignupForm v-if="signupStep === 1" @signup="signupStep++" hide-title class="mb-5" />
             </li>
             <li>
               <div
                 class="flex items-center justify-center max-w-64 mx-auto font-bold mb-3"
                 :class="{ 'opacity-25': signupStep > 2 }"
               >
-                <span
-                  class="flex-shrink-0 rounded-full border-primary border-2 h-8 w-8 mr-2"
-                >
-                  2
-                </span>
-                <p class="text-left">
-                  Create your first PlaySpace.
-                </p>
+                <span class="flex-shrink-0 rounded-full border-primary border-2 h-8 w-8 mr-2">2</span>
+                <p class="text-left">Create your first PlaySpace.</p>
               </div>
               <PlaySpaceForm
                 v-if="signupStep === 2"
@@ -312,14 +253,8 @@
                 class="flex items-center justify-center max-w-64 mx-auto font-bold mb-3"
                 :class="{ 'opacity-25': signupStep > 3 }"
               >
-                <span
-                  class="flex-shrink-0 rounded-full border-primary border-2 h-8 w-8 mr-2"
-                >
-                  3
-                </span>
-                <p class="text-left">
-                  Copy the link and send it to a friend.
-                </p>
+                <span class="flex-shrink-0 rounded-full border-primary border-2 h-8 w-8 mr-2">3</span>
+                <p class="text-left">Copy the link and send it to a friend.</p>
               </div>
               <p-copy
                 v-if="signupStep === 3"
@@ -327,33 +262,23 @@
                 :text="computedNewPlaySpaceLink"
                 variant="primary"
                 class="mb-5"
-              >
-                Copy Link
-              </p-copy>
+              >Copy Link</p-copy>
             </li>
             <li>
               <div
                 class="flex items-center justify-center max-w-64 mx-auto font-bold mb-3"
                 :class="{ 'opacity-25': signupStep > 4 }"
               >
-                <span
-                  class="flex-shrink-0 rounded-full border-primary border-2 h-8 w-8 mr-2"
-                >
-                  4
-                </span>
-                <p class="text-left">
-                  Start watching together.
-                </p>
+                <span class="flex-shrink-0 rounded-full border-primary border-2 h-8 w-8 mr-2">4</span>
+                <p class="text-left">Start watching together.</p>
               </div>
-              <div v-if="signupStep === 4">
-                Redirecting you in 3 seconds...
-              </div>
+              <div v-if="signupStep === 4">Redirecting you in 3 seconds...</div>
             </li>
           </ol>
         </div>
         <!-- <p-link to="/create" variant="primary" class="my-2">
           Create a PlaySpace
-        </p-link> -->
+        </p-link>-->
       </div>
     </div>
   </div>
