@@ -340,6 +340,7 @@ export default {
         // If skipped video is current playing video, load next video
         if (index === 0) {
           this.loadVideo(this.stream.queue[0])
+          this.onPlay()
         }
       }
     )
@@ -405,7 +406,7 @@ export default {
     onPlay() {
       this.$socket.SFU.emit(`room-stream-youtube-play`, {
         id: this.stream.id,
-        time: this.player.getCurrentTime()
+        time: this.player.getCurrentTime() || 0
       })
       this.setYouTubeVideoState({ state: 1, stream: this.stream })
       this.playerData.isPaused = false
