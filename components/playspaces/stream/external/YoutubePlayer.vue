@@ -208,7 +208,7 @@ export default {
     playerData: {
       time: 0,
       duration: 0,
-      volume: 50,
+      volume: 100,
       isMuted: true,
       isPaused: true,
       isFullscreen: true
@@ -245,6 +245,13 @@ export default {
     })
 
     setTimeout(() => {
+      // TODO move this to its own store
+      // Get volume from localStorage
+      const playerData = JSON.parse(localStorage.getItem("playspace-player"))
+      if (playerData) {
+        this.playerData.volume = playerData.youtube.volume
+      }
+
       // Set volume initially
       this.player.setVolume(this.playerData.volume)
       this.playerData.isMuted = this.playerData.volume === 0
@@ -363,6 +370,13 @@ export default {
   watch: {
     "playerData.volume"(volume) {
       this.player.setVolume(volume)
+      // TODO update this code, move it to vuex store
+      const playerData = {
+        youtube: {
+          volume
+        }
+      }
+      localStorage.setItem("playspace-player", JSON.stringify(playerData))
       if (volume > 0) this.playerData.isMuted = false
       else this.playerData.isMuted = true
     },
