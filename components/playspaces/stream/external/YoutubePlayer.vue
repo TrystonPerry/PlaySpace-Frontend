@@ -1,15 +1,18 @@
 <template>
-  <div 
-    @mouseenter="controls = true" 
+  <div
+    @mouseenter="controls = true"
     @mouseleave="controls = false"
-    :id="`${stream.id}-container`" 
+    :id="`${stream.id}-container`"
     class="h-full w-full relative"
   >
-    <div 
-      v-show="stream.queue.length > 0" 
-      class="h-full w-full"
-    >
-      <div :id="stream.id" :src="src" frameborder="0" class="w-full h-full" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"></div>
+    <div v-show="stream.queue.length > 0" class="h-full w-full">
+      <div
+        :id="stream.id"
+        :src="src"
+        frameborder="0"
+        class="w-full h-full"
+        allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+      ></div>
     </div>
     <div
       v-show="stream.queue.length === 0"
@@ -21,7 +24,11 @@
           <h2 class="text-2xl font-bold">The Queue is Empty</h2>
           <p>Add videos to the queue to continue watching!</p>
         </div>
-        <p-btn @click="isAddVideo = !isAddVideo" variant="none" class="bg-green-700">
+        <p-btn
+          @click="isAddVideo = !isAddVideo"
+          variant="none"
+          class="bg-green-700"
+        >
           <p-icon icon="fas fa-plus" />Add Video
         </p-btn>
         <p-btn
@@ -81,20 +88,20 @@
       class="controls absolute flex"
       style="left:50%;top:50%;transform:translate(-50%,-50%)"
     >
-      <p-btn 
-        @click="isAddVideo = !isAddVideo" 
-        variant="none" 
-        size="sm" 
+      <p-btn
+        @click="isAddVideo = !isAddVideo"
+        variant="none"
+        size="sm"
         class="bg-green-700 mr-1 text-xs lg:text-base"
       >
         <p-icon icon="fas fa-plus" />
         Add Video
       </p-btn>
-      <p-btn 
-        v-if="stream.queue.length && isStreamer" 
-        @click="skipCurrentVideo" 
-        variant="none" 
-        size="sm" 
+      <p-btn
+        v-if="stream.queue.length && isStreamer"
+        @click="skipCurrentVideo"
+        variant="none"
+        size="sm"
         class="bg-blue-400 mr-1 text-xs lg:text-base"
       >
         <p-icon icon="fas fa-forward" />
@@ -111,66 +118,58 @@
         Remove Player
       </p-btn>
     </div>
-    <div
-      v-if="controls"
-      class="w-full bg-dark-4 absolute bottom-0 left-0"
-    >
+    <div v-if="controls" class="w-full bg-dark-4 absolute bottom-0 left-0">
       <div v-if="isStreamer" class="relative w-full h-full">
-        <input 
+        <input
           type="range"
-          @input="onTimeChange($event)" 
+          @input="onTimeChange($event)"
           min="0"
           :value="playerData.time"
           :max="playerData.duration"
           class="absolute left-0 w-full h-4"
-          style="top:-0.5rem" 
+          style="top:-0.5rem"
         />
       </div>
-        <div class="flex items-center ">
-          <div v-if="isStreamer">
-            <p-btn
-              v-if="!playerData.isPaused"
-              @click="onPause"
-              variant="none"
-            >
-              <p-icon icon="fas fa-pause" screen-reader-text="Pause" />
-            </p-btn>
-            <p-btn
-              v-else
-              @click="onPlay"
-              variant="none"
-            >
-              <p-icon icon="fas fa-play" screen-reader-text="Play" />
-            </p-btn>
-          </div>
-          <div 
-            @mouseenter="showVolume = true"
-            @mouseleave="showVolume = false"
-            class="flex items-center"
+      <div class="flex items-center ">
+        <div v-if="isStreamer">
+          <p-btn v-if="!playerData.isPaused" @click="onPause" variant="none">
+            <p-icon icon="fas fa-pause" screen-reader-text="Pause" />
+          </p-btn>
+          <p-btn v-else @click="onPlay" variant="none">
+            <p-icon icon="fas fa-play" screen-reader-text="Play" />
+          </p-btn>
+        </div>
+        <div
+          @mouseenter="showVolume = true"
+          @mouseleave="showVolume = false"
+          class="flex items-center"
+        >
+          <p-btn
+            @click="playerData.isMuted = !playerData.isMuted"
+            variant="none"
+            class="w-12"
           >
-            <p-btn
-              @click="playerData.isMuted = !playerData.isMuted" 
-              variant="none"
-              class="w-12"
-            >
-              <p-icon v-if="playerData.isMuted" icon="fas fa-volume-mute" />
-              <p-icon v-else-if="playerData.volume > 50" icon="fas fa-volume-up" />
-              <p-icon v-else icon="fas fa-volume-down" />
-            </p-btn>
-            <input 
-              v-if="showVolume"
-              v-model="playerData.volume"
-              type="range" 
-              class="w-24"
-              min="0"
-              max="100"
-            >
-          </div>
-          <span class="ml-2 text-xs opacity-75">
-            {{ playerTime }} / {{ playerDuration }}
-          </span>
-          <div class="flex-grow"></div>
-          <!-- <p-btn variant="none">
+            <p-icon v-if="playerData.isMuted" icon="fas fa-volume-mute" />
+            <p-icon
+              v-else-if="playerData.volume > 50"
+              icon="fas fa-volume-up"
+            />
+            <p-icon v-else icon="fas fa-volume-down" />
+          </p-btn>
+          <input
+            v-if="showVolume"
+            v-model="playerData.volume"
+            type="range"
+            class="w-24"
+            min="0"
+            max="100"
+          />
+        </div>
+        <span class="ml-2 text-xs opacity-75">
+          {{ playerTime }} / {{ playerDuration }}
+        </span>
+        <div class="flex-grow"></div>
+        <!-- <p-btn variant="none">
             <p-icon icon="fas fa-cog" screen-reader-text="Video Quality" />
         </p-btn> -->
         <!-- <p-btn @click="controls = !controls" variant="none">
@@ -205,11 +204,11 @@ export default {
 
   data: () => ({
     player: null,
-    
+
     playerData: {
       time: 0,
       duration: 0,
-      volume: 0,
+      volume: 100,
       isMuted: true,
       isPaused: true,
       isFullscreen: true
@@ -246,6 +245,13 @@ export default {
     })
 
     setTimeout(() => {
+      // TODO move this to its own store
+      // Get volume from localStorage
+      const playerData = JSON.parse(localStorage.getItem("playspace-player"))
+      if (playerData) {
+        this.playerData.volume = playerData.youtube.volume
+      }
+
       // Set volume initially
       this.player.setVolume(this.playerData.volume)
       this.playerData.isMuted = this.playerData.volume === 0
@@ -262,10 +268,7 @@ export default {
         })
       }
 
-      // If player is not brand new
-      if (this.stream.state !== -1) {
-        this.seekTo(this.stream.time)
-      }
+      this.seekTo(this.stream.time)
 
       // If player is paused, pause it
       if (this.stream.state === 2) {
@@ -300,7 +303,8 @@ export default {
 
     // On play
     this.sockets.SFU.subscribe(
-      `room-stream-youtube-${this.stream.id}-played`, () => {
+      `room-stream-youtube-${this.stream.id}-played`,
+      () => {
         this.playVideo()
         this.setYouTubeVideoState({ state: 1, stream: this.stream })
         this.playerData.isPaused = false
@@ -309,7 +313,8 @@ export default {
 
     // On pause
     this.sockets.SFU.subscribe(
-      `room-stream-youtube-${this.stream.id}-paused`, () => {
+      `room-stream-youtube-${this.stream.id}-paused`,
+      () => {
         this.pauseVideo()
         this.setYouTubeVideoState({ state: 2, stream: this.stream })
         this.playerData.isPaused = true
@@ -335,6 +340,7 @@ export default {
         // If skipped video is current playing video, load next video
         if (index === 0) {
           this.loadVideo(this.stream.queue[0])
+          this.onPlay()
         }
       }
     )
@@ -352,19 +358,26 @@ export default {
     playerTime() {
       const t = this.playerData.time
       if (!t) return "0:00"
-      return `${Math.floor(t/60)}:${("0"+(Math.floor(t%60))).substr(-2)}`
+      return `${Math.floor(t / 60)}:${("0" + Math.floor(t % 60)).substr(-2)}`
     },
 
     playerDuration() {
       const t = this.playerData.duration
       if (!t) return "0:00"
-      return `${Math.floor(t/60)}:${("0"+(Math.floor(t%60))).substr(-2)}`
+      return `${Math.floor(t / 60)}:${("0" + Math.floor(t % 60)).substr(-2)}`
     }
   },
 
   watch: {
     "playerData.volume"(volume) {
       this.player.setVolume(volume)
+      // TODO update this code, move it to vuex store
+      const playerData = {
+        youtube: {
+          volume
+        }
+      }
+      localStorage.setItem("playspace-player", JSON.stringify(playerData))
       if (volume > 0) this.playerData.isMuted = false
       else this.playerData.isMuted = true
     },
@@ -393,7 +406,7 @@ export default {
     onPlay() {
       this.$socket.SFU.emit(`room-stream-youtube-play`, {
         id: this.stream.id,
-        time: this.player.getCurrentTime()
+        time: this.player.getCurrentTime() || 0
       })
       this.setYouTubeVideoState({ state: 1, stream: this.stream })
       this.playerData.isPaused = false
@@ -477,31 +490,31 @@ export default {
     @apply bg-dark-4;
   }
 }
-input[type=range] {
+input[type="range"] {
   -webkit-appearance: none; /* Hides the slider so that custom slider can be made */
   width: 100%; /* Specific width is required for Firefox. */
   background: transparent; /* Otherwise white in Chrome */
 }
 
-input[type=range]::-webkit-slider-thumb {
+input[type="range"]::-webkit-slider-thumb {
   -webkit-appearance: none;
 }
 
-input[type=range]:focus {
+input[type="range"]:focus {
   outline: none; /* Removes the blue border. You should probably do some kind of focus styling for accessibility reasons though. */
 }
 
-input[type=range]::-ms-track {
+input[type="range"]::-ms-track {
   width: 100%;
   cursor: pointer;
 
   /* Hides the slider so custom styles can be added */
-  background: transparent; 
+  background: transparent;
   border-color: transparent;
   color: transparent;
 }
 /* Special styling for WebKit/Blink */
-input[type=range]::-webkit-slider-thumb {
+input[type="range"]::-webkit-slider-thumb {
   -webkit-appearance: none;
   height: 1rem;
   width: 1rem;
@@ -512,14 +525,14 @@ input[type=range]::-webkit-slider-thumb {
 }
 
 /* All the same stuff for Firefox */
-input[type=range]::-moz-range-thumb {
+input[type="range"]::-moz-range-thumb {
   height: 1rem;
   width: 1rem;
   border-radius: 50%;
   background: #009dee;
   cursor: pointer;
 }
-input[type=range]::-webkit-slider-runnable-track {
+input[type="range"]::-webkit-slider-runnable-track {
   width: 100%;
   height: 0.3rem;
   cursor: pointer;
@@ -527,7 +540,7 @@ input[type=range]::-webkit-slider-runnable-track {
   border-radius: 1.3px;
 }
 
-input[type=range]::-moz-range-track {
+input[type="range"]::-moz-range-track {
   width: 100%;
   height: 0.3rem;
   cursor: pointer;
@@ -535,18 +548,18 @@ input[type=range]::-moz-range-track {
   border-radius: 1.3px;
 }
 
-input[type=range]::-ms-track {
+input[type="range"]::-ms-track {
   width: 100%;
   height: 0.3rem;
   cursor: pointer;
   background: #f3f3f3;
   color: transparent;
 }
-input[type=range]::-ms-fill-lower {
+input[type="range"]::-ms-fill-lower {
   background: #009dee;
   border: 0.2px solid #010101;
 }
-input[type=range]::-ms-fill-upper {
+input[type="range"]::-ms-fill-upper {
   background: #f3f3f3;
 }
 </style>
