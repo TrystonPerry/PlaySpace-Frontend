@@ -48,7 +48,11 @@ export default {
   },
 
   mounted() {
-    this.$store.state.stream.streams.video.forEach(this.consume)
+    this.streams.forEach(this.consume)
+  },
+
+  beforeDestroy() {
+    Object.keys(this.consumers).forEach(this.destroyConsumer)
   },
 
   watch: {
@@ -112,9 +116,12 @@ export default {
       this.$store.dispatch("nav/updateVideoContainer")
 
       this.sockets.SFU.subscribe(`producer-stream-closed-${producerId}`, () => {
-        // CRITICAL TODO tell server to delete this consumer (maybe have server delete all consumers based on that closed producer anyways)
+        // CRITICAL TODO tell server to delete this consumer (maybe have server delete all consumers based on that closed producer anyways)\
+        this.consumers[producerId].close()
         delete this.consumers[producerId]
+
         if (stream.audio) {
+          this.consumers[stream.audio.producerId].close()
           delete this.consumers[stream.audio.producerId]
         }
 
@@ -192,6 +199,10 @@ export default {
           }
         )
       })
+    },
+
+    destroyConsumer(producerId) {
+      this.sockets.SFU.unsubscribe(`room-transport-consumed-${producerId}`)
     }
   },
 
