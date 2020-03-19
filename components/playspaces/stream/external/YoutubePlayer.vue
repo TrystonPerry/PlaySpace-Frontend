@@ -24,11 +24,7 @@
           <h2 class="text-2xl font-bold">The Queue is Empty</h2>
           <p>Add videos to the queue to continue watching!</p>
         </div>
-        <p-btn
-          @click="isAddVideo = !isAddVideo"
-          variant="none"
-          class="bg-green-700"
-        >
+        <p-btn @click="isAddVideo = !isAddVideo" variant="none" class="bg-green-700">
           <p-icon icon="fas fa-plus" />Add Video
         </p-btn>
         <p-btn
@@ -94,8 +90,7 @@
         size="sm"
         class="bg-green-700 mr-1 text-xs lg:text-base"
       >
-        <p-icon icon="fas fa-plus" />
-        Add Video
+        <p-icon icon="fas fa-plus" />Add Video
       </p-btn>
       <p-btn
         v-if="stream.queue.length && isStreamer"
@@ -104,8 +99,7 @@
         size="sm"
         class="bg-blue-400 mr-1 text-xs lg:text-base"
       >
-        <p-icon icon="fas fa-forward" />
-        Skip Video
+        <p-icon icon="fas fa-forward" />Skip Video
       </p-btn>
       <p-btn
         v-if="isStreamer"
@@ -114,11 +108,10 @@
         size="sm"
         class="bg-red-400 text-xs lg:text-base"
       >
-        <p-icon icon="fas fa-minus" />
-        Remove Player
+        <p-icon icon="fas fa-minus" />Remove Player
       </p-btn>
     </div>
-    <div v-if="controls" class="w-full bg-dark-4 absolute bottom-0 left-0">
+    <div v-if="controls && stream.queue.length" class="w-full bg-dark-4 absolute bottom-0 left-0">
       <div v-if="isStreamer" class="relative w-full h-full">
         <input
           type="range"
@@ -130,7 +123,7 @@
           style="top:-0.5rem"
         />
       </div>
-      <div class="flex items-center ">
+      <div class="flex items-center">
         <div v-if="isStreamer">
           <p-btn v-if="!playerData.isPaused" @click="onPause" variant="none">
             <p-icon icon="fas fa-pause" screen-reader-text="Pause" />
@@ -144,16 +137,9 @@
           @mouseleave="showVolume = false"
           class="flex items-center"
         >
-          <p-btn
-            @click="playerData.isMuted = !playerData.isMuted"
-            variant="none"
-            class="w-12"
-          >
+          <p-btn @click="playerData.isMuted = !playerData.isMuted" variant="none" class="w-12">
             <p-icon v-if="playerData.isMuted" icon="fas fa-volume-mute" />
-            <p-icon
-              v-else-if="playerData.volume > 50"
-              icon="fas fa-volume-up"
-            />
+            <p-icon v-else-if="playerData.volume > 50" icon="fas fa-volume-up" />
             <p-icon v-else icon="fas fa-volume-down" />
           </p-btn>
           <input
@@ -165,16 +151,14 @@
             max="100"
           />
         </div>
-        <span class="ml-2 text-xs opacity-75">
-          {{ playerTime }} / {{ playerDuration }}
-        </span>
+        <span class="ml-2 text-xs opacity-75">{{ playerTime }} / {{ playerDuration }}</span>
         <div class="flex-grow"></div>
         <!-- <p-btn variant="none">
             <p-icon icon="fas fa-cog" screen-reader-text="Video Quality" />
-        </p-btn> -->
+        </p-btn>-->
         <!-- <p-btn @click="controls = !controls" variant="none">
           <p-icon icon="fas fa-minus-square" screen-reader-text="Hide Controls" />
-        </p-btn> -->
+        </p-btn>-->
         <p-btn @click="toggleFullscreen" variant="none">
           <p-icon icon="fas fa-expand" screen-reader-text="Fullscreen" />
         </p-btn>
@@ -213,6 +197,9 @@ export default {
       isPaused: true,
       isFullscreen: true
     },
+
+    // TODO temp, this is a temp solution
+    skippedInLastSecond: false,
 
     interval: null,
     controls: false,
@@ -260,26 +247,35 @@ export default {
       this.playVideo()
       this.playerData.isPaused = false
 
+      // If brand new player
+      if (this.stream.state === -1) {
+        this.setYouTubeVideoState({
+          stream: this.stream,
+          state: 1
+        })
+      }
+
       // If video is playing, update time
-      if (this.stream.state === 1) {
+      else if (this.stream.state === 1) {
         this.setYouTubeVideoTime({
           stream: this.stream,
           time: this.stream.time + 2
         })
       }
 
-      this.seekTo(this.stream.time)
-
       // If player is paused, pause it
-      if (this.stream.state === 2) {
+      else if (this.stream.state === 2) {
         this.pauseVideo()
         this.playerData.isPaused = true
       }
+
+      this.seekTo(this.stream.time)
     }, 2000)
 
     // Add interval to check if time and state are synced
     this.interval = setInterval(() => {
       const playerTime = this.player.getCurrentTime()
+      const playerDuration = this.player.getDuration()
 
       // Add 1 second to goal time
       this.setYouTubeVideoTime({
@@ -287,9 +283,13 @@ export default {
         time: this.stream.time + 1
       })
 
+      if (playerDuration !== 0 && playerTime >= playerDuration) {
+        this.skipCurrentVideo()
+      }
+
       // Update player time info
       this.playerData.time = playerTime
-      this.playerData.duration = this.player.getDuration()
+      this.playerData.duration = playerDuration
     }, 1000)
 
     // On new time
@@ -328,6 +328,7 @@ export default {
         // If this video is the only video in queue, play it
         if (this.stream.queue.length === 1) {
           this.loadVideo(this.stream.queue[0])
+          this.onPlay()
         }
       }
     )
@@ -336,9 +337,21 @@ export default {
     this.sockets.SFU.subscribe(
       `room-stream-youtube-${this.stream.id}-skip-video`,
       index => {
+        if (this.skippedInLastSecond) return
+
+        this.skippedInLastSecond = true
+        setTimeout(() => (this.skippedInLastSecond = false), 1000)
+
         this.removeVideoFromYouTubeQueue({ stream: this.stream, index })
+
+        // If no more videos in queue
+        if (!this.stream.queue.length) {
+          this.pauseVideo()
+          this.setYouTubeVideoState({ state: 2, stream: this.stream })
+        }
+
         // If skipped video is current playing video, load next video
-        if (index === 0) {
+        else if (index === 0) {
           this.loadVideo(this.stream.queue[0])
           this.onPlay()
         }
@@ -469,7 +482,6 @@ export default {
         id: this.stream.id,
         index: 0
       })
-      this.setYouTubeVideoTime({ stream: this.stream, time: 0 })
     },
 
     toggleFullscreen() {
