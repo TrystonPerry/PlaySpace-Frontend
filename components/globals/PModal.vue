@@ -1,11 +1,11 @@
 <template>
   <portal to="modal-container">
-    <div v-if="value" class="modal flex items-center justify-center">
-      <div class="modal__box-container">
-        <div
-          class="modal__box bg-dark-5 shadow-reg scrollbar overflow-auto text-gray-300"
-        >
-          <button @click="onClose" class="btn btn-close">X</button>
+    <div v-if="value" ref="modal" class="modal flex items-center justify-center">
+      <div class="modal__box-container w-full" style="max-width:600px">
+        <div class="modal__box bg-dark-5 shadow-reg scrollbar overflow-auto text-gray-300">
+          <button @click="onClose" class="btn btn-close">
+            <p-icon icon="fa fa-times" />
+          </button>
           <slot></slot>
         </div>
       </div>
@@ -39,19 +39,15 @@ export default {
     window.removeEventListener("keydown", this.onKeyDown)
   },
 
-  // TODO fix input focus :(((((
-  // watch: {
-  //   async value(value) {
-  //     if (value === true) {
-  //       await this.$nextTick()
-  //       const modal = document.getElementById(this.id)
-  //       const input = modal.querySelector("input")
-  //       if (input) {
-  //         input.focus()
-  //       }
-  //     }
-  //   }
-  // },
+  watch: {
+    async value(value) {
+      if (value === true) {
+        await this.$nextTick()
+        const input = this.$refs.modal.querySelector("input")
+        if (input) input.focus()
+      }
+    }
+  },
 
   methods: {
     onKeyDown(e) {
@@ -86,7 +82,6 @@ export default {
     box-sizing: border-box;
 
     .btn-close {
-      color: red;
       font-weight: bold;
       color: white;
       background: black;

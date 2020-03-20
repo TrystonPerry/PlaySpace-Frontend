@@ -80,7 +80,6 @@ export default {
   overflow-x: auto;
 
   &__resize {
-    cursor: ew-resize;
     width: 4px;
     left: 0px;
   }
