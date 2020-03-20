@@ -73,7 +73,7 @@ export default {
     setProperSize() {
       // TODO figure out why $refs are undefined in mounted
       if (!this.$refs.videos) return
-      this.$refs.videos.style.height = "calc(100vh - 7rem)"
+      this.$refs.videos.style.height = "calc(100vh - 6.1rem)"
 
       const height = this.$refs.videos.offsetHeight
       const width = this.$refs.videos.offsetWidth

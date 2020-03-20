@@ -215,16 +215,8 @@ export default {
         autoplay: 0,
         controls: 0,
         disablenewui: 1,
-        disablekb: 1,
-        cc_load_policy: 1,
-        iv_load_policy: 3,
         modestbranding: 1,
-        playsinline: 1,
-        enablecastapi: 1,
-        rel: 0,
-        showinfo: 0,
-        enablejsapi: 1,
-        html5: 1
+        playsinline: 1
       },
       events: {
         onStateChange: this.onPlayerStateChange

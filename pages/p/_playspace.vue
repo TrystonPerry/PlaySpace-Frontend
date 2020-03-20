@@ -1,9 +1,5 @@
 <template>
-  <div
-    :key="$route.params.playspace"
-    class="relative playspace h-full"
-    style="max-height:100%"
-  >
+  <div :key="$route.params.playspace" class="relative playspace h-full" style="max-height:100%">
     <div v-if="isSupported" class="flex flex-col h-full relative">
       <div
         class="flex-shrink-0 text-center text-gray-300 bg-dark-2 overflow-y-auto"
@@ -12,10 +8,7 @@
           $store.state.nav.isMobile && !totalStreams ? 'max-height:40vh' : ''
         "
       >
-        <VideoContainer
-          v-if="device && sendTransport && recvTransport"
-          class="video-container"
-        />
+        <VideoContainer v-if="device && sendTransport && recvTransport" class="video-container" />
 
         <div
           v-if="!totalStreams"
@@ -30,9 +23,7 @@
                 class="flex-shrink-0 md:mb-2"
               />
               <div class="ml-2 md:ml-0">
-                <h1 class="text-lg md:text-2xl font-bold">
-                  {{ playSpace.channelName }}
-                </h1>
+                <h1 class="text-lg md:text-2xl font-bold">{{ playSpace.channelName }}</h1>
                 <h2 class="md:text-lg">{{ playSpace.title }}</h2>
               </div>
             </div>
@@ -54,33 +45,23 @@
       />
 
       <div class="channel__actions flex flex-shrink-0 bg-dark-5 w-full">
-        <AddStream
-          class="flex-grow flex-shrink-0 flex items-center"
-          btn-classes="flex-grow"
-        >
+        <AddStream class="flex-grow flex-shrink-0 flex items-center" btn-classes="flex-grow">
           <p-icon icon="fas fa-plus" />
-          <div class="text-xs">
-            {{ totalStreams ? "Add Stream" : "Start Stream" }}
-          </div>
+          <div class="text-xs">{{ totalStreams ? "Add Stream" : "Start Stream" }}</div>
         </AddStream>
         <p-btn
           v-if="$store.state.stream.tracks.video"
           @click="endVideoStream"
           variant="none"
           size="sm"
-          class="flex-grow flex-shrink-0 "
+          class="flex-grow flex-shrink-0"
         >
           <span class="text-red-500">
             <p-icon icon="fas fa-minus" />
             <div class="text-xs">End Stream</div>
           </span>
         </p-btn>
-        <p-btn
-          @click="share"
-          variant="none"
-          size="sm"
-          class="flex-grow flex-shrink-0"
-        >
+        <p-btn @click="share" variant="none" size="sm" class="flex-grow flex-shrink-0">
           <p-icon icon="fas fa-share-alt" />
           <div class="text-xs">Share</div>
         </p-btn>
@@ -107,9 +88,9 @@
       </div>
     </div>
     <div v-else>
-      <h1 class="p-3 text-center text-gray-300 text-2xl font-bold">
-        Sorry, but your device is not supported :(
-      </h1>
+      <h1
+        class="p-3 text-center text-gray-300 text-2xl font-bold"
+      >Sorry, but your device is not supported :(</h1>
     </div>
 
     <client-only>
@@ -122,9 +103,7 @@
           <div
             class="bg-dark-5 text-gray-300 text-center shadow-reg py-3 px-5 rounded-lg shadow-xl"
           >
-            <h1 class="text-xl font-bold text-center">
-              Sound Muted by Default
-            </h1>
+            <h1 class="text-xl font-bold text-center">Sound Muted by Default</h1>
             <p>
               Your browser has blocked sound from autoplaying, click to hear
               everyone.
