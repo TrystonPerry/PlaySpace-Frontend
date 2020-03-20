@@ -59,22 +59,38 @@
             :key="i"
             class="flex items-center mb-1 rounded p-1"
           >
-            <h3 class="flex-grow">{{ videoId }}</h3>
-            <p-tooltip v-if="isStreamer" text="Remove" position="left">
-              <p-btn
-                @click="
-                  $socket.SFU.emit(`room-stream-youtube-skip-video`, {
-                    id: stream.id,
-                    index: i
-                  })
-                "
-                variant="none"
-                size="xs"
-                class="bg-red-400"
-              >
-                <p-icon icon="fas fa-trash" />
-              </p-btn>
-            </p-tooltip>
+            <div class="flex flex-grow">
+              <div class="relative flex-shrink-0 mr-2 rounded" style="max-width:12rem">
+                <img
+                  :src="`https://i.ytimg.com/vi/${videoId}/mqdefault.jpg`"
+                  class="w-full h-full rounded"
+                />
+                <small
+                  class="absolute bg-dark-500"
+                  style="bottom:0;right:0;"
+                >{{ stream.queueMetaData[i].duration }}</small>
+              </div>
+              <div class="flex flex-col justify-center">
+                <h3 class="text-lg font-bold">{{ stream.queueMetaData[i].title }}</h3>
+                <small>Uploaded on {{ stream.queueMetaData[i].publishedAt | formatDate }}</small>
+                <div>
+                  <p-btn
+                    v-if="isStreamer"
+                    @click="
+                      $socket.SFU.emit(`room-stream-youtube-skip-video`, {
+                        id: stream.id,
+                        index: i
+                      })
+                    "
+                    variant="none"
+                    size="xs"
+                    class="bg-red-400 text-xs"
+                  >
+                    <p-icon icon="fas fa-trash" />Remove
+                  </p-btn>
+                </div>
+              </div>
+            </div>
           </li>
         </ul>
       </div>
@@ -315,8 +331,8 @@ export default {
 
     this.sockets.SFU.subscribe(
       `room-stream-youtube-${this.stream.id}-add-video`,
-      videoId => {
-        this.addVideoToYouTubeQueue({ stream: this.stream, videoId })
+      ({ videoId, video }) => {
+        this.addVideoToYouTubeQueue({ stream: this.stream, videoId, video })
         // If this video is the only video in queue, play it
         if (this.stream.queue.length === 1) {
           this.loadVideo(this.stream.queue[0])

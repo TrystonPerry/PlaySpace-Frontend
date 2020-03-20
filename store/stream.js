@@ -46,8 +46,9 @@ export default {
     ADD_STREAM(state, { type, stream }) {
       state.streams[type].push(stream)
     },
-    ADD_VIDEO_TO_YOUTUBE_QUEUE(state, { stream, videoId }) {
+    ADD_VIDEO_TO_YOUTUBE_QUEUE(state, { stream, videoId, video }) {
       stream.queue.push(videoId)
+      stream.queueMetaData.push(video)
     },
     SET_YOUTUBE_VIDEO_STATE(state, { state: newState, stream }) {
       stream.state = newState
@@ -57,6 +58,7 @@ export default {
     },
     REMOVE_VIDEO_FROM_YOUTUBE_QUEUE(state, { stream, index }) {
       stream.queue.splice(index, 1)
+      stream.queueMetaData.splice(index, 1)
     },
     REMOVE_STREAM(state, { type, stream }) {
       const i = state.streams[type].indexOf(stream)
