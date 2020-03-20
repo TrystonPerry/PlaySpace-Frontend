@@ -198,6 +198,9 @@ export default {
       isFullscreen: true
     },
 
+    // TODO temp, this is a temp solution
+    skippedInLastSecond: false,
+
     interval: null,
     controls: false,
     showVolume: false,
@@ -244,26 +247,35 @@ export default {
       this.playVideo()
       this.playerData.isPaused = false
 
+      // If brand new player
+      if (this.stream.state === -1) {
+        this.setYouTubeVideoState({
+          stream: this.stream,
+          state: 1
+        })
+      }
+
       // If video is playing, update time
-      if (this.stream.state === 1) {
+      else if (this.stream.state === 1) {
         this.setYouTubeVideoTime({
           stream: this.stream,
           time: this.stream.time + 2
         })
       }
 
-      this.seekTo(this.stream.time)
-
       // If player is paused, pause it
-      if (this.stream.state === 2) {
+      else if (this.stream.state === 2) {
         this.pauseVideo()
         this.playerData.isPaused = true
       }
+
+      this.seekTo(this.stream.time)
     }, 2000)
 
     // Add interval to check if time and state are synced
     this.interval = setInterval(() => {
       const playerTime = this.player.getCurrentTime()
+      const playerDuration = this.player.getDuration()
 
       // Add 1 second to goal time
       this.setYouTubeVideoTime({
@@ -271,9 +283,13 @@ export default {
         time: this.stream.time + 1
       })
 
+      if (playerDuration !== 0 && playerTime >= playerDuration) {
+        this.skipCurrentVideo()
+      }
+
       // Update player time info
       this.playerData.time = playerTime
-      this.playerData.duration = this.player.getDuration()
+      this.playerData.duration = playerDuration
     }, 1000)
 
     // On new time
@@ -312,6 +328,7 @@ export default {
         // If this video is the only video in queue, play it
         if (this.stream.queue.length === 1) {
           this.loadVideo(this.stream.queue[0])
+          this.onPlay()
         }
       }
     )
@@ -320,9 +337,21 @@ export default {
     this.sockets.SFU.subscribe(
       `room-stream-youtube-${this.stream.id}-skip-video`,
       index => {
+        if (this.skippedInLastSecond) return
+
+        this.skippedInLastSecond = true
+        setTimeout(() => (this.skippedInLastSecond = false), 1000)
+
         this.removeVideoFromYouTubeQueue({ stream: this.stream, index })
+
+        // If no more videos in queue
+        if (!this.stream.queue.length) {
+          this.pauseVideo()
+          this.setYouTubeVideoState({ state: 2, stream: this.stream })
+        }
+
         // If skipped video is current playing video, load next video
-        if (index === 0) {
+        else if (index === 0) {
           this.loadVideo(this.stream.queue[0])
           this.onPlay()
         }
@@ -453,7 +482,6 @@ export default {
         id: this.stream.id,
         index: 0
       })
-      this.setYouTubeVideoTime({ stream: this.stream, time: 0 })
     },
 
     toggleFullscreen() {
