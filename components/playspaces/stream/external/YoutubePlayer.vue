@@ -66,7 +66,7 @@
                   class="w-full h-full rounded"
                 />
                 <small
-                  class="absolute bg-dark-500"
+                  class="absolute bg-black-700 px-1 rounded-br"
                   style="bottom:0;right:0;"
                 >{{ stream.queueMetaData[i].duration }}</small>
               </div>
@@ -75,7 +75,7 @@
                 <small>Uploaded on {{ stream.queueMetaData[i].publishedAt | formatDate }}</small>
                 <div>
                   <p-btn
-                    v-if="isStreamer"
+                    v-if="isStreamer && i > 0"
                     @click="
                       $socket.SFU.emit(`room-stream-youtube-skip-video`, {
                         id: stream.id,
@@ -88,6 +88,16 @@
                   >
                     <p-icon icon="fas fa-trash" />Remove
                   </p-btn>
+                  <p-btn
+                    v-if="isStreamer && i === 0"
+                    @click="skipCurrentVideo"
+                    variant="none"
+                    size="xs"
+                    class="bg-blue-400 text-xs"
+                  >
+                    <p-icon icon="fas fa-forward" />Skip Video
+                  </p-btn>
+                  <i v-if="i === 0" class="text-sm">(Currently playing)</i>
                 </div>
               </div>
             </div>
