@@ -5,39 +5,22 @@
     </p-btn>
 
     <p-modal v-model="isModal" @input="reset">
-      <h1 class="text-2xl font-bold mb-2">
-        Add a Stream
-      </h1>
+      <h1 class="text-2xl font-bold mb-2">Add a Stream</h1>
       <ul class="flex flex-wrap justify-center mb-4">
         <!-- Streamable on Desktop -->
-        <li
-          v-if="canProduceOnDesktop"
-          class="flex-shrink-0 w-full m-1 max-w-48"
-        >
-          <button
-            @click="getDesktopStream"
-            class="bg-primary font-bold text-gray-300 py-2 w-full"
-          >
+        <li v-if="canProduceOnDesktop" class="flex-shrink-0 w-full m-1 max-w-48">
+          <button @click="getDesktopStream" class="bg-primary font-bold text-gray-300 py-2 w-full">
             <p-icon icon="fas fa-desktop" />Desktop
           </button>
         </li>
-        <li
-          v-if="canProduceOnDesktop"
-          class="flex-shrink-0 w-full m-1 max-w-48"
-        >
-          <button
-            @click="getWebcamStream"
-            class="bg-primary font-bold text-gray-300 py-2 w-full"
-          >
+        <li v-if="canProduceOnDesktop" class="flex-shrink-0 w-full m-1 max-w-48">
+          <button @click="getWebcamStream" class="bg-primary font-bold text-gray-300 py-2 w-full">
             <p-icon icon="fas fa-camera" />Webcam
           </button>
         </li>
 
         <!-- Streamable on Desktop only if Room -->
-        <li
-          v-if="canAddStreamOnDesktop"
-          class="flex-shrink-0 w-full m-1 max-w-48"
-        >
+        <li v-if="canAddStreamOnDesktop" class="flex-shrink-0 w-full m-1 max-w-48">
           <button
             @click="mode = 'youtube'"
             class="text-gray-300 py-2 w-full font-bold"
@@ -46,10 +29,16 @@
             <p-icon icon="fab fa-youtube" />YouTube
           </button>
         </li>
-        <li
-          v-if="canAddStreamOnDesktop"
-          class="flex-shrink-0 w-full m-1 max-w-48"
-        >
+        <li v-if="canAddStreamOnDesktop" class="flex-shrink-0 w-full m-1 max-w-48">
+          <button
+            @click="mode = 'dailymotion'"
+            class="text-gray-300 py-2 w-full font-bold"
+            style="background:rgb(40, 179, 200);"
+          >
+            <p-icon icon="fab fa-dailymotion" />DailyMotion
+          </button>
+        </li>
+        <li v-if="canAddStreamOnDesktop" class="flex-shrink-0 w-full m-1 max-w-48">
           <button
             @click="mode = 'twitch'"
             class="text-gray-300 py-2 w-full font-bold"
@@ -81,57 +70,61 @@
       <div v-if="mode === 'youtube'">
         <div class="flex items-center">
           <p-icon icon="fab fa-youtube text-4xl" style="color:#FE0200;" />
-          <h2 class="text-2xl ml-2 font-bold">
-            Add a YouTube Video
-          </h2>
+          <h2 class="text-2xl ml-2 font-bold">Add a YouTube video</h2>
         </div>
         <a
           href="https://youtube.com"
           target="_blank"
           class="text-primary hover:underline my-2 block"
-        >
-          Browse YouTube in new Tab
-        </a>
-        <h3 class="text-lg font-bold mb-2">
-          Enter the video URL below
-        </h3>
+        >Browse YouTube in new Tab</a>
+        <h3 class="text-lg font-bold mb-2">Enter the video URL below</h3>
         <form @submit.prevent="addYouTubeStream" class="flex">
           <p-input
             v-model="youtubeUrl"
             placeholder="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
             class="flex-grow"
           />
-          <p-btn variant="primary" type="submit" class="h-full">
-            Add
-          </p-btn>
+          <p-btn variant="primary" type="submit" class="h-full">Add</p-btn>
+        </form>
+      </div>
+      <div v-if="mode === 'dailymotion'">
+        <div class="flex items-center">
+          <p-icon icon="fab fa-dailymotion text-4xl" style="color:rgb(40, 179, 200);" />
+          <h2 class="text-2xl ml-2 font-bold">Add a DailyMotion video</h2>
+        </div>
+        <a
+          href="https://dailymotion.com"
+          target="_blank"
+          class="text-primary hover:underline my-2 block"
+        >Browse DailyMotion in new Tab</a>
+        <h3 class="text-lg font-bold mb-2">Enter the video URL below</h3>
+        <form @submit.prevent="addDailyMotionStream" class="flex">
+          <p-input
+            v-model="dailyMotionUrl"
+            placeholder="https://www.dailymotion.com/video/x7ssqjf"
+            class="flex-grow"
+          />
+          <p-btn variant="primary" type="submit" class="h-full">Add</p-btn>
         </form>
       </div>
       <div v-if="mode === 'twitch'">
         <div class="flex items-center">
           <p-icon icon="fab fa-twitch text-4xl" style="color:#9047FF" />
-          <h2 class="text-2xl ml-2 font-bold">
-            Add a Twitch Stream
-          </h2>
+          <h2 class="text-2xl ml-2 font-bold">Add a Twitch Stream</h2>
         </div>
         <a
           href="https://twitch.tv"
           target="_blank"
           class="text-primary hover:underline my-2 block"
-        >
-          Browse Twitch in new Tab
-        </a>
-        <h3 class="text-lg font-bold mb-2">
-          Enter the Twitch URL or username below
-        </h3>
+        >Browse Twitch in new Tab</a>
+        <h3 class="text-lg font-bold mb-2">Enter the Twitch URL or username below</h3>
         <form @submit.prevent="addTwitchStream" class="flex">
           <p-input
             v-model="twitchUsername"
             placeholder="https://www.twitch.tv/drdisrespect or drdisrespect"
             class="flex-grow"
           />
-          <p-btn variant="primary" type="submit" class="h-full">
-            Add
-          </p-btn>
+          <p-btn variant="primary" type="submit" class="h-full">Add</p-btn>
         </form>
       </div>
     </p-modal>
@@ -162,6 +155,7 @@ export default {
     isModal: false,
     mode: "",
     youtubeUrl: "",
+    dailyMotionUrl: "x7sug3v",
     twitchUsername: ""
   }),
 
@@ -315,10 +309,13 @@ export default {
       this.reset()
     },
 
+    addDailyMotionStream() {},
+
     reset() {
       this.isModal = false
       this.mode = ""
       this.youtubeUrl = ""
+      this.dailyMotionUrl = ""
       this.twitchUsername = ""
     }
   }

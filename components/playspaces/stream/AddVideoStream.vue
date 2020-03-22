@@ -14,10 +14,7 @@
               !$store.state.stream.tracks.video
           "
         >
-          <button
-            @click="getDesktopStream"
-            class="bg-primary font-bold text-gray-300 py-2 w-full"
-          >
+          <button @click="getDesktopStream" class="bg-primary font-bold text-gray-300 py-2 w-full">
             <p-icon icon="fas fa-desktop" />Desktop
           </button>
         </li>
@@ -28,10 +25,7 @@
               !$store.state.stream.tracks.video
           "
         >
-          <button
-            @click="getWebcamStream"
-            class="bg-primary font-bold text-gray-300 py-2 w-full"
-          >
+          <button @click="getWebcamStream" class="bg-primary font-bold text-gray-300 py-2 w-full">
             <p-icon icon="fas fa-camera" />Webcam
           </button>
         </li>
@@ -84,6 +78,20 @@
           "
         >
           <button
+            @click="isDailyMotion = true"
+            class="text-gray-300 py-2 w-full font-bold"
+            style="background:#FE0200;"
+          >
+            <p-icon icon="fab fa-dailymotion" />DailyMotion
+          </button>
+        </li>
+        <li
+          v-if="
+            !$store.state.nav.isMobile &&
+              $store.state.stream.streams.external.length < 5
+          "
+        >
+          <button
             @click="isTwitch = true"
             class="text-gray-300 py-2 w-full font-bold"
             style="background:#9047FF"
@@ -96,57 +104,41 @@
     <p-modal v-model="isYoutube" @close="youtubeUrl = ''" class="text-left">
       <div class="flex items-center">
         <p-icon icon="fab fa-youtube text-4xl" style="color:#FE0200;" />
-        <h2 class="text-2xl ml-2 font-bold">
-          Add a YouTube Video
-        </h2>
+        <h2 class="text-2xl ml-2 font-bold">Add a YouTube Video</h2>
       </div>
       <a
         href="https://youtube.com"
         target="_blank"
         class="text-primary hover:underline my-2 block"
-      >
-        Browse YouTube in new Tab
-      </a>
-      <h3 class="text-lg font-bold mb-2">
-        Enter the video URL below
-      </h3>
+      >Browse YouTube in new Tab</a>
+      <h3 class="text-lg font-bold mb-2">Enter the video URL below</h3>
       <form @submit.prevent="addYouTubeStream" class="flex">
         <p-input
           v-model="youtubeUrl"
           placeholder="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
           class="flex-grow"
         />
-        <p-btn variant="primary" type="submit" class="h-full">
-          Add
-        </p-btn>
+        <p-btn variant="primary" type="submit" class="h-full">Add</p-btn>
       </form>
     </p-modal>
     <p-modal v-model="isTwitch" @close="twitchUsername = ''">
       <div class="flex items-center">
         <p-icon icon="fab fa-twitch text-4xl" style="color:#9047FF" />
-        <h2 class="text-2xl ml-2 font-bold">
-          Add a Twitch Stream
-        </h2>
+        <h2 class="text-2xl ml-2 font-bold">Add a Twitch Stream</h2>
       </div>
       <a
         href="https://twitch.tv"
         target="_blank"
         class="text-primary hover:underline my-2 block"
-      >
-        Browse Twitch in new Tab
-      </a>
-      <h3 class="text-lg font-bold mb-2">
-        Enter the Twitch URL or username below
-      </h3>
+      >Browse Twitch in new Tab</a>
+      <h3 class="text-lg font-bold mb-2">Enter the Twitch URL or username below</h3>
       <form @submit.prevent="addTwitchStream" class="flex">
         <p-input
           v-model="twitchUsername"
           placeholder="https://www.twitch.tv/drdisrespect or drdisrespect"
           class="flex-grow"
         />
-        <p-btn variant="primary" type="submit" class="h-full">
-          Add
-        </p-btn>
+        <p-btn variant="primary" type="submit" class="h-full">Add</p-btn>
       </form>
     </p-modal>
   </div>
@@ -172,6 +164,7 @@ export default {
 
   data: () => ({
     isYoutube: false,
+    isDailyMotion: false,
     isTwitch: false,
     youtubeUrl: "",
     twitchUsername: ""
