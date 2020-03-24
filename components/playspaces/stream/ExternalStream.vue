@@ -1,22 +1,32 @@
 <template>
-  <StreamControls
-    :stream="stream"
-    :playerData="playerData"
-    @skipVideo="skipVideo"
-    @timeChange="timeChange"
-    @toggleFullscreen="toggleFullscreen"
-    @updatePlayerData="updatePlayerData"
-    :id="`${stream.id}-container`"
-  >
-    <YoutubePlayer
-      v-if="stream.type === 'youtube'"
-      :playerData="playerData"
+  <div>
+    <StreamControls
       :stream="stream"
+      :playerData="playerData"
+      @play="playVideo"
+      @pause="pauseVideo"
       @skipVideo="skipVideo"
+      @timeChange="timeChange"
+      @toggleFullscreen="toggleFullscreen"
       @updatePlayerData="updatePlayerData"
-    />
-    <TwitchPlayer v-if="stream.type === 'twitch'" :stream="stream" />
-  </StreamControls>
+      :id="`${stream.id}-container`"
+    >
+      <YoutubePlayer
+        :playerData="playerData"
+        :stream="stream"
+        @skipVideo="skipVideo"
+        @updatePlayerData="updatePlayerData"
+      />
+      <DailyMotionPlayer
+        v-if="queue.length && queue[0].type === 'dailymotion'"
+        :playerData="playerData"
+        :stream="stream"
+        @skipVideo="skipVideo"
+        @updatePlayerData="updatePlayerData"
+      />
+      <TwitchPlayer v-if="stream.type === 'twitch'" :stream="stream" />
+    </StreamControls>
+  </div>
 </template>
 
 <script>
@@ -25,12 +35,14 @@ import { mapGetters, mapActions } from "vuex"
 import StreamControls from "./StreamControls"
 
 import YoutubePlayer from "./external/YoutubePlayer"
+import DailyMotionPlayer from "./external/DailyMotionPlayer"
 import TwitchPlayer from "./external/TwitchPlayer"
 
 export default {
   components: {
     StreamControls,
     YoutubePlayer,
+    DailyMotionPlayer,
     TwitchPlayer
   },
 
@@ -49,9 +61,8 @@ export default {
       duration: 0,
       activeVideoId: "",
       showVolume: false,
-      volume: 100,
+      volume: 50,
       isMuted: true,
-      isPaused: true,
       isFullscreen: false
     }
   }),
@@ -59,25 +70,32 @@ export default {
   computed: {
     ...mapGetters({
       isAuthorized: "playSpace/isAuthorized"
-    })
+    }),
+
+    queueIds() {
+      return Object.keys(this.stream.queue)
+    },
+
+    queue() {
+      return Object.values(this.stream.queue)
+    }
   },
 
   created() {
-    console.log({ ...this.stream })
-
-    this.playerData.activeVideoId = this.stream.queue[0]
+    this.playerData.activeVideoId = this.queue[0].videoId
+    this.playerData.time = this.stream.time
 
     // TODO put this in its own function and depend on stream type
     // Get volume from localStorage
     const playerData = JSON.parse(localStorage.getItem("playspace-player"))
-    if (playerData && playerData[this.stream.type]) {
-      this.playerData.volume = playerData[this.stream.type].volume
+    if (playerData && playerData.youtube && playerData.youtube.volume) {
+      this.playerData.volume = playerData.youtube.volume
     }
     this.playerData.isMuted = this.playerData.volume === 0
 
     // On new time
     this.sockets.SFU.subscribe(
-      `room-stream-youtube-${this.stream.id}-player-time-update`,
+      `room-stream-video-${this.stream.id}-player-time-update`,
       ({ time }) => {
         this.playerData.time = time
         this.setYouTubeVideoTime({ stream: this.stream, time })
@@ -86,56 +104,52 @@ export default {
 
     // On play
     this.sockets.SFU.subscribe(
-      `room-stream-youtube-${this.stream.id}-played`,
+      `room-stream-video-${this.stream.id}-played`,
       () => {
-        this.playerData.isPaused = false
         this.setYouTubeVideoState({ state: 1, stream: this.stream })
       }
     )
 
     // On pause
     this.sockets.SFU.subscribe(
-      `room-stream-youtube-${this.stream.id}-paused`,
+      `room-stream-video-${this.stream.id}-paused`,
       () => {
-        this.playerData.isPaused = true
         this.setYouTubeVideoState({ state: 2, stream: this.stream })
       }
     )
 
     // Add new video to
     this.sockets.SFU.subscribe(
-      `room-stream-youtube-${this.stream.id}-add-video`,
-      ({ videoId, video }) => {
-        this.addVideo(videoId, video)
+      `room-stream-video-${this.stream.id}-add-video`,
+      ({ queueId, video }) => {
+        this.addVideo(queueId, video)
 
-        // If no videos in queue before this
-        if (this.stream.queue.length === 1) {
-          this.loadVideo(videoId)
+        // If no videos in queue, load this video
+        if (this.queue.length === 1) {
+          this.loadVideo(video.videoId)
         }
       }
     )
 
     // On video skip
     this.sockets.SFU.subscribe(
-      `room-stream-youtube-${this.stream.id}-skip-video`,
-      index => {
-        if (this.skippedInLastSecond) return
+      `room-stream-video-${this.stream.id}-skip-video`,
+      queueId => {
+        if (!this.queue.length) return
 
-        this.skippedInLastSecond = true
-        setTimeout(() => (this.skippedInLastSecond = false), 1000)
+        const splicedQueueId = this.queueIds[0]
 
-        this.removeVideoFromYouTubeQueue({ stream: this.stream, index })
+        this.removeVideoFromYouTubeQueue({ stream: this.stream, queueId })
 
-        // If no more videos in queue
-        if (!this.stream.queue.length) {
-          this.playerData.isPaused = true
-          this.setYouTubeVideoState({ state: 2, stream: this.stream })
-          this.playerData.activeVideoId = ""
+        // If skipped currently playing video, play next video
+        if (splicedQueueId === queueId && this.queueIds.length) {
+          this.loadVideo(this.queue[0].videoId)
         }
 
-        // If skipped currently playing video
-        else if (index === 0) {
-          this.loadVideo(this.stream.queue[0])
+        // If no more videos in queue
+        else if (!this.queueIds.length) {
+          this.setYouTubeVideoState({ state: 2, stream: this.stream })
+          this.playerData.activeVideoId = ""
         }
       }
     )
@@ -163,7 +177,7 @@ export default {
         localStorage.setItem(
           "playspace-player",
           JSON.stringify({
-            [this.stream.type]: { volume: playerData.volume }
+            youtube: { volume: Number(playerData.volume) }
           })
         )
       }
@@ -172,51 +186,50 @@ export default {
       })
     },
 
-    addVideo(videoId, video) {
-      this.addVideoToYouTubeQueue({ stream: this.stream, videoId, video })
+    addVideo(queueId, video) {
+      this.addVideoToYouTubeQueue({ stream: this.stream, queueId, video })
       // If the queue was empty before this, play this video
       if (this.stream.queue.length === 1) {
-        this.playerData.isPaused = false
+        this.setYouTubeVideoState({ stream: this.stream, state: 1 })
       }
     },
 
     playVideo() {
-      this.$socket.SFU.emit(`room-stream-youtube-play`, {
+      this.$socket.SFU.emit(`room-stream-video-play`, {
         id: this.stream.id,
         time: this.playerData.time || 0
       })
       this.setYouTubeVideoState({ state: 1, stream: this.stream })
-      this.playerData.isPaused = false
     },
 
     pauseVideo() {
-      this.$socket.SFU.emit(`room-stream-youtube-pause`, {
+      this.$socket.SFU.emit(`room-stream-video-pause`, {
         id: this.stream.id,
         time: this.playerData.time || 0
       })
       this.setYouTubeVideoState({ state: 2, stream: this.stream })
-      this.playerData.isPaused = true
     },
 
-    skipVideo(index) {
+    skipVideo(queueId) {
       this.playerData.duration = 0
-      this.$socket.SFU.emit(`room-stream-youtube-skip-video`, {
+      this.$socket.SFU.emit(`room-stream-video-skip-video`, {
         id: this.stream.id,
-        index
+        queueId
       })
     },
 
     loadVideo(videoId) {
-      this.playerData.isPaused = false
-      this.setYouTubeVideoState({ state: 1, stream: this.stream })
       this.playerData.activeVideoId = ""
+      this.setYouTubeVideoState({ state: 1, stream: this.stream })
+      this.setYouTubeVideoTime({ stream: this.stream, time: 0 })
+      this.playerData.time = 0
       this.playerData.activeVideoId = videoId
     },
 
     timeChange(event) {
       // TODO: throttle this function
       const time = Number(event.target.value)
-      this.$socket.SFU.emit(`room-steam-youtube-player-time`, {
+      this.$socket.SFU.emit(`room-steam-video-player-time`, {
         id: this.stream.id,
         time
       })
@@ -237,5 +250,4 @@ export default {
 }
 </script>
 
-<style>
-</style>
+<style></style>

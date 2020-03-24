@@ -1,3 +1,5 @@
+import Vue from "vue"
+
 export default {
   state: () => ({
     producerIds: {
@@ -46,9 +48,8 @@ export default {
     ADD_STREAM(state, { type, stream }) {
       state.streams[type].push(stream)
     },
-    ADD_VIDEO_TO_YOUTUBE_QUEUE(state, { stream, videoId, video }) {
-      stream.queue.push(videoId)
-      stream.queueMetaData.push(video)
+    ADD_VIDEO_TO_YOUTUBE_QUEUE(state, { stream, queueId, video }) {
+      Vue.set(stream.queue, queueId, video)
     },
     SET_YOUTUBE_VIDEO_STATE(state, { state: newState, stream }) {
       stream.state = newState
@@ -56,9 +57,8 @@ export default {
     SET_YOUTUBE_VIDEO_TIME(state, { stream, time }) {
       stream.time = time
     },
-    REMOVE_VIDEO_FROM_YOUTUBE_QUEUE(state, { stream, index }) {
-      stream.queue.splice(index, 1)
-      stream.queueMetaData.splice(index, 1)
+    REMOVE_VIDEO_FROM_YOUTUBE_QUEUE(state, { stream, queueId }) {
+      Vue.delete(stream.queue, queueId)
     },
     REMOVE_STREAM(state, { type, stream }) {
       const i = state.streams[type].indexOf(stream)

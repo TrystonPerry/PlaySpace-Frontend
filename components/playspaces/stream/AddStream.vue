@@ -302,14 +302,21 @@ export default {
       if (!url) return
 
       this.$socket.SFU.emit("room-stream-external", {
-        type: "youtube",
+        type: "video",
+        videoType: "youtube",
         videoId: url
       })
 
       this.reset()
     },
 
-    addDailyMotionStream() {},
+    addDailyMotionStream() {
+      this.$socket.SFU.emit("room-stream-external", {
+        type: "video",
+        videoType: "dailymotion",
+        videoId: this.dailyMotionUrl
+      })
+    },
 
     reset() {
       this.isModal = false

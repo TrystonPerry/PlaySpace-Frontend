@@ -1,14 +1,9 @@
 <template>
-  <div
-    :id="stream.id"
-    frameborder="0"
-    class="w-full h-full"
-    allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-  ></div>
+  <div :id="stream.id" frameborder="0" class="w-full h-full"></div>
 </template>
 
 <script>
-import { mapGetters, mapActions } from "vuex"
+import { mapActions } from "vuex"
 
 export default {
   props: {
@@ -30,48 +25,51 @@ export default {
 
   mounted() {
     this.startedAt = Date.now()
-    this.player = new YT.Player(this.stream.id, {
-      videoId: this.playerData.activeVideoId,
-      playerVars: {
-        autoplay: 0,
-        controls: 0,
-        disablenewui: 1,
-        modestbranding: 1,
-        playsinline: 1
-      },
-      events: {
-        onReady: this.onReady,
-        onStateChange: this.onPlayerStateChange
+    this.player = DM.player(document.getElementById(this.stream.id), {
+      video: this.playerData.activeVideoId,
+      width: "100%",
+      height: "100%",
+      params: {
+        api: 1,
+        autoplay: true,
+        "autoplay-mute": true,
+        controls: false,
+        "queue-autoplay-next": false,
+        "queue-enable": false,
+        "sharing-enable": false,
+        start: this.stream.time,
+        "ui-start-screen-info": false
       }
     })
+
+    this.player.addEventListener("apiready", this.onReady)
   },
 
   beforeDestroy() {
     clearInterval(this.interval)
   },
 
-  // Hook into player data events
   watch: {
     "playerData.time"(time) {
-      this.player.seekTo(time)
+      this.player.seek(time)
     },
     "playerData.volume"(volume) {
-      this.player.setVolume(volume)
-      if (volume > 0) this.playerData.isMuted = false
-      else this.playerData.isMuted = true
+      this.player.setVolume((volume / 100).toFixed(2))
     },
     "playerData.isMuted"(isMuted) {
-      if (isMuted) this.player.mute()
-      else this.player.unMute()
+      this.player.setMuted(isMuted)
     },
     "stream.state"(state) {
-      if (state === 2) this.player.pauseVideo()
-      else this.player.playVideo()
+      if (state === 2) this.player.pause()
+      else this.player.play()
     },
     "playerData.activeVideoId"(videoId) {
-      console.log(videoId)
       if (!videoId) return
-      this.player.loadVideoById(videoId)
+      this.player.load({
+        video: videoId,
+        autoplay: true,
+        start: 0
+      })
     }
   },
 
@@ -82,12 +80,6 @@ export default {
     }),
 
     onReady() {
-      // Mute video due to autoplaying with sound block
-      this.player.setVolume(0)
-      this.player.isMuted = true
-
-      this.player.playVideo()
-
       // If brand new player
       if (this.stream.state === -1) {
         this.setYouTubeVideoState({
@@ -106,19 +98,20 @@ export default {
 
       // If player is paused, pause it
       else if (this.stream.state === 2) {
-        this.player.pauseVideo()
+        this.player.pause()
       }
 
-      this.player.seekTo(this.stream.time)
-
       // Unmute player
-      this.player.isMuted = false
-      this.player.setVolume(this.playerData.volume)
+      this.player.setMuted(false)
+      this.player.setVolume(0.5)
+
+      // console.log(this.player.volume)
+      // console.log(this.player.muted)
 
       // Add interval to update video / player data
       this.interval = setInterval(() => {
-        const time = this.player.getCurrentTime()
-        const duration = this.player.getDuration()
+        const time = this.player.currentTime
+        const duration = this.player.duration
 
         // Update player time
         this.setYouTubeVideoTime({
@@ -133,15 +126,10 @@ export default {
 
         this.$emit("updatePlayerData", { duration })
       }, 1000)
-    },
-
-    onPlayerStateChange(event) {
-      if (event.data === 1 && this.stream.state === 2) {
-        this.player.pauseVideo()
-      } else if (event.data === 2 && this.stream.state === 1) {
-        this.player.playVideo()
-      }
     }
   }
 }
 </script>
+
+<style>
+</style>

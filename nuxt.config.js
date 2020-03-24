@@ -62,6 +62,9 @@ module.exports = {
       },
       {
         src: "https://www.youtube.com/iframe_api"
+      },
+      {
+        src: "https://api.dmcdn.net/all.js"
       }
     ]
   },

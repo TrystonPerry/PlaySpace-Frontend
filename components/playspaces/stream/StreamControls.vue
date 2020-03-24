@@ -31,11 +31,12 @@
 
     <!-- Video Controls Center Overlay -->
     <div
-      v-if="controls && stream.queue.length"
+      v-if="pc.center && controls && queue.length"
       class="controls absolute flex"
       style="left:50%;top:50%;transform:translate(-50%,-50%)"
     >
       <p-btn
+        v-if="pc.center.addVideo"
         @click="isAddVideo = !isAddVideo"
         variant="none"
         size="sm"
@@ -44,8 +45,8 @@
         <p-icon icon="fas fa-plus" />Add Video
       </p-btn>
       <p-btn
-        v-if="stream.queue.length && isStreamer"
-        @click="$emit('skipVideo', 0)"
+        v-if="pc.center.skipVideo && queue.length && isStreamer"
+        @click="$emit('skipVideo', queueIds[0])"
         variant="none"
         size="sm"
         class="bg-blue-400 mr-1 text-xs lg:text-base"
@@ -53,7 +54,7 @@
         <p-icon icon="fas fa-forward" />Skip Video
       </p-btn>
       <p-btn
-        v-if="isStreamer"
+        v-if="pc.center.removePlayer && isStreamer"
         @click="$socket.SFU.emit('room-stream-external-close', stream.id)"
         variant="none"
         size="sm"
@@ -64,7 +65,10 @@
     </div>
 
     <!-- Video Down Controls -->
-    <div v-if="controls && stream.queue.length" class="w-full bg-dark-4 absolute bottom-0 left-0">
+    <div
+      v-if="pc.downBar && controls && queue.length"
+      class="w-full bg-dark-4 absolute bottom-0 left-0"
+    >
       <div v-if="isStreamer" class="relative w-full h-full">
         <input
           type="range"
@@ -78,7 +82,7 @@
       </div>
       <div class="flex items-center">
         <div v-if="isStreamer">
-          <p-btn v-if="!playerData.isPaused" @click="onPause" variant="none">
+          <p-btn v-if="stream.state === 1" @click="onPause" variant="none">
             <p-icon icon="fas fa-pause" screen-reader-text="Pause" />
           </p-btn>
           <p-btn v-else @click="onPlay" variant="none">
@@ -130,32 +134,28 @@
         />
         <p-btn variant="primary" type="submit" class="h-full">Add</p-btn>
       </form>
-      <div v-if="stream.queue.length > 0" class="mt-2">
+      <div v-if="queue.length > 0" class="mt-2">
         <h2 class="text-2xl">Player Queue</h2>
         <ul class="queue list-style-none overflow-y-auto">
-          <li
-            v-for="(videoId, i) in stream.queue"
-            :key="i"
-            class="flex items-center mb-1 rounded p-1"
-          >
+          <li v-for="(video, i) in queue" :key="i" class="flex items-center mb-1 rounded p-1">
             <div class="flex flex-grow">
               <div class="relative flex-shrink-0 mr-2 rounded" style="max-width:12rem">
                 <img
-                  :src="`https://i.ytimg.com/vi/${videoId}/mqdefault.jpg`"
+                  :src="`https://i.ytimg.com/vi/${video.videoId}/mqdefault.jpg`"
                   class="w-full h-full rounded"
                 />
                 <small
                   class="absolute bg-black-700 px-1 rounded-br"
                   style="bottom:0;right:0;"
-                >{{ stream.queueMetaData[i].duration }}</small>
+                >{{ video.data.duration }}</small>
               </div>
               <div class="flex flex-col justify-center">
-                <h3 class="text-lg font-bold">{{ stream.queueMetaData[i].title }}</h3>
-                <small>Uploaded on {{ stream.queueMetaData[i].publishedAt | formatDate }}</small>
+                <h3 class="text-lg font-bold">{{ video.data.title }}</h3>
+                <small>Uploaded on {{ video.data.publishedAt | formatDate }}</small>
                 <div>
                   <p-btn
                     v-if="isStreamer && i > 0"
-                    @click="$emit('skipVideo', i)"
+                    @click="$emit('skipVideo', queueIds[i])"
                     variant="none"
                     size="xs"
                     class="bg-red-400 text-xs"
@@ -164,7 +164,7 @@
                   </p-btn>
                   <p-btn
                     v-if="isStreamer && i === 0"
-                    @click="$emit('skipVideo', 0)"
+                    @click="$emit('skipVideo', queueIds[0])"
                     variant="none"
                     size="xs"
                     class="bg-blue-400 text-xs"
@@ -184,6 +184,8 @@
 
 <script>
 import { mapGetters } from "vuex"
+
+import playerControls from "@/data/playerControls"
 
 const regex = {
   youtubeUrl: /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#\&\?]*).*/
@@ -213,8 +215,24 @@ export default {
       isStreamer: "playSpace/isStreamer"
     }),
 
+    queue() {
+      return Object.values(this.stream.queue) || []
+    },
+
+    queueIds() {
+      return Object.keys(this.stream.queue) || []
+    },
+
+    pc() {
+      if (!this.queue.length) return {}
+      return playerControls[this.queue[0].type]
+    },
+
     isVideo() {
-      return this.stream.queue.length || this.stream.type === "twitch"
+      return (
+        this.queue.length &&
+        ["youtube", "dailymotion"].includes(this.queue[0].type)
+      )
     },
 
     playerTime() {
@@ -239,8 +257,9 @@ export default {
       // TODO notify that it's an invalid URL
       if (!videoId) return
 
-      this.$socket.SFU.emit("room-stream-youtube-add-video", {
+      this.$socket.SFU.emit("room-stream-video-add-video", {
         id: this.stream.id,
+        type: "youtube",
         videoId
       })
 
@@ -248,11 +267,11 @@ export default {
     },
 
     onPlay() {
-      this.$emit("updatePlayerData", { isPaused: false })
+      this.$emit("play")
     },
 
     onPause() {
-      this.$emit("updatePlayerData", { isPaused: true })
+      this.$emit("pause")
     },
 
     showVolume() {
