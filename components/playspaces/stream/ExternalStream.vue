@@ -12,7 +12,6 @@
       :id="`${stream.id}-container`"
     >
       <div class="h-full w-full">
-        <span class="absolute">{{ playerData.type + playerData.activeVideoId }}</span>
         <YoutubePlayer
           v-if="playerData.type === 'youtube'"
           :playerData="playerData"

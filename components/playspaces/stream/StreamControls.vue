@@ -11,7 +11,7 @@
       <div>
         <div class="mb-2">
           <p-icon icon="fab fa-youtube text-4xl" style="color:#FE0200;" />
-          <p-icon icon="fab fa-dailymotion text-4xl" style="color:#FE0200;" />
+          <p-icon icon="fab fa-dailymotion text-4xl" style="color:rgb(40, 179, 200);" />
           <h2 class="text-2xl font-bold">The Queue is Empty</h2>
           <p>Add videos to the queue to continue watching!</p>
         </div>
@@ -123,7 +123,8 @@
     <p-modal v-model="isAddVideo" class="text-left text-gray-200">
       <div class="flex items-center">
         <p-icon icon="fab fa-youtube text-4xl" style="color:#FE0200;" />
-        <h2 class="text-2xl ml-2 font-bold">Add a YouTube Video</h2>
+        <p-icon icon="fab fa-dailymotion text-4xl" style="background:rgb(40, 179, 200);" />
+        <h2 class="text-2xl ml-2 font-bold">Add a Video</h2>
       </div>
       <h3 class="text-lg font-bold mb-2">Enter the video URL below</h3>
       <form @submit.prevent="addVideo" class="flex">
