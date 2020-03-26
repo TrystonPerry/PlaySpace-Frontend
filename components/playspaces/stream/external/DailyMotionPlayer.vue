@@ -26,8 +26,6 @@ export default {
   }),
 
   mounted() {
-    console.log(this.stream)
-
     this.startedAt = Date.now()
     this.player = DM.player(document.getElementById(this.stream.id), {
       video: this.playerData.activeVideoId,

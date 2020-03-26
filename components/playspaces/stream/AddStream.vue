@@ -323,6 +323,8 @@ export default {
         videoType: "dailymotion",
         videoId: url
       })
+
+      this.reset()
     },
 
     reset() {
