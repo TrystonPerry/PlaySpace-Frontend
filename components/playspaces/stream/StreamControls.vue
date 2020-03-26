@@ -1,7 +1,7 @@
 <template>
   <div @mouseenter="controls = true" @mouseleave="controls = false" class="h-full w-full relative">
     <!-- Video player / Empty queue controls -->
-    <div v-show="isVideo" class="w-full h-full">
+    <div v-show="isVideo || stream.type === 'twitch'" class="w-full h-full">
       <slot></slot>
     </div>
     <div
@@ -138,7 +138,7 @@
         <h2 class="text-2xl">Player Queue</h2>
         <ul class="queue list-style-none overflow-y-auto">
           <li v-for="(video, i) in queue" :key="i" class="flex items-center mb-1 rounded p-1">
-            <div class="flex flex-grow">
+            <div v-if="video.data" class="flex flex-grow">
               <div class="relative flex-shrink-0 mr-2 rounded" style="max-width:12rem">
                 <img
                   :src="`https://i.ytimg.com/vi/${video.videoId}/mqdefault.jpg`"
@@ -175,6 +175,7 @@
                 </div>
               </div>
             </div>
+            <div v-else>{{ video.videoId }}</div>
           </li>
         </ul>
       </div>
@@ -188,7 +189,8 @@ import { mapGetters } from "vuex"
 import playerControls from "@/data/playerControls"
 
 const regex = {
-  youtubeUrl: /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#\&\?]*).*/
+  youtubeUrl: /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#\&\?]*).*/,
+  dailymotionUrl: /https?:\/\/(www.)?(dailymotion.com|dai.ly)(\/video)?\/(.{7})/
 }
 
 export default {
@@ -224,6 +226,7 @@ export default {
     },
 
     pc() {
+      if (this.stream.type === "twitch") return playerControls["twitch"]
       if (!this.queue.length) return {}
       return playerControls[this.queue[0].type]
     },
@@ -250,16 +253,26 @@ export default {
 
   methods: {
     addVideo() {
+      let videoId
+      let type
+
       const match = this.url.match(regex.youtubeUrl)
+      if (match) {
+        videoId = match[7].length === 11 ? match[7] : false
+        type = "youtube"
+      }
 
-      const videoId = match && match[7].length === 11 ? match[7] : false
-
+      const match2 = this.url.match(regex.dailymotionUrl)
+      if (match2) {
+        videoId = match2[4]
+        type = "dailymotion"
+      }
       // TODO notify that it's an invalid URL
       if (!videoId) return
 
       this.$socket.SFU.emit("room-stream-video-add-video", {
         id: this.stream.id,
-        type: "youtube",
+        type,
         videoId
       })
 

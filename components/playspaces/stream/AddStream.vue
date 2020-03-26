@@ -140,6 +140,7 @@ import { mapActions } from "vuex"
 
 const regex = {
   youtubeUrl: /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#\&\?]*).*/,
+  dailymotionUrl: /https?:\/\/(www.)?(dailymotion.com|dai.ly)(\/video)?\/(.{7})/,
   twitchUrl: /^(https?:\/\/twitch.tv\/)?(\w+)$/
 }
 
@@ -155,7 +156,7 @@ export default {
     isModal: false,
     mode: "",
     youtubeUrl: "",
-    dailyMotionUrl: "x7sug3v",
+    dailyMotionUrl: "",
     twitchUsername: ""
   }),
 
@@ -311,10 +312,16 @@ export default {
     },
 
     addDailyMotionStream() {
+      const match = this.dailyMotionUrl.match(regex.dailymotionUrl)
+
+      const url = match && match[4]
+
+      if (!url) return
+
       this.$socket.SFU.emit("room-stream-external", {
         type: "video",
         videoType: "dailymotion",
-        videoId: this.dailyMotionUrl
+        videoId: url
       })
     },
 

@@ -1,5 +1,7 @@
 <template>
-  <div :id="stream.id" frameborder="0" class="w-full h-full"></div>
+  <div class="h-full w-full">
+    <div :id="stream.id" frameborder="0" class="w-full h-full"></div>
+  </div>
 </template>
 
 <script>
@@ -65,6 +67,7 @@ export default {
     },
     "playerData.activeVideoId"(videoId) {
       if (!videoId) return
+      console.log(videoId)
       this.player.load({
         video: videoId,
         autoplay: true,

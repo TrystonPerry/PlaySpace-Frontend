@@ -11,20 +11,26 @@
       @updatePlayerData="updatePlayerData"
       :id="`${stream.id}-container`"
     >
-      <YoutubePlayer
-        :playerData="playerData"
-        :stream="stream"
-        @skipVideo="skipVideo"
-        @updatePlayerData="updatePlayerData"
-      />
-      <DailyMotionPlayer
-        v-if="queue.length && queue[0].type === 'dailymotion'"
-        :playerData="playerData"
-        :stream="stream"
-        @skipVideo="skipVideo"
-        @updatePlayerData="updatePlayerData"
-      />
-      <TwitchPlayer v-if="stream.type === 'twitch'" :stream="stream" />
+      <div class="h-full w-full">
+        <span class="absolute">{{ playerData.type + playerData.activeVideoId }}</span>
+        <YoutubePlayer
+          v-if="playerData.type === 'youtube'"
+          :key="queueIds[0]"
+          :playerData="playerData"
+          :stream="stream"
+          @skipVideo="skipVideo"
+          @updatePlayerData="updatePlayerData"
+        />
+        <DailyMotionPlayer
+          v-if="playerData.type === 'dailymotion'"
+          :key="queueIds[0]"
+          :playerData="playerData"
+          :stream="stream"
+          @skipVideo="skipVideo"
+          @updatePlayerData="updatePlayerData"
+        />
+        <TwitchPlayer v-if="stream.type === 'twitch'" :stream="stream" />
+      </div>
     </StreamControls>
   </div>
 </template>
@@ -63,7 +69,8 @@ export default {
       showVolume: false,
       volume: 50,
       isMuted: true,
-      isFullscreen: false
+      isFullscreen: false,
+      type: ""
     }
   }),
 
@@ -84,6 +91,7 @@ export default {
   created() {
     this.playerData.activeVideoId = this.queue[0].videoId
     this.playerData.time = this.stream.time
+    this.playerData.type = this.queue[0].type
 
     // TODO put this in its own function and depend on stream type
     // Get volume from localStorage
@@ -126,7 +134,7 @@ export default {
 
         // If no videos in queue, load this video
         if (this.queue.length === 1) {
-          this.loadVideo(video.videoId)
+          this.loadVideo(queueId)
         }
       }
     )
@@ -143,13 +151,14 @@ export default {
 
         // If skipped currently playing video, play next video
         if (splicedQueueId === queueId && this.queueIds.length) {
-          this.loadVideo(this.queue[0].videoId)
+          this.loadVideo(this.queueIds[0])
         }
 
         // If no more videos in queue
         else if (!this.queueIds.length) {
           this.setYouTubeVideoState({ state: 2, stream: this.stream })
           this.playerData.activeVideoId = ""
+          this.playerData.type = ""
         }
       }
     )
@@ -218,12 +227,16 @@ export default {
       })
     },
 
-    loadVideo(videoId) {
+    loadVideo(queueId) {
+      const video = this.stream.queue[queueId]
+      if (!video) return
+      this.playerData.type = ""
       this.playerData.activeVideoId = ""
       this.setYouTubeVideoState({ state: 1, stream: this.stream })
       this.setYouTubeVideoTime({ stream: this.stream, time: 0 })
       this.playerData.time = 0
-      this.playerData.activeVideoId = videoId
+      this.playerData.type = video.type
+      this.playerData.activeVideoId = video.videoId
     },
 
     timeChange(event) {

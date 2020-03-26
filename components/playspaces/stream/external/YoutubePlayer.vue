@@ -1,10 +1,12 @@
 <template>
-  <div
-    :id="stream.id"
-    frameborder="0"
-    class="w-full h-full"
-    allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-  ></div>
+  <div class="h-full w-full">
+    <div
+      :id="stream.id"
+      frameborder="0"
+      class="w-full h-full"
+      allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+    ></div>
+  </div>
 </template>
 
 <script>
