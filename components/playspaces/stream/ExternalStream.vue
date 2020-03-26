@@ -217,6 +217,9 @@ export default {
     },
 
     skipVideo(queueId) {
+      if (typeof queueId === "number") {
+        queueId = this.queueIds[queueId]
+      }
       this.playerData.duration = 0
       this.$socket.SFU.emit(`room-stream-video-skip-video`, {
         id: this.stream.id,
