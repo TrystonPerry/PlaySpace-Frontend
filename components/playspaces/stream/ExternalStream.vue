@@ -15,7 +15,6 @@
         <span class="absolute">{{ playerData.type + playerData.activeVideoId }}</span>
         <YoutubePlayer
           v-if="playerData.type === 'youtube'"
-          :key="queueIds[0]"
           :playerData="playerData"
           :stream="stream"
           @skipVideo="skipVideo"
@@ -23,7 +22,6 @@
         />
         <DailyMotionPlayer
           v-if="playerData.type === 'dailymotion'"
-          :key="queueIds[0]"
           :playerData="playerData"
           :stream="stream"
           @skipVideo="skipVideo"

@@ -141,17 +141,20 @@
             <div v-if="video.data" class="flex flex-grow">
               <div class="relative flex-shrink-0 mr-2 rounded" style="max-width:12rem">
                 <img
-                  :src="`https://i.ytimg.com/vi/${video.videoId}/mqdefault.jpg`"
+                  :src="queue[0].type === 'youtube' ? `https://i.ytimg.com/vi/${video.videoId}/mqdefault.jpg` : `https://dailymotion.com/thumbnail/video/${video.videoId}`"
                   class="w-full h-full rounded"
                 />
                 <small
+                  v-if="video.data.duration"
                   class="absolute bg-black-700 px-1 rounded-br"
                   style="bottom:0;right:0;"
                 >{{ video.data.duration }}</small>
               </div>
               <div class="flex flex-col justify-center">
                 <h3 class="text-lg font-bold">{{ video.data.title }}</h3>
-                <small>Uploaded on {{ video.data.publishedAt | formatDate }}</small>
+                <small
+                  v-if="video.data.publishedAt"
+                >Uploaded on {{ video.data.publishedAt | formatDate }}</small>
                 <div>
                   <p-btn
                     v-if="isStreamer && i > 0"
