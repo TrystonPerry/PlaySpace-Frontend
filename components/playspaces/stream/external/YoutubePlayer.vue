@@ -125,7 +125,7 @@ export default {
         // Update player time
         this.setYouTubeVideoTime({
           stream: this.stream,
-          time
+          time: this.stream.time + 1
         })
 
         // If video has just ended
